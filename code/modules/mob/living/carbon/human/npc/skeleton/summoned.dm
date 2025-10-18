@@ -80,9 +80,54 @@
 	switch(command_mode)
 		if("follow")
 			if(command_target && ismob(command_target))
+				var/turf/target_turf = get_turf(command_target)
+				if(!target_turf)
+					command_mode = "idle"
+					return
+
 				var/dist = get_dist(src, command_target)
+
+				// === Handle different z-levels ===
+				if(target_turf.z != z)
+					var/target_z = target_turf.z
+
+					// Check for stairs underfoot
+					var/obj/structure/stairs/the_stairs = locate() in get_turf(src)
+					if(the_stairs)
+						var/move_dir = (target_z > z) ? the_stairs.dir : GLOB.reverse_dir[the_stairs.dir]
+						var/turf/next_step = the_stairs.get_target_loc(move_dir)
+
+						if(next_step)
+							// actually move to the stair target turf
+							if(src.Move(next_step))
+								NPC_THINK("[src] ascends/descends stairs to z [next_step.z]")
+								return
+						else
+							// failsafe, step toward the stair’s target
+							step_to(src, the_stairs)
+							return
+
+					// Try Z-jump
+					if(HAS_TRAIT(src, TRAIT_ZJUMP))
+						if(npc_try_jump_to(target_turf))
+							return
+						else
+							sleep(1 SECONDS)
+							return
+
+					// Find nearby stairs and move onto them
+					for(var/obj/structure/stairs/S in view(5, src))
+						var/dir_to_stairs = get_dir(src, S)
+						if((target_z > z && S.dir == dir_to_stairs) || (target_z < z && GLOB.reverse_dir[S.dir] == dir_to_stairs))
+							step_to(src, S)
+							return
+
+					// Can't find a way up/down
+					walk(src, 0)
+					return
+
+				// === Same-z behavior ===
 				if(dist > 2)
-					// Constantly refresh the walk_to so it stays locked on
 					walk_to(src, command_target, 0, 2)
 				else
 					walk(src, 0)

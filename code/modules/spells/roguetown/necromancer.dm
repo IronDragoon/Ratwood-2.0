@@ -210,7 +210,7 @@
 
 /obj/effect/proc_holder/spell/invoked/tame_undead
 	name = "Tame Undead"
-	desc = "Oftentymes, husks and shamblers walk aimlessly - uncertain of their future. They need not look further, any longer. \
+	desc = "Oftentymes, husks and shamblers walk aimlessly - uncertain of their future. Befriends the undead \
 	Requires the target to be within four tiles. Works on undead animals, too."
 	overlay_state = "wolf_head_undead"
 	range = 4
@@ -310,7 +310,7 @@
 
 /obj/effect/proc_holder/spell/invoked/command_undead
 	name = "Command Undead"
-	desc = "Commands guard-level skeletons. Cast on turf to head in that direction ignoring all else. Cast on a minion to set to idle-aggressive, cast on self to command it to follow, cast on target to attack them."
+	desc = "Commands skeletons. Cast on turf to head in that direction ignoring all else. Cast on self to command it to follow, cast on target to attack them, Cast on a lesser skeleton to set to idle-aggressive,"
 	overlay_state = "ZIZO"
 	warnie = "sydwarning"
 	range = 8
@@ -337,7 +337,7 @@
 	if(!target)
 		to_chat(user, "You must click a location or creature to command your undead.")
 		return
-
+	var/faction_tag = "[user.mind.current.real_name]_faction"
 	// Handle CARBON skeletons first
 	var/list/minions = list()
 	var/list/simple_minions = list()
@@ -355,7 +355,7 @@
 	var/command_type
 	if(ismob(target))
 		var/mob/living/L = target
-		if(L == user)
+		if(L == user || faction_tag in L.faction)
 			command_type = "follow"
 		else
 			command_type = "attack"
@@ -370,7 +370,7 @@
 		M.set_command(command_type, target)
 		switch(command_type)
 			if("follow")
-				M.receive_command_text("begins following [user] faithfully.")
+				M.receive_command_text("begins following [target] faithfully.")
 			if("move")
 				M.receive_command_text("shambles toward an indicated location.")
 			if("attack")
@@ -382,7 +382,6 @@
 	// -----------------------------------------------------------------
 
 	var/mob/caster = user
-	var/faction_tag = "[caster.mind.current.real_name]_faction"
 	// Target is one of our own minions
 	if(ismob(target) && istype(target, /mob/living/simple_animal))
 		var/mob/living/simple_animal/minion = target
