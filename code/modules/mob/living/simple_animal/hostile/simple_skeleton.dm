@@ -134,9 +134,9 @@
 		if(lich_antag && user.real_name)
 			faction |= "[user.real_name]_faction"
 
-	damage_check = world.time
-	if(is_summoned) //check, if it NOT summoned skeleton, he lifetime - infinity. For mapping-spawned skeltons
-		addtimer(CALLBACK(src, PROC_REF(deathtime)), 1 MINUTES)
+//	damage_check = world.time
+//	if(is_summoned) //check, if it NOT summoned skeleton, he lifetime - infinity. For mapping-spawned skeltons
+//		addtimer(CALLBACK(src, PROC_REF(deathtime)), 1 MINUTES)
 
 /mob/living/simple_animal/hostile/rogue/skeleton/proc/deathtime()
 	start_take_damage = TRUE
