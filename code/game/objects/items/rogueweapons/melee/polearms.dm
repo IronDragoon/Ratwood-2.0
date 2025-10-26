@@ -90,7 +90,7 @@
 
 /datum/intent/sword/lunge/estoc
 	damfactor = 1.2
-	penfactor = 20
+	penfactor = 37//25 base, +5, at 67. More for applying bleed through armour, since it's a needle.
 	swingdelay = 0
 	clickcd = CLICK_CD_CHARGED
 
