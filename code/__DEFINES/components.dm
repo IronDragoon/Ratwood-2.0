@@ -470,3 +470,10 @@
 // heretic signals
 #define COMSIG_TRAIT_GAIN "trait_gain"    // (trait, source)
 #define COMSIG_TRAIT_LOSS "trait_loss"    // (trait, source)				//from monkey CtrlClickOn(): (/mob)
+
+//S Smithing
+
+#define COMSIG_ITEM_PLACED_ON_ANVIL "item_placed_on_anvil"
+#define COMSIG_ITEM_REMOVED_FROM_ANVIL "item_removed_from_anvil"
+#define COMSIG_ITEM_HAMMERED_ON_ANVIL "item_hammered_on_anvil"
+#define COMSIG_ITEM_ADDED_TO_FORGING "item_added_to_forging"
