@@ -41,7 +41,7 @@
 	icon_state = "druidgrove"
 	droning_sound = 'sound/music/area/druid.ogg'
 	droning_sound_dusk = null
-	threat_region = THREAT_REGION_OUTER_GROVE
+	threat_region = THREAT_REGION_ROCKHILL_OUTER_GROVE
 	ambush_times = null
 
 

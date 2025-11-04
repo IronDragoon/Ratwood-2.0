@@ -241,9 +241,6 @@
 /datum/intent/proc/spec_on_apply_effect(mob/living/H, mob/living/user, params)
 	return
 
-/datum/intent/proc/on_mmb(atom/target, mob/living/user, params)
-	return
-
 /datum/intent/use
 	name = "use"
 	icon_state = "inuse"
@@ -393,7 +390,7 @@
 	charging_slowdown = 3
 	warnoffset = 20
 	var/strength_check = FALSE //used when we fire HEAVY bows
-	
+
 /datum/intent/proc/arc_check()
 	return FALSE
 
@@ -476,7 +473,7 @@
 	miss_text = "claw at the air"
 	miss_sound = "punchwoosh"
 	item_d_type = "slash"
-	
+
 
 /datum/intent/unarmed/shove
 	name = "shove"

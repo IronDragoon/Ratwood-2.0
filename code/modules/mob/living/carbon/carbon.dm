@@ -667,10 +667,7 @@
 			if(message)
 				visible_message("<span class='danger'>[vomitrelay] throws up all over [parent]!</span>", \
 								"<span class='danger'>I puke all over [parent]!</span>")
-				SEND_SIGNAL(parent, COMSIG_ADD_MOOD_EVENT, "vomitother", /datum/mood_event/vomitother)
 				parent.add_stress(/datum/stressevent/vomitother)
-
-				SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "vomitedonother", /datum/mood_event/vomitedonother)
 				src.add_stress(/datum/stressevent/vomitedonother)
 			distance = 0
 		else if(is_mouth_covered()) //make this add a blood/vomit overlay later it'll be hilarious

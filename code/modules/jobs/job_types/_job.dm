@@ -169,10 +169,6 @@
 	var/class_setup_examine = TRUE
 
 
-	///Whether this class can be clicked on for details.
-	var/class_setup_examine = TRUE
-
-
 
 /datum/job/proc/special_job_check(mob/dead/new_player/player)
 	return TRUE
@@ -215,7 +211,7 @@
 	if(spells && H.mind)
 		for(var/S in spells)
 			H.mind.AddSpell(new S)
-			
+
 	if(length(job_stats))
 		for(var/stat in job_stats)
 			H.change_stat(stat, job_stats[stat])
@@ -278,7 +274,7 @@
 
 	if(islist(advclass_cat_rolls))
 		hugboxify_for_class_selection(H)
-	
+
 	log_admin("[H.key]/([H.real_name]) has joined as [H.mind.assigned_role].")
 
 /client/verb/set_mugshot()

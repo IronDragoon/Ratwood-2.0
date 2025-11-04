@@ -46,7 +46,7 @@
 	var/accessory = "None"
 	var/detail = "None"
 	var/marking = "None"
-	
+
 	var/shavelevel = 0
 	var/breathe_tick = 0 // Used for gas mask delays.
 	var/socks = "Nude" //Which socks the player wants
@@ -121,7 +121,7 @@
 	var/erpprefs = null
 
 	var/list/img_gallery = list()
-	
+
 
 	var/nsfw_headshot_link = null
 
@@ -157,6 +157,7 @@
 	var/list/curses = list()
 	COOLDOWN_DECLARE(priest_announcement)
 	COOLDOWN_DECLARE(guildmaster_announcement) //This is not for priest but if you are looking for GUILDMASTER announcements it's here, more so convinence than anything.
+	COOLDOWN_DECLARE(crier_announcement)
 	COOLDOWN_DECLARE(priest_sermon)
 	COOLDOWN_DECLARE(priest_apostasy)
 	COOLDOWN_DECLARE(priest_excommunicate)
@@ -173,3 +174,8 @@
 	var/mob/living/carbon/human/hostage //What hostage we have
 
 	fovangle = FOV_DEFAULT
+
+	// adds a flag that if we were skeletonized not because we are super dead and rotted, our face can be shown
+	var/ritual_skeletonization = FALSE // ritualcircles.dm path of rituos, prevents the ritual target's name always being unknown ingame. used in human_helpers.dm if( !O || (HAS_TRAIT(src, TRAIT_DISFIGURED)) || !real_name || (O.skeletonized && !ritual_skeletonization && !mind?.has_antag_datum(/datum/antagonist/lich)))
+
+	var/already_converted_once = FALSE // ritualcircles.dm , used to make it so players can't switch around between inhumen gods to stack buffs with conversion rites

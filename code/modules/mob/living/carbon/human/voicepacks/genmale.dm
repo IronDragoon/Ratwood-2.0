@@ -95,7 +95,7 @@
 			if("attnwhistle")
 				used = 'sound/vo/attn.ogg'
 			if("clap")
-				used = list('sound/body/clap (1).ogg','sound/body/clap (2).ogg','sound/body/clap (3).ogg','sound/body/clap (4).ogg')
+				used = list('sound/vo/clap (1).ogg','sound/vo/clap (2).ogg','sound/vo/clap (3).ogg','sound/vo/clap (4).ogg')
 			if("psst")
 				used = 'sound/vo/psst.ogg'
 			if("meow")
@@ -160,5 +160,5 @@
 				used = 'sound/vo/sniff.ogg'
 			if("sneeze")
 				used = 'sound/vo/male/male_sneeze.ogg'
-			
+
 	return used

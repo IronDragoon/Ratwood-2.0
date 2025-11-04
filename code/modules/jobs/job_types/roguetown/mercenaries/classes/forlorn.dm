@@ -3,8 +3,8 @@
 	tutorial = "The Order of the Forlorn Hope, a holy order founded in the name of Noc and the banishment of the rot. Now it is riddled with the wounded, the veterans and the landless of the Vakran civil war. Take up the banner and fight again in the name of the Ten, or use the pretense of faith and zealotry to make ends meet by any means necessary."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = list(
-		/datum/species/lupian, 
-		/datum/species/anthromorph, 
+		/datum/species/lupian,
+		/datum/species/anthromorph,
 		/datum/species/vulpkanin
 	)
 	outfit = /datum/outfit/job/roguetown/mercenary/forlorn
@@ -76,8 +76,8 @@
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/shield/heater, SLOT_BACK_L)
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT)
 		if("crossbow")
-			H.equip_to_slot_or_del(new /obj/item/ammo_holder/quiver/bolts, SLOT_BELT_L) // This is super good so you only get ONE
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/sword/short/falchion, SLOT_BELT_R) // This is super good so you only get ONE
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolts, SLOT_BELT_L)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/sword/short/falchion, SLOT_BELT_R)
 			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow, SLOT_BACK_L)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT)
 

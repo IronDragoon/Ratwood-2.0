@@ -38,11 +38,11 @@
 
 /area/rogue/outdoors/beach/forest/north
 	name = "The Rotwood Coast - North"
-	threat_region = THREAT_REGION_NORTH_AZUREAN_COAST
+	threat_region = THREAT_REGION_AZUREAN_COAST
 
 /area/rogue/outdoors/beach/forest/south
 	name = "The Rotwood Coast - South"
-	threat_region = THREAT_REGION_SOUTH_AZUREAN_COAST
+	threat_region = THREAT_REGION_AZUREAN_COAST
 
 /area/rogue/under/cave/dukecourt
 	name = "Mad Duke's Manor"

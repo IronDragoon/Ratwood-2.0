@@ -182,8 +182,6 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/perfect_butcher_results
 	var/list/inherent_spells = list()
 
-	var/list/inherent_spells = list()
-
 	///What distance should we be checking for interesting things when considering idling/deidling? Defaults to AI_DEFAULT_INTERESTING_DIST
 	var/interesting_dist = AI_DEFAULT_INTERESTING_DIST
 	///our current cell grid

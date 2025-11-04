@@ -72,7 +72,7 @@
 	buff = /datum/status_effect/buff/magicwillpower
 	tier = 2
 	blacklisted = FALSE
-	required_atoms = list(/obj/item/magic/obsidian = 2, /obj/item/magic/fae/cale = 1)
+	required_atoms = list(/obj/item/magic/obsidian = 2, /obj/item/magic/fae/scale = 1)
 
 /datum/runeritual/buff/lesserwillpower
 	name = "lesser vitalized willpower"

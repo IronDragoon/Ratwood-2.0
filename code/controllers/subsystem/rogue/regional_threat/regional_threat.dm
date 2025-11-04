@@ -18,7 +18,7 @@
 #define THREAT_REGION_ROCKHILL_BOG_SUNKMIRE "Rockhill Terrorbog Sunken Mire"
 #define THREAT_REGION_ROCKHILL_WOODS_NORTH "Rockhill Murderwood North"
 #define THREAT_REGION_ROCKHILL_WOODS_SOUTH "Rockhill Murderwood South"
-
+#define THREAT_REGION_ROCKHILL_OUTER_GROVE "Rockhill Outer Grove"
 #define LOWPOP_THRESHOLD 30 // When do we give highpop tick?
 // Subsystem meant to handle regional threat level
 
@@ -96,7 +96,7 @@ SUBSYSTEM_DEF(regionthreat)
 		new /datum/threat_region(
 			_region_name = THREAT_REGION_ROCKHILL_BOG_WEST,
 			_latent_ambush = DANGER_MODERATE_LIMIT,
-			_min_ambush = DANGER_SAFE_FLOOR, 
+			_min_ambush = DANGER_SAFE_FLOOR,
 			_max_ambush = DANGER_DIRE_LIMIT,
 			_fixed_ambush = FALSE,
 			_lowpop_tick = 1,
@@ -104,7 +104,7 @@ SUBSYSTEM_DEF(regionthreat)
 		new /datum/threat_region(
 			_region_name = THREAT_REGION_ROCKHILL_BOG_SOUTH,
 			_latent_ambush = DANGER_MODERATE_LIMIT,
-			_min_ambush = DANGER_SAFE_FLOOR, 
+			_min_ambush = DANGER_SAFE_FLOOR,
 			_max_ambush = DANGER_DIRE_LIMIT,
 			_fixed_ambush = FALSE,
 			_lowpop_tick = 1,
@@ -112,7 +112,7 @@ SUBSYSTEM_DEF(regionthreat)
 		new /datum/threat_region(
 			_region_name = THREAT_REGION_ROCKHILL_BOG_SUNKMIRE,
 			_latent_ambush = DANGER_DIRE_LIMIT,
-			_min_ambush = DANGER_SAFE_FLOOR, 
+			_min_ambush = DANGER_SAFE_FLOOR,
 			_max_ambush = DANGER_DIRE_LIMIT,
 			_fixed_ambush = FALSE,
 			_lowpop_tick = 1,
@@ -133,8 +133,8 @@ SUBSYSTEM_DEF(regionthreat)
 			_fixed_ambush = FALSE,
 			_lowpop_tick = 1,
 			_highpop_tick = 1),
-		
-		
+
+
 	)
 
 /datum/controller/subsystem/regionthreat/fire(resumed)

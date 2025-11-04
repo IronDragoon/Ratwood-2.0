@@ -35,9 +35,9 @@
 	STALUC = 15
 	loot = list(/obj/effect/temp_visual/lich_dying)
 	projectiletype = /obj/projectile/magic
-	var/allowed_projectile_types = list(/obj/projectile/magic/lightning, 
+	var/allowed_projectile_types = list(/obj/projectile/magic/lightning,
 	/obj/projectile/magic/sickness,
-	/obj/projectile/magic/arcane_barrage, 
+	/obj/projectile/magic/arcane_barrage,
 	/obj/projectile/magic/acidsplash,
 	/obj/projectile/magic/aoe/fireball/spitfire)
 	patron = /datum/patron/inhumen/zizo
@@ -364,7 +364,7 @@
 	H.adjust_skillrank_up_to(/datum/skill/craft/carpentry, 1, TRUE)
 	H.adjust_skillrank_up_to(/datum/skill/craft/masonry, 1, TRUE)
 	H.adjust_skillrank_up_to(/datum/skill/craft/crafting, 1, TRUE)
-	H.adjust_skillrank_up_to(/datum/skill/misc/sewing, 1, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/craft/sewing, 1, TRUE)
 
 	H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
 	H.adjust_skillrank_up_to(/datum/skill/combat/maces, 3, TRUE)

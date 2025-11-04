@@ -101,14 +101,13 @@
 	allowed_race = NON_DWARVEN_RACE_TYPES
 
 //Gronn
-/obj/item/clothing/under/roguetown/trou/nomadpants
+/obj/item/clothing/under/roguetown/heavy_leather_pants/nomadpants
 	name = "nomad pants"
 	desc = "Tight fitting leather pants worn under clothing of the steppes."
 	icon_state = "nomadpants"
 	max_integrity = ARMOR_INT_LEG_HARDLEATHER
-	armor = ARMOR_PANTS_LEATHER
-	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT)
-	salvage_result = /obj/item/natural/hide/cured
+	armor = ARMOR_LEATHER
+
 /obj/item/clothing/under/roguetown/heavy_leather_pants/kazengun //no, not 'eastpants3', silly!
 	name = "gambeson trousers"
 	desc = "A form of Kazengunite peasant's trousers. The fabric used in their manufacture is strong, and could probably turn away a few blows."

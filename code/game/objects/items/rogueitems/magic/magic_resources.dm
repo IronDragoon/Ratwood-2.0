@@ -149,7 +149,7 @@
 	. = ..()
 	. += span_notice("It can be used to heal Fae summons.")
 
-/obj/item/magic/fairydust	//T1 mage summon loot
+/obj/item/magic/fae/dust	//T1 mage summon loot
     name = "fairy dust"
     icon_state = "fairy_dust"
     desc = "A glittering powder from a fae sprite."

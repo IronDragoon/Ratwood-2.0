@@ -905,7 +905,7 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
-			for(var/mob/living/carbon/human/persononrune in onrune) 
+			for(var/mob/living/carbon/human/persononrune in onrune)
 				if(persononrune.stat == DEAD)
 					folksonrune += persononrune
 			var/target = input(user, "Choose a supplicant") as null|anything in folksonrune
@@ -1230,7 +1230,7 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 	backr = /obj/item/rogueweapon/sword/long/zizo
 	neck = /obj/item/clothing/neck/roguetown/bevor
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/mending/lesser)
-	
+
 
 /obj/structure/ritualcircle/zizo/proc/rituosbone(mob/living/carbon/human/target)
 	if(!target || QDELETED(target) || target.loc != loc)
@@ -1242,7 +1242,7 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 	if (target.mob_biotypes & MOB_UNDEAD)
 		loc.visible_message(span_cult("YOU HAVE NO MORE LYFE TO GIVE, FOR YOUR HEART DOES NOT BEAT!"))
 		return
-	if (target.mind?.has_antag_datum(/datum/antagonist/vampire/lesser))
+	if (target.mind?.has_antag_datum(/datum/antagonist/vampire))
 		loc.visible_message(span_cult("YOU HAVE NO MORE LYFE TO GIVE, FOR YOUR HEART DOES NOT BEAT, CHILDE OF KAIN!"))
 		return
 	if (target.mind?.has_antag_datum(/datum/antagonist/werewolf/lesser))
@@ -1565,7 +1565,7 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
 	backr = /obj/item/rogueweapon/flail/peasantwarflail/matthios
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/mending/lesser)
-	
+
 /obj/structure/ritualcircle/matthios/proc/matthiosconversion(mob/living/carbon/human/target)
 	if(!target || QDELETED(target) || target.loc != loc)
 		to_chat(usr, "Selected target is not on the rune! [target.p_they(TRUE)] must be directly on top of the rune to receive Matthios' blessing.")

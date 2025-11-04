@@ -205,35 +205,6 @@
 	smeltresult = /obj/item/roguegem/diamond
 	sellprice = 230
 
-/obj/item/clothing/ring/dragon_ring
-	name = "Dragon Ring"
-	icon_state = "dragonring"
-	desc = "Carrying the likeness of a dragon, this glorious ring hums with a subtle energy."
-	sellprice = 666
-	var/active_item
-
-/obj/item/clothing/ring/dragon_ring/equipped(mob/living/user, slot)
-	. = ..()
-	if(active_item)
-		return
-	else if(slot == SLOT_RING)
-		active_item = TRUE
-		to_chat(user, span_notice("Here be dragons."))
-		user.change_stat(STATKEY_STR, 2)
-		user.change_stat(STATKEY_CON, 2)
-		user.change_stat(STATKEY_WIL, 2)
-	return
-
-/obj/item/clothing/ring/dragon_ring/dropped(mob/living/user)
-	..()
-	if(active_item)
-		to_chat(user, span_notice("Gone is thy hoard."))
-		user.change_stat(STATKEY_STR, -2)
-		user.change_stat(STATKEY_CON, -2)
-		user.change_stat(STATKEY_WIL, -2)
-		active_item = FALSE
-	return
-
 /obj/item/clothing/ring/duelist
 	name = "duelist's ring"
 	desc = "Born out of duelists desire for theatrics, this ring denotes a proposal — an honorable duel, with stakes set ahigh.\nIf both duelists wear this ring, successful baits will off balance them, and clashing disarms will never be unlikely.\n<i>'You shall know his name. You shall know his purpose. You shall die.'</i>"

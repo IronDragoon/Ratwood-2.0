@@ -269,7 +269,7 @@ SUBSYSTEM_DEF(treasury)
 	bank_accounts -= person
 	return TRUE
 
-/// Boilerplate that sets taxes and announces it to the world. Only changed taxes are announced. 
+/// Boilerplate that sets taxes and announces it to the world. Only changed taxes are announced.
 /datum/controller/subsystem/treasury/proc/set_taxes(list/categories, good_announcement_text, bad_announcement_text)
 	var/final_text = null
 	var/bad_guy = FALSE // If any fine exemptions are removed or tax is increased, uses an alternative message
@@ -286,7 +286,7 @@ SUBSYSTEM_DEF(treasury)
 
 	if(isnull(final_text))
 		return
-	
+
 	var/final_announcement_text = good_announcement_text
 	if(bad_guy)
 		final_announcement_text = bad_announcement_text

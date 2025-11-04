@@ -104,11 +104,6 @@
 			if(W && W.is_open)
 				CloseWings()
 
-/mob/living/carbon/human/Process_Spacemove(movement_dir = 0) //Temporary laziness thing. Will change to handles by species reee.
-	if(dna.species.space_move(src))
-		return TRUE
-	return ..()
-
 // ===== MOUNTING PONIES =====
 
 /mob/living/carbon/human/buckle_mob(mob/living/M, force = FALSE, check_loc = TRUE)

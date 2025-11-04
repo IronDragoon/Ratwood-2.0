@@ -78,7 +78,6 @@ SUBSYSTEM_DEF(nightshift)
 	return
 
 /mob/living/carbon/human/update_tod(todd)
-	progress_cycles()
 	if(client)
 		var/area/areal = get_area(src)
 		if(!cmode)
@@ -113,3 +112,10 @@ SUBSYSTEM_DEF(nightshift)
 		triumphs_to_add++
 	adjust_triumphs(triumphs_to_add)
 	to_chat(src, span_danger("Nights Survived: \Roman[allmig_reward]"))
+
+/mob/living/carbon/human
+	var/survived_cycles = 0
+
+/mob/living/carbon/human/proc/progress_cycles()
+	survived_cycles++
+	GLOB.carebox.human_cycle_progress(src)

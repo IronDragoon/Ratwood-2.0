@@ -240,3 +240,9 @@
 	body_parts_inherent = FULL_BODY
 	max_integrity = ARMOR_INT_SIDE_ANTAG
 	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT, BCLASS_TWIST, BCLASS_PEEL, BCLASS_PIERCE, BCLASS_CHOP, BCLASS_LASHING, BCLASS_STAB)
+
+/obj/structure/vampire/necromanticbook // Used to summon undead to attack town/defend manor.
+	name = "Tome of Souls"
+	icon_state = "tome"
+	var/list/useoptions = list("Create Death Knight", "Steal the Sun")
+	var/sunstolen = FALSE

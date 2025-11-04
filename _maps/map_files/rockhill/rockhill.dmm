@@ -159,12 +159,12 @@
 	dir = 1
 	},
 /obj/machinery/gear_painter{
-	pixel_y = 7;
-	pixel_x = -11
+	pixel_x = -11;
+	pixel_y = 7
 	},
 /obj/item/roguebin/water/gross{
-	pixel_y = 7;
-	pixel_x = 11
+	pixel_x = 11;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/twig,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -205,8 +205,8 @@
 	},
 /obj/machinery/light/rogue/wallfire/candle/blue/l,
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_x = -4;
 	icon_state = "floorcandlee1";
+	pixel_x = -4;
 	pixel_y = 2
 	},
 /turf/open/floor/rogue/concrete,
@@ -445,8 +445,8 @@
 /area/rogue/outdoors/woodsrat/above)
 "ajl" = (
 /obj/structure/roguemachine/atm{
-	pixel_y = -32;
-	location_tag = "Keep Gatehouse"
+	location_tag = "Keep Gatehouse";
+	pixel_y = -32
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/manor/rockhill)
@@ -644,8 +644,8 @@
 "amX" = (
 /obj/structure/mineral_door/wood/red{
 	locked = 1;
-	name = "Absolver's Chambers";
-	lockid = "inquisition"
+	lockid = "inquisition";
+	name = "Absolver's Chambers"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/inq)
@@ -1135,8 +1135,8 @@
 /area/rogue/indoors/town/garrison)
 "awz" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - North";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - North"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/bograt/south)
@@ -1227,6 +1227,10 @@
 /obj/structure/fermentation_keg/water,
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/warden)
+"axe" = (
+/obj/structure/dungeon_entry/center,
+/turf/closed/mineral/random/rogue,
+/area/rogue/indoors/shelter/mountains)
 "axi" = (
 /obj/structure/mirror{
 	pixel_y = 28
@@ -1353,10 +1357,10 @@
 	dir = 1
 	},
 /obj/item/roguekey{
+	desc = "This old key opens the peddler for the hightown street shop.";
 	icon_state = "brownkey";
 	lockid = "street_shop01";
-	name = "Street Shop Key";
-	desc = "This old key opens the peddler for the hightown street shop."
+	name = "Street Shop Key"
 	},
 /obj/item/roguekey/courtphysician,
 /turf/open/floor/rogue/tile/tilerg,
@@ -1549,9 +1553,9 @@
 /area/rogue/indoors/inq)
 "aBU" = (
 /obj/structure/lever{
-	redstone_id = "smith_shutterbasement";
+	pixel_x = 8;
 	pixel_y = 25;
-	pixel_x = 8
+	redstone_id = "smith_shutterbasement"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors/town/dwarfin/rockhill)
@@ -1764,8 +1768,8 @@
 "aER" = (
 /obj/structure/bed/rogue/inn/wool{
 	dir = 8;
-	pixel_y = 2;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 2
 	},
 /obj/item/bedsheet/rogue/cloth{
 	dir = 1;
@@ -2173,8 +2177,7 @@
 /area/rogue/outdoors/town/rockhill)
 "aMO" = (
 /obj/structure/fluff/railing/fence{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -2413,8 +2416,8 @@
 "aQD" = (
 /obj/machinery/light/rogue/wallfire/candle/l,
 /obj/structure/bed/rogue/inn/wool{
-	pixel_y = 8;
-	dir = 8
+	dir = 8;
+	pixel_y = 8
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/church)
@@ -2732,18 +2735,18 @@
 "aVm" = (
 /obj/structure/stairs/stone,
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = -32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/greenstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "aVo" = (
 /obj/machinery/light/rogue/wallfire/candle/r,
@@ -2794,8 +2797,8 @@
 /area/rogue/indoors/town/warden)
 "aVP" = (
 /obj/structure/mirror{
-	pixel_y = 0;
-	pixel_x = 32
+	pixel_x = 32;
+	pixel_y = 0
 	},
 /obj/structure/chair/stool/rogue,
 /turf/open/floor/rogue/twig,
@@ -2888,20 +2891,20 @@
 "aXo" = (
 /obj/structure/rack/rogue/shelf,
 /obj/item/reagent_containers/glass/bowl{
-	pixel_y = 30;
-	pixel_x = -8
+	pixel_x = -8;
+	pixel_y = 30
 	},
 /obj/item/reagent_containers/glass/bowl{
-	pixel_y = 30;
-	pixel_x = -3
+	pixel_x = -3;
+	pixel_y = 30
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = 32;
-	pixel_x = 5
+	pixel_x = 5;
+	pixel_y = 32
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = 32;
-	pixel_x = 12
+	pixel_x = 12;
+	pixel_y = 32
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/warden)
@@ -3051,19 +3054,19 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "baW" = (
 /obj/effect/decal/cobbleedge{
 	dir = 6
 	},
 /obj/structure/roguemachine/atm{
-	pixel_y = -32;
-	location_tag = "Vanguard Fortress"
+	location_tag = "Vanguard Fortress";
+	pixel_y = -32
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/warden)
@@ -3242,8 +3245,8 @@
 	icon_state = "largetable"
 	},
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 23;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 23
 	},
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/town/manor/rockhill)
@@ -3335,11 +3338,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "bfZ" = (
 /turf/closed/wall/mineral/rogue/wooddark,
@@ -3391,10 +3394,10 @@
 /area/rogue/indoors)
 "bgM" = (
 /obj/item/roguekey{
+	desc = "this key opens the chief and shaman's  doors in the old goblin encampment";
 	icon_state = "cheesekey";
 	lockid = "gobbo_chief";
-	name = "fancy goblin key";
-	desc = "this key opens the chief and shaman's  doors in the old goblin encampment"
+	name = "fancy goblin key"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/town/basement{
@@ -3416,8 +3419,8 @@
 /area/rogue/indoors/town/church/chapel)
 "bhe" = (
 /obj/effect/decal/carpet/square/black{
-	pixel_y = 20;
-	pixel_x = 16
+	pixel_x = 16;
+	pixel_y = 20
 	},
 /turf/open/floor/rogue/ruinedwood/chevron,
 /area/rogue/indoors/town/church/chapel)
@@ -3482,8 +3485,8 @@
 /area/rogue/indoors/town/tavern)
 "bim" = (
 /mob/living/carbon/human/species/goblin/npc/ambush/hell{
-	icon_state = "goblin_hell";
-	faction = list("infernal","neutral")
+	faction = list("infernal","neutral");
+	icon_state = "goblin_hell"
 	},
 /obj/structure/fluff/walldeco/chains,
 /turf/open/floor/rogue/metal/barograte,
@@ -3660,8 +3663,8 @@
 	},
 /obj/structure/table/wood/poor,
 /obj/item/millstone{
-	pixel_y = 7;
-	pixel_x = 3
+	pixel_x = 3;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/twig,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -3833,8 +3836,8 @@
 	pixel_y = 32
 	},
 /obj/item/candle/gold/lit{
-	pixel_y = 6;
-	pixel_x = -5
+	pixel_x = -5;
+	pixel_y = 6
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/manor/rockhill)
@@ -3877,8 +3880,8 @@
 /area/rogue/outdoors/beach/harbor)
 "boP" = (
 /obj/structure/fluff/customsign{
-	name = "EVIL ASS LAVA  DUNGEON - UNDER CONSTRUCTION!!";
 	icon_state = "signwrote";
+	name = "EVIL ASS LAVA  DUNGEON - UNDER CONSTRUCTION!!";
 	pixel_y = 3
 	},
 /turf/open/floor/rogue/naturalstone,
@@ -3894,11 +3897,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "bpt" = (
 /turf/open/floor/rogue/ruinedwood{
@@ -3981,8 +3984,8 @@
 /obj/structure/table/wood,
 /obj/item/roguegear/bronze,
 /obj/item/roguegear/bronze{
-	pixel_y = 9;
-	pixel_x = -7
+	pixel_x = -7;
+	pixel_y = 9
 	},
 /turf/open/floor/rogue/tile/brownbrick,
 /area/rogue/indoors/town/manor/rockhill)
@@ -4037,8 +4040,8 @@
 "brW" = (
 /obj/structure/table/wood,
 /obj/item/natural/feather{
-	pixel_y = 11;
-	pixel_x = -4
+	pixel_x = -4;
+	pixel_y = 11
 	},
 /obj/item/paper,
 /obj/item/paper,
@@ -4053,18 +4056,18 @@
 /area/rogue/indoors/town/manor/rockhill)
 "bsh" = (
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = -32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "bst" = (
 /obj/structure/fluff/railing/border{
@@ -4296,8 +4299,8 @@
 "bwm" = (
 /obj/structure/table/vtable/v2,
 /obj/item/trash/candle{
-	pixel_y = 11;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = 11
 	},
 /obj/machinery/light/rogue/wallfire/candle/blue,
 /obj/item/clothing/neck/roguetown/psicross/malum,
@@ -4366,11 +4369,11 @@
 	pixel_y = 2
 	},
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -4555,8 +4558,7 @@
 /area/rogue/indoors/town/manor/rockhill)
 "bzP" = (
 /obj/structure/fluff/railing/border{
-	dir = 6;
-	icon_state = "border"
+	dir = 6
 	},
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/indoors/town)
@@ -4764,8 +4766,8 @@
 /area/rogue/indoors/shelter/druidgrove)
 "bDA" = (
 /obj/structure/pillory{
-	pixel_y = 2;
-	lockid = list("nightmaiden")
+	lockid = list("nightmaiden");
+	pixel_y = 2
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/indoors/town/bath)
@@ -4962,11 +4964,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "bGW" = (
 /obj/structure/fluff/railing/wood{
@@ -5012,11 +5014,11 @@
 /area/rogue/indoors/town/tavern)
 "bHA" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/indoors/shelter/druidgrove)
@@ -5228,13 +5230,6 @@
 	icon_state = "vertw"
 	},
 /area/rogue/indoors/town)
-"bLx" = (
-/obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 6
-	},
-/turf/open/floor/rogue/ruinedwood/spiral,
-/area/rogue/indoors/town/manor/rockhill)
 "bLU" = (
 /turf/open/water/river{
 	dir = 4;
@@ -5293,13 +5288,11 @@
 "bMY" = (
 /obj/item/reagent_containers/lux,
 /obj/structure/closet/crate/chest{
-	lockid = "physician";
-	locked = 1
+	locked = 1;
+	lockid = "physician"
 	},
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/physician)
@@ -5642,10 +5635,10 @@
 /obj/item/clothing/shoes/roguetown/boots,
 /obj/item/clothing/shoes/roguetown/boots,
 /obj/machinery/light/rogue/wallfire/candle/floorcandle/pink{
-	plane = -7;
-	pixel_y = 4;
+	desc = "These candles produces a heady vapor, warding away the less pleasing scents of the sewer.";
 	name = "scented candles";
-	desc = "These candles produces a heady vapor, warding away the less pleasing scents of the sewer."
+	pixel_y = 4;
+	plane = -7
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/under/town/sewer)
@@ -5694,11 +5687,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "bRO" = (
 /obj/structure/stairs{
@@ -5775,9 +5768,7 @@
 /turf/open/floor/rogue/greenstone,
 /area/rogue/indoors/town/magician)
 "bTg" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/railing/wood{
 	dir = 4;
 	pixel_x = 6
@@ -6149,11 +6140,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "bZZ" = (
 /obj/effect/wisp/prestidigitation,
@@ -6207,6 +6198,12 @@
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/woodsrat/south)
+"caU" = (
+/obj/machinery/light/rogue/firebowl/standing/blue,
+/turf/open/floor/rogue/snowrough,
+/area/rogue/outdoors/mountains/decap{
+	first_time_text = "Somewhere High"
+	})
 "caV" = (
 /obj/structure/mineral_door/wood{
 	locked = 1;
@@ -6219,11 +6216,11 @@
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "cbg" = (
 /turf/closed/wall/mineral/rogue/roofwall/middle{
@@ -6262,9 +6259,9 @@
 /area/rogue/indoors/town/warden)
 "cbI" = (
 /obj/structure/mineral_door/wood{
+	icon_state = "wcr";
 	locked = 1;
-	lockid = "manor";
-	icon_state = "wcr"
+	lockid = "manor"
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/manor/rockhill)
@@ -6395,12 +6392,12 @@
 "cem" = (
 /obj/machinery/light/rogue/firebowl,
 /obj/item/roguekey{
+	desc = "this key opens basic doors in the old goblin encampment";
 	icon_state = "brownkey";
 	lockid = "gobbo";
 	name = "goblin key";
 	pixel_x = -7;
-	pixel_y = 4;
-	desc = "this key opens basic doors in the old goblin encampment"
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/metal,
 /area/rogue/under/town/basement{
@@ -6758,8 +6755,8 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/minotaur{
 	icon = 'icons/roguetown/mob/monster/cow.dmi';
 	icon_state = "cow";
-	pixel_x = 0;
-	name = "Odd Cow"
+	name = "Odd Cow";
+	pixel_x = 0
 	},
 /obj/effect/decal/cleanable/blood/splatter,
 /turf/open/floor/rogue/greenstone/runed,
@@ -6803,8 +6800,8 @@
 /area/rogue/indoors/shelter/mountains)
 "clI" = (
 /obj/structure/mineral_door/wood/red{
-	lockid = "inquisition";
 	locked = 1;
+	lockid = "inquisition";
 	name = "Pantry"
 	},
 /turf/open/floor/rogue/concrete,
@@ -7147,8 +7144,8 @@
 "crL" = (
 /obj/structure/closet/crate/chest{
 	lockid = "warden";
-	pixel_y = 7;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 7
 	},
 /obj/item/clothing/cloak/stabard/bog,
 /obj/item/clothing/cloak/stabard/bog,
@@ -7253,9 +7250,7 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town)
 "ctl" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cave)
 "cto" = (
@@ -7295,8 +7290,8 @@
 /area/rogue/indoors/inq)
 "ctX" = (
 /obj/machinery/light/rogue/wallfire/candle/l{
-	pixel_y = -32;
-	pixel_x = 0
+	pixel_x = 0;
+	pixel_y = -32
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/dwarfin/rockhill)
@@ -7332,11 +7327,11 @@
 /area/rogue/outdoors/bograt/north)
 "cuV" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -7410,9 +7405,7 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/outdoors/town/rockhill)
 "cwg" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors)
 "cwh" = (
@@ -8023,11 +8016,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "cFr" = (
 /obj/structure/closet/crate/drawer{
@@ -8198,11 +8191,11 @@
 "cHV" = (
 /obj/structure/chair/bench/church/smallbench,
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/cave/dungeon1)
@@ -8374,9 +8367,9 @@
 /area/rogue/indoors/inq)
 "cKx" = (
 /obj/structure/toilet{
+	desc = "A man's throne is his throne";
 	icon_state = "0,2";
-	name = "Very Fancy Toilet";
-	desc = "A man's throne is his throne"
+	name = "Very Fancy Toilet"
 	},
 /obj/structure/fluff/railing/border{
 	pixel_y = -8
@@ -8585,8 +8578,8 @@
 	},
 /turf/closed/wall/mineral/rogue/roofwall/outercorner{
 	dir = 8;
-	name = "reinforced roofing";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roofing"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "cNQ" = (
@@ -8839,10 +8832,10 @@
 /area/rogue/indoors/town/bath)
 "cRd" = (
 /obj/structure/mineral_door/wood/donjon{
+	dir = 8;
 	locked = 1;
 	lockid = "merc";
-	name = "Mercenary's Den";
-	dir = 8
+	name = "Mercenary's Den"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors)
@@ -9018,10 +9011,10 @@
 	dir = 8
 	},
 /obj/structure/curtain/magenta{
-	icon_state = "curtain-closed";
-	open = 0;
 	color = "#a1254a";
-	opacity = 1
+	icon_state = "curtain-closed";
+	opacity = 1;
+	open = 0
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/bath)
@@ -9159,6 +9152,12 @@
 /obj/item/natural/bundle/stick,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors)
+"cWK" = (
+/obj/machinery/light/rogue/firebowl/standing/blue,
+/turf/open/floor/rogue/snowpatchy,
+/area/rogue/outdoors/mountains/decap{
+	first_time_text = "Somewhere High"
+	})
 "cWN" = (
 /obj/structure/stairs/stone{
 	dir = 1
@@ -9530,9 +9529,9 @@
 	},
 /obj/item/candle/gold/lit,
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom2";
-	name = "Manor Guestroom II Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom II Key"
 	},
 /turf/open/floor/rogue/tile/masonic/inverted,
 /area/rogue/indoors/town/manor/rockhill)
@@ -9639,11 +9638,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "dfk" = (
 /obj/structure/flora/roguegrass,
@@ -9738,17 +9737,17 @@
 /area/rogue/outdoors/town/roofs)
 "dgG" = (
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
-	pixel_y = -32
+	pixel_y = -32;
+	status = 1
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "dgM" = (
 /obj/structure/closet/crate/chest,
@@ -9882,9 +9881,7 @@
 /area/rogue/under/cavewet/wizarddungeon)
 "djK" = (
 /obj/structure/stairs{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/outdoors/bograt/above)
@@ -10030,9 +10027,7 @@
 /area/rogue/indoors/town/manor/rockhill)
 "dlQ" = (
 /obj/structure/stairs{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/rogue/ruinedwood/chevron,
 /area/rogue/indoors)
@@ -10226,8 +10221,8 @@
 /area/rogue/outdoors/town/rockhill)
 "dpA" = (
 /obj/structure/table/wood{
-	icon_state = "tablewood1";
-	dir = 1
+	dir = 1;
+	icon_state = "tablewood1"
 	},
 /obj/item/storage/belt/rogue/pouch,
 /obj/machinery/light/roguestreet/orange/walllamp,
@@ -10407,8 +10402,8 @@
 /area/rogue/outdoors/bograt/above)
 "dss" = (
 /obj/machinery/light/rogue/wallfire/candle/l{
-	pixel_y = -32;
-	pixel_x = 0
+	pixel_x = 0;
+	pixel_y = -32
 	},
 /obj/structure/chair/wood{
 	dir = 4;
@@ -10505,11 +10500,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "dum" = (
 /obj/structure/fluff/walldeco/chains,
@@ -10706,10 +10701,10 @@
 /area/rogue/indoors/town/manor/rockhill)
 "dxC" = (
 /obj/effect/landmark/mapGenerator/rogue/roguetownfield{
-	endTurfY = 400;
 	endTurfX = 255;
-	startTurfY = 150;
-	startTurfX = 45
+	endTurfY = 400;
+	startTurfX = 45;
+	startTurfY = 150
 	},
 /turf/closed/mineral/rogue/bedrock,
 /area/rogue/under/cavewet)
@@ -10777,11 +10772,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "dyN" = (
 /obj/structure/flora/ausbushes/lavendergrass,
@@ -10950,9 +10945,9 @@
 "dAY" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ff370f";
-	name = "Odd Wisp";
 	desc = "A peculiar natural phenomena, seemingly related to the roiling lava below";
-	light_color = "#ff5630"
+	light_color = "#ff5630";
+	name = "Odd Wisp"
 	},
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/woodsrat/north)
@@ -11016,8 +11011,8 @@
 "dBS" = (
 /obj/structure/mineral_door/wood/red{
 	locked = 1;
-	name = "Storage";
-	lockid = "inquisition"
+	lockid = "inquisition";
+	name = "Storage"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/inq)
@@ -11036,11 +11031,11 @@
 /area/rogue/indoors/inq)
 "dCl" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/grassyel,
 /area/rogue/indoors/shelter/druidgrove)
@@ -11090,8 +11085,8 @@
 	pixel_x = -32
 	},
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	pixel_y = -32;
-	pixel_x = -32
+	pixel_x = -32;
+	pixel_y = -32
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/church)
@@ -11190,11 +11185,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "dEr" = (
 /turf/open/floor/rogue/herringbone,
@@ -11371,8 +11366,8 @@
 	},
 /turf/open/floor/rogue/churchrough,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "dHR" = (
 /obj/machinery/light/rogue/torchholder{
@@ -11380,15 +11375,15 @@
 	pixel_y = 30
 	},
 /obj/structure/fluff/customsign{
-	name = "WEST TO: ROCKHILL ORPHANAGE AND BOARDING SCHOOL";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "WEST TO: ROCKHILL ORPHANAGE AND BOARDING SCHOOL"
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/outdoors/town/rockhill)
 "dHW" = (
 /mob/living/carbon/human/species/goblin/npc/ambush/hell{
-	icon_state = "goblin_hell";
-	faction = list("infernal","neutral")
+	faction = list("infernal","neutral");
+	icon_state = "goblin_hell"
 	},
 /turf/open/floor/rogue/metal/barograte,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -11536,11 +11531,11 @@
 /area/rogue/outdoors/bograt/above)
 "dJN" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/water/swamp,
 /area/rogue/outdoors/bograt/sunken)
@@ -11636,15 +11631,15 @@
 "dLF" = (
 /obj/structure/lever/wall{
 	dir = 8;
-	redstone_id = "fireexperiment2";
 	name = "Unlabelled lever";
-	pixel_y = -9
+	pixel_y = -9;
+	redstone_id = "fireexperiment2"
 	},
 /obj/structure/lever/wall{
 	dir = 8;
-	redstone_id = "firepreentry";
 	name = "Unlabelled lever";
-	pixel_y = 8
+	pixel_y = 8;
+	redstone_id = "firepreentry"
 	},
 /turf/open/floor/rogue/greenstone,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -11773,11 +11768,11 @@
 	dir = 8
 	},
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -11873,9 +11868,9 @@
 "dPB" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp,
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = -32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/greenstone,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -11954,9 +11949,9 @@
 	dir = 10
 	},
 /obj/structure/bars/passage{
-	redstone_id = "gatesidepassage";
+	density = 0;
 	icon_state = "passage1";
-	density = 0
+	redstone_id = "gatesidepassage"
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/manor/rockhill)
@@ -12003,8 +11998,8 @@
 /area/rogue/indoors/town/church/chapel)
 "dRg" = (
 /obj/structure/roguemachine/atm{
-	pixel_y = 0;
-	location_tag = "Merchant"
+	location_tag = "Merchant";
+	pixel_y = 0
 	},
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/indoors/town/shop)
@@ -12118,8 +12113,8 @@
 /area/rogue/under/town/sewer)
 "dSz" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 6
+	dir = 6;
+	icon_state = "largetable"
 	},
 /obj/item/paper,
 /obj/item/natural/feather{
@@ -12154,11 +12149,11 @@
 /turf/open/floor/rogue/blocks/green,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "dSY" = (
 /obj/structure/fluff/railing/wood{
@@ -12180,8 +12175,8 @@
 	},
 /turf/closed/wall/mineral/rogue/roofwall/middle{
 	dir = 8;
-	name = "reinforced roofing";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roofing"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "dTK" = (
@@ -12217,8 +12212,8 @@
 "dUh" = (
 /obj/structure/bell_common{
 	dir = 8;
-	pixel_y = 20;
-	pixel_x = 10
+	pixel_x = 10;
+	pixel_y = 20
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/physician)
@@ -12247,9 +12242,9 @@
 /obj/machinery/light/rogue/wallfire/candle/r,
 /obj/structure/lever/wall{
 	dir = 4;
+	layer = 4;
 	name = "Not Forgiven";
-	redstone_id = "gates_confessinal";
-	layer = 4
+	redstone_id = "gates_confessinal"
 	},
 /turf/open/floor/rogue/ruinedwood/chevron,
 /area/rogue/indoors/town/church)
@@ -12344,11 +12339,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "dWk" = (
 /obj/structure/fluff/railing/border/east,
@@ -12401,10 +12396,10 @@
 /area/rogue/indoors/town/tavern)
 "dWP" = (
 /obj/structure/mineral_door/wood/donjon{
+	dir = 1;
 	locked = 1;
 	lockid = "walls";
-	name = "Gatehouse";
-	dir = 1
+	name = "Gatehouse"
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town)
@@ -12559,8 +12554,8 @@
 	icon_state = "churchtable_alt"
 	},
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 17;
-	pixel_x = -11
+	pixel_x = -11;
+	pixel_y = 17
 	},
 /obj/item/roguecoin/silver,
 /turf/open/floor/rogue/churchmarble,
@@ -12645,10 +12640,10 @@
 /area/rogue/indoors/town/manor/rockhill)
 "eaF" = (
 /obj/item/roguekey{
+	desc = "this key opens the chief and shaman's  doors in the old goblin encampment";
 	icon_state = "cheesekey";
 	lockid = "gobbo_chief";
-	name = "fancy goblin key";
-	desc = "this key opens the chief and shaman's  doors in the old goblin encampment"
+	name = "fancy goblin key"
 	},
 /turf/open/floor/rogue/blocks/stonered,
 /area/rogue/under/town/basement{
@@ -12704,8 +12699,8 @@
 	keylock = 1;
 	locked = 1;
 	lockid = "nightman";
-	pixel_x = 3;
-	name = "Stash"
+	name = "Stash";
+	pixel_x = 3
 	},
 /obj/item/reagent_containers/glass/bottle/rogue/wine,
 /obj/item/reagent_containers/glass/bottle/rogue/wine,
@@ -12715,8 +12710,8 @@
 /obj/item/roguekey/nightman,
 /turf/open/floor/carpet/purple,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "ebi" = (
 /obj/structure/closet/dirthole/closed,
@@ -12954,8 +12949,8 @@
 /area/rogue/indoors/town/bath)
 "eeq" = (
 /obj/structure/mineral_door/wood/red{
-	lockid = "inquisition";
 	locked = 1;
+	lockid = "inquisition";
 	name = "Storage"
 	},
 /turf/open/floor/rogue/herringbone,
@@ -13085,8 +13080,8 @@
 /obj/item/book/rogue/law,
 /obj/structure/roguemachine/mail{
 	mailtag = "Mercenary's Guild";
-	pixel_y = 0;
-	pixel_x = -32
+	pixel_x = -32;
+	pixel_y = 0
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors)
@@ -13195,13 +13190,13 @@
 "ehY" = (
 /obj/structure/lever/wall{
 	dir = 8;
-	redstone_id = "gate_churchcell";
-	pixel_y = -7
+	pixel_y = -7;
+	redstone_id = "gate_churchcell"
 	},
 /obj/structure/lever/wall{
 	dir = 8;
-	redstone_id = "window_churchcell";
-	pixel_y = 9
+	pixel_y = 9;
+	redstone_id = "window_churchcell"
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/town/church)
@@ -13317,11 +13312,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "ekt" = (
 /obj/structure/flora/roguegrass,
@@ -13550,9 +13545,9 @@
 /area/rogue/indoors/town/manor/rockhill)
 "enF" = (
 /obj/structure/roguemachine/atm{
+	location_tag = "Throneroom";
 	pixel_x = 32;
-	pixel_y = 0;
-	location_tag = "Throneroom"
+	pixel_y = 0
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
@@ -13565,10 +13560,10 @@
 "enW" = (
 /obj/structure/roguemachine/bounty,
 /obj/machinery/light/rogue/wallfire/candle/floorcandle/pink{
-	plane = -7;
-	pixel_y = 4;
+	desc = "These candles produces a heady vapor, warding away the less pleasing scents of the sewer.";
 	name = "scented candles";
-	desc = "These candles produces a heady vapor, warding away the less pleasing scents of the sewer."
+	pixel_y = 4;
+	plane = -7
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/town/sewer)
@@ -13592,9 +13587,9 @@
 /area/rogue/outdoors/town/roofs)
 "eoi" = (
 /obj/structure/mineral_door/wood/red{
+	locked = 1;
 	lockid = "farm";
-	name = "Butcher";
-	locked = 1
+	name = "Butcher"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
@@ -13919,17 +13914,17 @@
 	})
 "euF" = (
 /obj/structure/lever{
-	redstone_id = "WatcherRoom";
-	pixel_y = 17
+	pixel_y = 17;
+	redstone_id = "WatcherRoom"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "euG" = (
 /obj/structure/flora/newtree,
@@ -13947,11 +13942,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "euX" = (
 /obj/structure/chair/stool/rogue,
@@ -13964,8 +13959,7 @@
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
-	dir = 8;
-	icon_state = "border"
+	dir = 8
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/inq)
@@ -14000,8 +13994,8 @@
 "evD" = (
 /turf/open/floor/carpet/purple,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "evK" = (
 /obj/machinery/light/rogue/wallfire/candle/blue/l,
@@ -14068,11 +14062,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "exk" = (
 /obj/item/roguebin/water/gross,
@@ -14121,11 +14115,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "eyf" = (
 /turf/open/floor/rogue/cobble,
@@ -14466,11 +14460,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "eDh" = (
 /obj/structure/stairs{
@@ -14552,8 +14546,8 @@
 	pixel_y = 2
 	},
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 7;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/blocks/stonered,
 /area/rogue/indoors/town/manor/rockhill)
@@ -14662,9 +14656,7 @@
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/town/rockhill)
 "eGd" = (
-/obj/machinery/light/rogue/firebowl/standing/green{
-	icon_state = "standingg1"
-	},
+/obj/machinery/light/rogue/firebowl/standing/green,
 /turf/open/floor/rogue/volcanic,
 /area/rogue/indoors/town/magician)
 "eGj" = (
@@ -14721,10 +14713,10 @@
 "eGZ" = (
 /obj/structure/table/wood/poor,
 /obj/item/roguekey{
+	desc = "This old key opens the peddler for the local lowtown eatery.";
 	icon_state = "brownkey";
 	lockid = "foodshop";
-	name = "Food Shop Peddler Key";
-	desc = "This old key opens the peddler for the local lowtown eatery."
+	name = "Food Shop Peddler Key"
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors)
@@ -14832,10 +14824,10 @@
 	},
 /obj/structure/fluff/customsign{
 	desc = "Follow the road";
+	icon_state = "signwrote";
 	name = "Whitevein - Down Below!";
 	pixel_x = 7;
-	pixel_y = 10;
-	icon_state = "signwrote"
+	pixel_y = 10
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/town/rockhill)
@@ -14892,9 +14884,9 @@
 "eJu" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp,
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = 32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/volcanic{
 	desc = "Silky and sharp-smooth, like cracked glass"
@@ -15112,8 +15104,7 @@
 "eMX" = (
 /obj/structure/bookcase/random/adult,
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	icon_state = "border"
+	dir = 4
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/church)
@@ -15167,8 +15158,8 @@
 /area/rogue/under/cavewet)
 "eOv" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - North";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - North"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/bograt/safe)
@@ -15247,8 +15238,8 @@
 /obj/structure/table/wood,
 /obj/structure/table/wood/poor,
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 12;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = 12
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/manor/rockhill)
@@ -15581,8 +15572,8 @@
 	},
 /turf/closed/wall/mineral/rogue/roofwall/middle{
 	dir = 1;
-	name = "reinforced roofing";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roofing"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "eVP" = (
@@ -15699,9 +15690,7 @@
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/Academy)
 "eXk" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/walldeco/stone{
 	pixel_y = -32
 	},
@@ -15762,8 +15751,8 @@
 "eZm" = (
 /obj/structure/table/wood,
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 15;
-	pixel_x = -9
+	pixel_x = -9;
+	pixel_y = 15
 	},
 /turf/open/floor/rogue/carpet/lord/left,
 /area/rogue/indoors/town/manor/rockhill)
@@ -15833,18 +15822,18 @@
 "fah" = (
 /obj/structure/closet/crate/drawer,
 /obj/item/roguekey{
+	desc = "An unremarkable iron key found in an abandoned old church.";
 	icon_state = "brownkey";
 	lockid = "zizochurchtreasure";
-	name = "rusty old church key";
-	desc = "An unremarkable iron key found in an abandoned old church."
+	name = "rusty old church key"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/cave/dungeon1)
 "faj" = (
 /obj/structure/closet/crate/roguecloset/inn/south{
-	pixel_y = 12;
+	keylock = 1;
 	lockid = "fancyiii";
-	keylock = 1
+	pixel_y = 12
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/tavern)
@@ -15866,8 +15855,8 @@
 /area/rogue/outdoors/beach/harbor)
 "faq" = (
 /obj/structure/roguemachine/atm{
-	pixel_y = 0;
-	location_tag = "Keep Feasthall"
+	location_tag = "Keep Feasthall";
+	pixel_y = 0
 	},
 /turf/closed/wall/mineral/rogue/decostone/long{
 	dir = 1
@@ -15908,8 +15897,8 @@
 	icon_state = "longtable"
 	},
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_x = -4;
 	icon_state = "floorcandlee1";
+	pixel_x = -4;
 	pixel_y = 4
 	},
 /turf/open/floor/rogue/herringbone,
@@ -15964,9 +15953,9 @@
 "fcU" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ff0d00";
-	name = "Infernal Wisp";
+	desc = "An ominous manifestation of latent ambient magick";
 	light_color = "#ff0d00";
-	desc = "An ominous manifestation of latent ambient magick"
+	name = "Infernal Wisp"
 	},
 /turf/open/floor/rogue/volcanic,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -15986,8 +15975,8 @@
 "fdv" = (
 /obj/structure/roguemachine/mail/l{
 	mailtag = "Hightown Gatehouse";
-	pixel_y = -32;
-	pixel_x = 0
+	pixel_x = 0;
+	pixel_y = -32
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/town)
@@ -16023,8 +16012,8 @@
 /area/rogue/outdoors/woodsrat/river)
 "fea" = (
 /obj/structure/mineral_door/bars{
-	lockid = "inquisition";
-	locked = 1
+	locked = 1;
+	lockid = "inquisition"
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/outdoors/town/rockhill)
@@ -16483,8 +16472,8 @@
 	icon_state = "longtable_mid"
 	},
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_y = 4;
-	pixel_x = 2
+	pixel_x = 2;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/bath)
@@ -16560,13 +16549,11 @@
 "fmK" = (
 /obj/structure/fluff/railing/border{
 	dir = 10;
-	icon_state = "border";
-	pixel_y = 32;
-	pixel_x = 32
+	pixel_x = 32;
+	pixel_y = 32
 	},
 /obj/structure/fluff/railing/border{
 	dir = 6;
-	icon_state = "border";
 	pixel_x = -32;
 	pixel_y = 32
 	},
@@ -16599,11 +16586,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "fnt" = (
 /obj/structure/chair/bench/couchablack,
@@ -16737,14 +16724,14 @@
 /obj/item/roguekey/nightmaiden{
 	lockid = "steam";
 	name = "steam room key";
-	pixel_y = -3;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = -3
 	},
 /obj/item/roguekey/nightmaiden{
 	lockid = "steam";
 	name = "steam room key";
-	pixel_y = -3;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = -3
 	},
 /obj/item/roguekey/nightmaiden{
 	lockid = "lux3";
@@ -16769,8 +16756,8 @@
 /area/rogue/indoors)
 "fpR" = (
 /obj/structure/closet/crate/drawer/inn{
-	lockid = "roomi";
-	keylock = 1
+	keylock = 1;
+	lockid = "roomi"
 	},
 /obj/machinery/light/rogue/wallfire{
 	pixel_y = 32
@@ -16779,8 +16766,8 @@
 /area/rogue/indoors/town/tavern)
 "fqg" = (
 /obj/item/candle/skull/lit{
-	pixel_y = -3;
-	pixel_x = 12
+	pixel_x = 12;
+	pixel_y = -3
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town)
@@ -16801,9 +16788,9 @@
 	icon_state = "largetable"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom3";
-	name = "Manor Guestroom III Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom III Key"
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/manor/rockhill)
@@ -16850,8 +16837,8 @@
 	dir = 4
 	},
 /obj/structure/fluff/statue/gargoyle/moss{
-	pixel_y = 4;
-	pixel_x = -4
+	pixel_x = -4;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/bograt/above)
@@ -16932,9 +16919,9 @@
 "frS" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ff0d00";
-	name = "Infernal Wisp";
+	desc = "An ominous manifestation of latent ambient magick";
 	light_color = "#ff0d00";
-	desc = "An ominous manifestation of latent ambient magick"
+	name = "Infernal Wisp"
 	},
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/bograt/above)
@@ -17092,8 +17079,8 @@
 /area/rogue/indoors/town/bath)
 "fva" = (
 /obj/structure/fluff/pillow/blue{
-	dir = 1;
 	color = "#2762cf";
+	dir = 1;
 	pixel_y = -4
 	},
 /turf/open/floor/carpet/royalblack,
@@ -17192,9 +17179,7 @@
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/outdoors/town/rockhill)
 "fxf" = (
-/obj/machinery/light/rogue/firebowl/standing/green{
-	icon_state = "standingg1"
-	},
+/obj/machinery/light/rogue/firebowl/standing/green,
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/indoors/town/magician)
 "fxm" = (
@@ -17991,10 +17976,10 @@
 "fJY" = (
 /obj/structure/closet/crate/chest,
 /obj/item/roguekey{
+	desc = "this key opens the guard's doors in the old goblin encampment";
 	icon_state = "spikekey";
 	lockid = "gobbo_guards";
-	name = "mean goblin key";
-	desc = "this key opens the guard's doors in the old goblin encampment"
+	name = "mean goblin key"
 	},
 /turf/open/floor/rogue/cobble,
 /turf/open/floor/rogue/greenstone,
@@ -18018,11 +18003,11 @@
 /turf/open/floor/rogue/greenstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "fKM" = (
 /obj/item/bedsheet/rogue/pelt{
@@ -18110,10 +18095,10 @@
 /area/rogue/outdoors/bograt/south)
 "fLR" = (
 /obj/structure/closet/crate/chest{
-	pixel_y = 9;
-	pixel_x = 5;
+	locked = 1;
 	lockid = "zizochurchtreasure";
-	locked = 1
+	pixel_x = 5;
+	pixel_y = 9
 	},
 /obj/item/roguecoin/silver/pile,
 /obj/item/roguecoin/gold,
@@ -18203,8 +18188,7 @@
 /area/rogue/under/cavewet)
 "fMQ" = (
 /obj/structure/fluff/railing/fence{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/flora/roguegrass,
 /turf/open/floor/rogue/blocks,
@@ -18377,9 +18361,9 @@
 /obj/item/roguecoin/silver/pile,
 /obj/item/roguecoin/gold/pile,
 /obj/item/reagent_containers/glass/cup/golden/psydon{
-	pixel_y = 9;
+	layer = 4;
 	pixel_x = -7;
-	layer = 4
+	pixel_y = 9
 	},
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/indoors/town/church)
@@ -18393,11 +18377,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "fPA" = (
 /obj/structure/fluff/railing/border{
@@ -18529,11 +18513,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "fRo" = (
 /obj/structure/roguemachine/scomm/l,
@@ -18606,8 +18590,7 @@
 /area/rogue/outdoors/beach/harbor)
 "fSj" = (
 /obj/structure/fluff/railing/border{
-	dir = 8;
-	icon_state = "border"
+	dir = 8
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/town/roofs)
@@ -18717,18 +18700,18 @@
 "fUf" = (
 /obj/structure/stairs/stone,
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = 32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/greenstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "fUg" = (
 /turf/open/floor/rogue/naturalstone,
@@ -18867,11 +18850,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "fWo" = (
 /obj/structure/bed/rogue/inn/wool,
@@ -18994,11 +18977,11 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "fYq" = (
 /obj/structure/fluff/statue/gargoyle/moss/candles,
@@ -19352,8 +19335,8 @@
 "gfq" = (
 /obj/item/natural/wood/plank,
 /obj/item/natural/wood/plank{
-	pixel_y = 10;
-	pixel_x = 14
+	pixel_x = 14;
+	pixel_y = 10
 	},
 /obj/effect/decal/cleanable/debris/woody,
 /turf/open/floor/rogue/ruinedwood{
@@ -19573,8 +19556,8 @@
 /area/rogue/indoors/town/physician)
 "gjy" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 6
+	dir = 6;
+	icon_state = "largetable"
 	},
 /obj/structure/mirror{
 	pixel_x = -32;
@@ -19855,8 +19838,8 @@
 /area/rogue/indoors/town/church/chapel)
 "got" = (
 /obj/structure/mineral_door/wood/deadbolt{
-	lockid = "farm";
-	dir = 1
+	dir = 1;
+	lockid = "farm"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
@@ -19913,9 +19896,9 @@
 /area/rogue/outdoors/town/rockhill)
 "gpD" = (
 /obj/structure/roguemachine/atm{
+	location_tag = "Guild Smithy Front";
 	pixel_x = -32;
-	pixel_y = 0;
-	location_tag = "Guild Smithy Front"
+	pixel_y = 0
 	},
 /obj/structure/fluff/walldeco/bsmith,
 /turf/open/floor/rogue/blocks,
@@ -20339,8 +20322,8 @@
 /area/rogue/indoors/town/church)
 "gwh" = (
 /obj/structure/fluff/statue/gargoyle/moss{
-	pixel_y = 3;
-	pixel_x = 4
+	pixel_x = 4;
+	pixel_y = 3
 	},
 /obj/structure/fluff/railing/border{
 	dir = 8
@@ -20350,8 +20333,8 @@
 "gwp" = (
 /obj/machinery/light/rogue/wallfire/candle,
 /obj/item/roguebin{
-	pixel_y = 10;
-	pixel_x = -7
+	pixel_x = -7;
+	pixel_y = 10
 	},
 /obj/machinery/gear_painter{
 	pixel_x = 11;
@@ -20548,8 +20531,8 @@
 /area/rogue/outdoors/rtfield/rockhill/above)
 "gAd" = (
 /obj/structure/lever{
-	redstone_id = "bogguardjail3";
-	pixel_x = 8
+	pixel_x = 8;
+	redstone_id = "bogguardjail3"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/warden)
@@ -20598,11 +20581,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "gAM" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -20686,11 +20669,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "gBZ" = (
 /obj/structure/fluff/walldeco/church/line{
@@ -20723,11 +20706,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "gDa" = (
 /obj/structure/fluff/railing/wood{
@@ -20767,8 +20750,8 @@
 	},
 /turf/closed/wall/mineral/rogue/roofwall/outercorner{
 	dir = 4;
-	name = "reinforced roofing";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roofing"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "gDx" = (
@@ -20905,15 +20888,15 @@
 /area/rogue/outdoors/beach/harbor)
 "gEU" = (
 /obj/structure/chair/wood/rogue{
-	pixel_y = 9;
-	pixel_x = -3
+	pixel_x = -3;
+	pixel_y = 9
 	},
 /obj/machinery/light/rogue/wallfire/candle/l,
 /obj/structure/lever/wall{
 	dir = 4;
 	name = "Not Forgiven";
-	redstone_id = "gates_INQconfessinal";
-	pixel_y = 15
+	pixel_y = 15;
+	redstone_id = "gates_INQconfessinal"
 	},
 /turf/open/floor/rogue/ruinedwood/chevron,
 /area/rogue/indoors/inq)
@@ -21127,13 +21110,13 @@
 "gKv" = (
 /obj/structure/bed/rogue/inn/wool{
 	dir = 8;
-	pixel_y = 7;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 7
 	},
 /obj/item/bedsheet/rogue/cloth{
 	dir = 1;
-	pixel_y = 7;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 7
 	},
 /obj/machinery/light/rogue/wallfire/candle,
 /turf/open/floor/rogue/ruinedwood/chevron,
@@ -21195,11 +21178,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "gLk" = (
 /mob/living/carbon/human/species/dwarfskeleton/ambush/knight,
@@ -21218,8 +21201,8 @@
 	pixel_x = -5
 	},
 /obj/item/reagent_containers/glass/cup/steel{
-	pixel_y = 7;
-	pixel_x = 6
+	pixel_x = 6;
+	pixel_y = 7
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/shop)
@@ -21392,8 +21375,8 @@
 	pixel_x = 8
 	},
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_y = -13;
-	pixel_x = -1
+	pixel_x = -1;
+	pixel_y = -13
 	},
 /obj/machinery/light/rogue/wallfire/candle/r,
 /turf/open/floor/carpet/inn,
@@ -21751,8 +21734,8 @@
 /area/rogue/indoors/shelter/druidgrove)
 "gUm" = (
 /obj/structure/lever{
-	redstone_id = "bogguardjail1";
-	pixel_x = 8
+	pixel_x = 8;
+	redstone_id = "bogguardjail1"
 	},
 /obj/structure/rack/rogue/shelf/big,
 /obj/item/rogueweapon/mace/woodclub{
@@ -21798,8 +21781,8 @@
 /area/rogue/under/town/sewer)
 "gUC" = (
 /obj/structure/bed/rogue/inn/wool{
-	pixel_y = 7;
-	pixel_x = 3
+	pixel_x = 3;
+	pixel_y = 7
 	},
 /obj/structure/fluff/railing/border{
 	dir = 8;
@@ -22005,11 +21988,11 @@
 /turf/closed/wall/mineral/rogue/decostone/mossy/red/end,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "gYh" = (
 /obj/machinery/light/rogue/wallfire/candle/blue/r,
@@ -22239,10 +22222,10 @@
 	dir = 1
 	},
 /obj/structure/curtain/magenta{
-	icon_state = "curtain-closed";
-	open = 0;
 	color = "#a1254a";
-	opacity = 1
+	icon_state = "curtain-closed";
+	opacity = 1;
+	open = 0
 	},
 /turf/open/floor/rogue/tile/bath,
 /area/rogue/indoors/town/bath)
@@ -22355,8 +22338,8 @@
 /obj/item/candle,
 /obj/structure/table/wood/poor,
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 12;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = 12
 	},
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/manor/rockhill)
@@ -22792,8 +22775,8 @@
 "hmd" = (
 /obj/structure/fluff/walldeco/innsign{
 	alpha = 200;
-	pixel_y = -15;
-	layer = 4.5
+	layer = 4.5;
+	pixel_y = -15
 	},
 /obj/structure/fluff/canopy/side,
 /obj/machinery/light/roguestreet/orange/walllamp{
@@ -23106,8 +23089,8 @@
 /area/rogue/indoors/town/warden)
 "hqP" = (
 /obj/structure/fluff/walldeco/psybanner{
-	pixel_y = -3;
-	pixel_x = -29
+	pixel_x = -29;
+	pixel_y = -3
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/town/rockhill)
@@ -23205,8 +23188,8 @@
 /area/rogue/indoors/town/manor/rockhill)
 "hsx" = (
 /obj/item/roguebin/trash{
-	pixel_y = 2;
-	pixel_x = 3
+	pixel_x = 3;
+	pixel_y = 2
 	},
 /turf/open/floor/rogue/ruinedwood/chevron,
 /area/rogue/indoors/town/tavern)
@@ -23471,9 +23454,9 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound,
 /obj/effect/wisp/prestidigitation{
 	color = "#ff0d00";
-	name = "Infernal Wisp";
+	desc = "An ominous manifestation of latent ambient magick";
 	light_color = "#ff0d00";
-	desc = "An ominous manifestation of latent ambient magick"
+	name = "Infernal Wisp"
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -23517,8 +23500,8 @@
 	pixel_y = 26
 	},
 /obj/item/clothing/neck/roguetown/psicross/necra{
-	pixel_y = 6;
-	pixel_x = -6
+	pixel_x = -6;
+	pixel_y = 6
 	},
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
 	pixel_y = 5
@@ -23736,17 +23719,16 @@
 /area/rogue/indoors/inq)
 "hCi" = (
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	icon_state = "border"
+	dir = 4
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq)
 "hCu" = (
 /obj/structure/mineral_door/wood/donjon{
-	lockid = "manor";
+	dir = 4;
 	locked = 1;
-	name = "Dungeons";
-	dir = 4
+	lockid = "manor";
+	name = "Dungeons"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/manor/rockhill)
@@ -23758,8 +23740,7 @@
 /area/rogue/indoors)
 "hCK" = (
 /obj/structure/stairs{
-	dir = 4;
-	icon_state = "stairs"
+	dir = 4
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/under/town/basement/keep)
@@ -23945,11 +23926,11 @@
 /turf/open/lava,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "hFG" = (
 /obj/structure/flora/ausbushes/reedbush,
@@ -24015,8 +23996,8 @@
 /area/rogue/outdoors/woodsrat/south)
 "hGH" = (
 /obj/structure/fluff/customsign{
-	name = "EVIL ASS BONE CASTLE  DUNGEON - UNDER CONSTRUCTION!!";
 	icon_state = "signwrote";
+	name = "EVIL ASS BONE CASTLE  DUNGEON - UNDER CONSTRUCTION!!";
 	pixel_y = 3
 	},
 /turf/open/floor/rogue/grassgrey,
@@ -24150,9 +24131,9 @@
 /area/rogue/indoors)
 "hJj" = (
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = 32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/volcanic{
 	desc = "Silky and sharp-smooth, like cracked glass"
@@ -24194,11 +24175,11 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "hKm" = (
 /turf/open/floor/rogue/rooftop/green/corner1{
@@ -24220,8 +24201,7 @@
 	icon_state = "cobbleedge-w"
 	},
 /obj/structure/mineral_door/wood/deadbolt{
-	dir = 8;
-	icon_state = "wooddir"
+	dir = 8
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/outdoors/beach/harbor)
@@ -24249,8 +24229,8 @@
 /area/rogue/indoors/town/church)
 "hLb" = (
 /obj/effect/decal/carpet/kover_darkred{
-	pixel_y = 10;
-	pixel_x = 16
+	pixel_x = 16;
+	pixel_y = 10
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town)
@@ -24267,12 +24247,12 @@
 	pixel_y = 6
 	},
 /obj/structure/table/wood{
-	icon_state = "tablewood1";
-	dir = 1
+	dir = 1;
+	icon_state = "tablewood1"
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = -3;
-	pixel_x = 9
+	pixel_x = 9;
+	pixel_y = -3
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -24575,10 +24555,10 @@
 /area/rogue/indoors)
 "hQC" = (
 /obj/structure/mineral_door/wood/donjon{
-	name = "Guard's Barracks";
-	lockid = "garrison";
+	dir = 1;
 	locked = 1;
-	dir = 1
+	lockid = "garrison";
+	name = "Guard's Barracks"
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/manor/rockhill)
@@ -24587,8 +24567,8 @@
 /area/rogue/indoors/town/bath)
 "hQI" = (
 /obj/item/roguebin/trash{
-	pixel_y = 22;
-	pixel_x = 3
+	pixel_x = 3;
+	pixel_y = 22
 	},
 /turf/open/floor/rogue/blocks/paving,
 /area/rogue/indoors/town/bath)
@@ -24785,11 +24765,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "hTD" = (
 /obj/structure/stairs/stone{
@@ -24831,8 +24811,8 @@
 	keylock = 1;
 	locked = 1;
 	lockid = "nightman";
-	pixel_x = 3;
-	name = "Stash"
+	name = "Stash";
+	pixel_x = 3
 	},
 /obj/item/reagent_containers/powder/ozium,
 /obj/item/reagent_containers/powder/ozium,
@@ -24844,8 +24824,8 @@
 /obj/item/reagent_containers/glass/bottle/rogue/emberwine,
 /turf/open/floor/carpet/purple,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "hUq" = (
 /obj/effect/decal/cobbleedge{
@@ -24973,8 +24953,8 @@
 /obj/item/armor_brush,
 /obj/item/polishing_cream,
 /obj/item/natural/stone{
-	pixel_y = 11;
-	pixel_x = -5
+	pixel_x = -5;
+	pixel_y = 11
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/manor/rockhill)
@@ -25059,20 +25039,20 @@
 "hYd" = (
 /obj/structure/rack/rogue/shelf/biggest,
 /obj/item/rogueweapon/scabbard/gwstrap{
-	pixel_y = -11;
-	pixel_x = -26
+	pixel_x = -26;
+	pixel_y = -11
 	},
 /obj/item/rogueweapon/scabbard/gwstrap{
-	pixel_y = -11;
-	pixel_x = -26
+	pixel_x = -26;
+	pixel_y = -11
 	},
 /obj/item/rogueweapon/scabbard/gwstrap{
-	pixel_y = -11;
-	pixel_x = -26
+	pixel_x = -26;
+	pixel_y = -11
 	},
 /obj/item/rogueweapon/scabbard/gwstrap{
-	pixel_y = -11;
-	pixel_x = -26
+	pixel_x = -26;
+	pixel_y = -11
 	},
 /obj/item/rogueweapon/scabbard/sheath,
 /obj/item/rogueweapon/scabbard/sheath,
@@ -25289,8 +25269,7 @@
 /area/rogue/indoors/town/church)
 "ibe" = (
 /obj/structure/fluff/railing/fence{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/fluff/railing/fence,
 /turf/open/floor/rogue/dirt/road,
@@ -25386,14 +25365,14 @@
 /obj/item/roguekey/nightmaiden{
 	lockid = "lux2";
 	name = "room II key";
-	pixel_y = -11;
-	pixel_x = 9
+	pixel_x = 9;
+	pixel_y = -11
 	},
 /obj/item/roguekey/nightmaiden{
 	lockid = "lux2";
 	name = "room II key";
-	pixel_y = -11;
-	pixel_x = 9
+	pixel_x = 9;
+	pixel_y = -11
 	},
 /obj/item/roguekey/nightmaiden{
 	lockid = "lux1";
@@ -25409,11 +25388,11 @@
 	pixel_y = 3
 	},
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -25563,15 +25542,15 @@
 "ifb" = (
 /obj/structure/lever/wall{
 	dir = 8;
-	redstone_id = "fireexperiment1";
 	name = "Unlabelled lever";
-	pixel_y = -9
+	pixel_y = -9;
+	redstone_id = "fireexperiment1"
 	},
 /obj/structure/lever/wall{
 	dir = 8;
-	redstone_id = "fireexperiment3";
 	name = "Unlabelled lever";
-	pixel_y = 7
+	pixel_y = 7;
+	redstone_id = "fireexperiment3"
 	},
 /turf/open/floor/rogue/greenstone,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -25627,8 +25606,8 @@
 "ign" = (
 /obj/structure/rack/rogue/shelf,
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 6
+	dir = 6;
+	icon_state = "largetable"
 	},
 /turf/open/floor/rogue/twig,
 /area/rogue/indoors)
@@ -26135,13 +26114,13 @@
 "iqO" = (
 /obj/structure/bed/rogue/inn/wool{
 	dir = 8;
-	pixel_y = 7;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 7
 	},
 /obj/item/bedsheet/rogue/cloth{
 	dir = 1;
-	pixel_y = 7;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/ruinedwood/chevron,
 /area/rogue/indoors/town/church)
@@ -26232,8 +26211,7 @@
 /area/rogue/indoors/shelter/druidgrove)
 "itc" = (
 /obj/effect/decal/cobbleedge{
-	dir = 5;
-	pixel_x = 0
+	dir = 5
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/inq/basement)
@@ -26246,9 +26224,9 @@
 /area/rogue/indoors/shelter/mountains)
 "itw" = (
 /obj/structure/lever/wall{
+	icon_state = "leverwall1";
 	pixel_x = 32;
-	redstone_id = "tourneybottom";
-	icon_state = "leverwall1"
+	redstone_id = "tourneybottom"
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/town/rockhill)
@@ -26298,11 +26276,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "iuo" = (
 /turf/open/floor/rogue/blocks,
@@ -26320,8 +26298,8 @@
 	pixel_y = 0
 	},
 /obj/structure/lever{
-	pixel_y = 7;
 	name = "Merchant Window Shutters";
+	pixel_y = 7;
 	redstone_id = "shutter_merchant3"
 	},
 /turf/open/floor/carpet/royalblack,
@@ -26574,11 +26552,11 @@
 /turf/open/floor/rogue/greenstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "iyy" = (
 /obj/structure/stairs/stone{
@@ -26677,9 +26655,9 @@
 	icon_state = "largetable"
 	},
 /obj/structure/roguemachine/atm{
+	location_tag = "Hightown Noticeboard";
 	pixel_x = -32;
-	pixel_y = 0;
-	location_tag = "Hightown Noticeboard"
+	pixel_y = 0
 	},
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/town/rockhill)
@@ -26708,8 +26686,7 @@
 /area/rogue/indoors)
 "izH" = (
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	icon_state = "border"
+	dir = 4
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/inq)
@@ -26885,11 +26862,11 @@
 	icon_state = "largetable"
 	},
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/shelter/druidgrove)
@@ -26954,9 +26931,9 @@
 /area/rogue/under/town/basement/keep)
 "iEi" = (
 /obj/structure/closet/crate/drawer/inn{
-	pixel_y = 9;
+	keylock = 1;
 	lockid = "roomiii";
-	keylock = 1
+	pixel_y = 9
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/tavern)
@@ -27188,8 +27165,8 @@
 /area/rogue/indoors/shelter/druidgrove)
 "iIf" = (
 /obj/machinery/light/rogue/wallfire{
-	pixel_y = 32;
-	pixel_x = -17
+	pixel_x = -17;
+	pixel_y = 32
 	},
 /obj/structure/shisha/hookah,
 /turf/open/floor/carpet/red,
@@ -27690,11 +27667,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "iSj" = (
 /obj/structure/fluff/railing/border{
@@ -27726,8 +27703,8 @@
 "iSt" = (
 /obj/structure/bell_common{
 	dir = 8;
-	pixel_y = 7;
-	pixel_x = 10
+	pixel_x = 10;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -28140,11 +28117,11 @@
 /turf/closed/mineral/random/rogue,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jac" = (
 /obj/structure/flora/ausbushes/reedbush,
@@ -28172,8 +28149,8 @@
 "jaw" = (
 /obj/structure/chair/wood/rogue{
 	dir = 4;
-	pixel_y = 4;
-	pixel_x = 5
+	pixel_x = 5;
+	pixel_y = 4
 	},
 /obj/effect/landmark/start/farmer{
 	dir = 4
@@ -28195,9 +28172,9 @@
 /area/rogue/indoors/shelter/druidgrove)
 "jaN" = (
 /obj/structure/bookcase/random{
-	pixel_y = -6;
+	density = 0;
 	pixel_x = 5;
-	density = 0
+	pixel_y = -6
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -28264,11 +28241,11 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jbX" = (
 /obj/structure/fluff/littlebanners/bluewhite{
@@ -28289,8 +28266,8 @@
 	})
 "jcb" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - North";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - North"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/bograt/safe)
@@ -28338,8 +28315,8 @@
 /area/rogue/outdoors/rtfield/rockhill)
 "jcx" = (
 /obj/structure/fluff/customsign{
-	name = "BEWARE!";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "BEWARE!"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/bograt/west)
@@ -28650,8 +28627,8 @@
 "jjB" = (
 /obj/structure/bell_common{
 	dir = 1;
-	pixel_y = -7;
-	pixel_x = -13
+	pixel_x = -13;
+	pixel_y = -7
 	},
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/indoors/town/tavern)
@@ -28967,11 +28944,11 @@
 /turf/open/floor/rogue/greenstone/runed,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jod" = (
 /obj/structure/table/wood/large_table/south_west,
@@ -29104,9 +29081,9 @@
 /area/rogue/indoors/town/physician)
 "jqI" = (
 /obj/structure/closet/crate/drawer/inn{
-	pixel_y = 9;
+	keylock = 1;
 	lockid = "roomiv";
-	keylock = 1
+	pixel_y = 9
 	},
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/town/tavern)
@@ -29235,9 +29212,9 @@
 /area/rogue/outdoors/rtfield/rockhill)
 "jsu" = (
 /obj/structure/bars/passage{
-	redstone_id = "tourneybottom";
 	density = 0;
-	icon_state = "passage1"
+	icon_state = "passage1";
+	redstone_id = "tourneybottom"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/town/rockhill)
@@ -29271,8 +29248,8 @@
 "jtn" = (
 /obj/structure/fluff/walldeco/church/line,
 /obj/structure/bed/rogue/inn/wool{
-	pixel_y = 9;
-	dir = 1
+	dir = 1;
+	pixel_y = 9
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/physician)
@@ -29419,26 +29396,26 @@
 	max_integrity = 100
 	},
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = -32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jwH" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /obj/structure/ritualcircle/dendor{
 	icon_state = "dendor_active"
@@ -30034,11 +30011,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jIm" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/rock,
@@ -30139,11 +30116,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jKx" = (
 /obj/structure/closet/crate/chest,
@@ -30391,11 +30368,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jOC" = (
 /obj/structure/flora/roguegrass/maneater/real,
@@ -30522,8 +30499,8 @@
 "jQk" = (
 /obj/structure/fluff/walldeco/chains,
 /obj/effect/decal/remains/human{
-	pixel_y = 16;
-	pixel_x = 10
+	pixel_x = 10;
+	pixel_y = 16
 	},
 /obj/effect/decal/cleanable/blood,
 /mob/living/carbon/human/species/goblin/npc/ambush/moon{
@@ -30532,11 +30509,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "jQo" = (
 /obj/structure/mineral_door/wood/red{
@@ -30670,9 +30647,7 @@
 	},
 /area/rogue/indoors/town/shop)
 "jSW" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/machinery/light/rogue/wallfire/candle/blue/l{
 	pixel_y = 10
 	},
@@ -30901,8 +30876,8 @@
 	pixel_y = 2
 	},
 /obj/item/candle/candlestick/gold/single/lit{
-	pixel_y = 16;
-	pixel_x = 12
+	pixel_x = 12;
+	pixel_y = 16
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/town/manor/rockhill)
@@ -31049,8 +31024,8 @@
 	icon_state = "largetable"
 	},
 /obj/item/candle/gold/lit{
-	pixel_y = 7;
-	pixel_x = 6
+	pixel_x = 6;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/tile/harem1,
 /area/rogue/indoors/town/manor/rockhill)
@@ -31213,11 +31188,11 @@
 /turf/closed/wall/mineral/rogue/decostone/mossy/red,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "kcZ" = (
 /obj/structure/fluff/railing/wood{
@@ -31279,9 +31254,9 @@
 /obj/item/paper/scroll,
 /obj/item/paper/scroll,
 /obj/structure/closet/crate/roguecloset/dark{
-	lockid = "nightman";
+	keylock = 1;
 	locked = 1;
-	keylock = 1
+	lockid = "nightman"
 	},
 /obj/item/roguekey/nightmaiden,
 /obj/item/roguekey/nightmaiden,
@@ -31578,9 +31553,9 @@
 "kgY" = (
 /obj/machinery/light/rogue/firebowl,
 /obj/structure/lever/wall{
+	dir = 8;
 	pixel_x = -3;
-	redstone_id = "goblingate";
-	dir = 8
+	redstone_id = "goblingate"
 	},
 /turf/open/floor/rogue/metal,
 /area/rogue/under/town/sewer)
@@ -32321,8 +32296,8 @@
 	pixel_y = 2
 	},
 /obj/item/reagent_containers/glass/cup/steel{
-	pixel_y = 11;
-	pixel_x = 9
+	pixel_x = 9;
+	pixel_y = 11
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/manor/rockhill)
@@ -32445,9 +32420,7 @@
 /turf/closed/wall/mineral/rogue/decostone,
 /area/rogue/indoors/town/church/chapel)
 "kwW" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/railing/wood{
 	dir = 4;
 	pixel_x = 10
@@ -32561,9 +32534,7 @@
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/church)
 "kzg" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/railing/border{
 	dir = 6
 	},
@@ -32619,8 +32590,8 @@
 	dir = 8
 	},
 /obj/structure/fluff/statue/gargoyle/moss{
-	pixel_y = 3;
-	pixel_x = 4
+	pixel_x = 4;
+	pixel_y = 3
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/bograt/above)
@@ -32646,9 +32617,9 @@
 /area/rogue/indoors/town/manor/rockhill)
 "kAr" = (
 /obj/structure/mineral_door/wood/red{
+	locked = 1;
 	lockid = "farm";
-	name = "Butcher";
-	locked = 1
+	name = "Butcher"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/indoors)
@@ -32679,8 +32650,7 @@
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	icon_state = "border"
+	dir = 4
 	},
 /obj/machinery/light/rogue/wallfire/candle/r,
 /turf/open/floor/rogue/concrete,
@@ -32804,10 +32774,10 @@
 /obj/item/natural/poo/horse,
 /mob/living/carbon/human/species/goblin/npc/cave,
 /obj/item/roguekey{
+	desc = "this key opens the chief and shaman's  doors in the old goblin encampment";
 	icon_state = "cheesekey";
 	lockid = "gobbo_chief";
-	name = "fancy goblin key";
-	desc = "this key opens the chief and shaman's  doors in the old goblin encampment"
+	name = "fancy goblin key"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/under/town/basement{
@@ -33037,9 +33007,9 @@
 /area/rogue/indoors/town/church)
 "kHJ" = (
 /obj/structure/roguemachine/atm{
+	location_tag = "Tavern";
 	pixel_x = -32;
-	pixel_y = 0;
-	location_tag = "Tavern"
+	pixel_y = 0
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/tavern)
@@ -33265,8 +33235,8 @@
 "kKO" = (
 /obj/structure/bell_common{
 	dir = 8;
-	pixel_y = 7;
-	pixel_x = 10
+	pixel_x = 10;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/outdoors/town/rockhill)
@@ -33341,8 +33311,8 @@
 	pixel_y = 32
 	},
 /obj/structure/bed/rogue/inn/wool{
-	pixel_y = 9;
-	dir = 1
+	dir = 1;
+	pixel_y = 9
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/physician)
@@ -33450,10 +33420,10 @@
 /area/rogue/indoors/town/warden)
 "kQd" = (
 /obj/structure/mineral_door/wood/deadbolt{
+	dir = 1;
 	keylock = 1;
 	locked = 1;
-	name = "Blacksmith Backdoor";
-	dir = 1
+	name = "Blacksmith Backdoor"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
@@ -33492,8 +33462,8 @@
 /area/rogue/outdoors/bograt/north)
 "kQT" = (
 /obj/structure/fluff/customsign{
-	name = "Sunkmire West, Rockhill East";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Sunkmire West, Rockhill East"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/bograt/safe)
@@ -33527,11 +33497,11 @@
 	dir = 8
 	},
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -33775,11 +33745,11 @@
 /turf/closed/wall/mineral/rogue/decostone/mossy/red/long,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "kXh" = (
 /obj/structure/chair/wood{
@@ -33828,9 +33798,7 @@
 /area/rogue/indoors/town)
 "kXF" = (
 /obj/structure/stairs{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/fluff/railing/border,
 /obj/item/grown/log/tree/small,
@@ -33875,8 +33843,8 @@
 	dir = 1
 	},
 /turf/closed/wall/mineral/rogue/roofwall/middle{
-	name = "reinforced roof";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roof"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "kYH" = (
@@ -33926,8 +33894,8 @@
 	icon_state = "largetable"
 	},
 /obj/item/candle/gold/lit{
-	pixel_y = 9;
-	pixel_x = 13
+	pixel_x = 13;
+	pixel_y = 9
 	},
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/town/manor/rockhill)
@@ -34077,12 +34045,6 @@
 	},
 /turf/closed,
 /area/rogue/indoors/shelter/druidgrove)
-"laG" = (
-/obj/structure/stairs{
-	dir = 2
-	},
-/turf/open/floor/rogue/greenstone,
-/area/rogue/under/town/sewer)
 "laN" = (
 /obj/structure/chair/wood/rogue{
 	dir = 4
@@ -34423,8 +34385,8 @@
 /area/rogue/indoors/town)
 "lix" = (
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_y = -14;
-	layer = 1.5
+	layer = 1.5;
+	pixel_y = -14
 	},
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/town/bath)
@@ -34473,17 +34435,17 @@
 "lkq" = (
 /obj/structure/bed/rogue/shit,
 /mob/living/carbon/human/species/goblin/npc/ambush/hell{
-	icon_state = "goblin_hell";
-	faction = list("infernal")
+	faction = list("infernal");
+	icon_state = "goblin_hell"
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "lkF" = (
 /obj/structure/fluff/railing/border{
@@ -34718,8 +34680,8 @@
 /area/rogue/indoors/town/warden)
 "loh" = (
 /obj/structure/fluff/customsign{
-	name = "BEWARE!";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "BEWARE!"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/bograt/south)
@@ -34957,8 +34919,8 @@
 	pixel_x = 8
 	},
 /obj/item/storage/pill_bottle/dice{
-	pixel_y = 5;
-	pixel_x = -6
+	pixel_x = -6;
+	pixel_y = 5
 	},
 /turf/open/floor/rogue/carpet,
 /area/rogue/indoors/town/bath)
@@ -35355,8 +35317,8 @@
 /area/rogue/under/town/basement/keep)
 "lAi" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - North";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - North"
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet)
@@ -35374,11 +35336,11 @@
 /area/rogue/indoors/shelter/druidgrove)
 "lAq" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/bograt/sunken)
@@ -35395,10 +35357,6 @@
 /obj/structure/table/wood{
 	dir = 1;
 	icon_state = "longtable"
-	},
-/obj/item/reagent_containers/food/condiment/saltshaker{
-	pixel_x = 11;
-	pixel_y = 17
 	},
 /obj/item/reagent_containers/peppermill{
 	pixel_x = 13;
@@ -35485,11 +35443,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "lCv" = (
 /obj/structure/fluff/railing/border{
@@ -35504,9 +35462,7 @@
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/indoors/town/physician)
 "lCJ" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/railing/wood{
 	dir = 8;
 	pixel_x = -8
@@ -35578,8 +35534,8 @@
 	pixel_y = 4
 	},
 /obj/item/roguegear/bronze{
-	pixel_y = -6;
-	pixel_x = -3
+	pixel_x = -3;
+	pixel_y = -6
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/physician)
@@ -35846,8 +35802,8 @@
 	pixel_x = -32
 	},
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 15;
-	pixel_x = -9
+	pixel_x = -9;
+	pixel_y = 15
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/manor/rockhill)
@@ -36212,8 +36168,8 @@
 /area/rogue/under/town/basement)
 "lOQ" = (
 /obj/structure/table/wood{
-	icon_state = "tablewood1";
-	dir = 1
+	dir = 1;
+	icon_state = "tablewood1"
 	},
 /obj/effect/spawner/lootdrop/roguetown/dungeon/weapons,
 /obj/effect/spawner/lootdrop/roguetown/dungeon/clothing,
@@ -36284,11 +36240,11 @@
 /turf/open/floor/rogue/greenstone/runed,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "lQu" = (
 /obj/structure/fluff/wallclock{
@@ -36426,8 +36382,8 @@
 /area/rogue/outdoors/bograt/south)
 "lTL" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - North";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - North"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/under/cavewet)
@@ -36483,8 +36439,8 @@
 "lVf" = (
 /obj/structure/roguemachine/mail{
 	mailtag = "Tavern";
-	pixel_y = 0;
-	pixel_x = 32
+	pixel_x = 32;
+	pixel_y = 0
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/tavern)
@@ -36689,8 +36645,8 @@
 /area/rogue/outdoors/beach/harbor)
 "lYE" = (
 /obj/structure/fluff/customsign{
-	name = "EVIL ASS MOUNTAIN ZONE - UNDER CONSTRUCTION!!";
 	icon_state = "signwrote";
+	name = "EVIL ASS MOUNTAIN ZONE - UNDER CONSTRUCTION!!";
 	pixel_y = 3
 	},
 /turf/open/floor/rogue/grasscold,
@@ -36770,8 +36726,8 @@
 /area/rogue/indoors/town)
 "lZD" = (
 /obj/structure/fluff/customsign{
-	name = "EVIL ASS.... SOMETHING  DUNGEON - UNDER CONSTRUCTION!!";
 	icon_state = "signwrote";
+	name = "EVIL ASS.... SOMETHING  DUNGEON - UNDER CONSTRUCTION!!";
 	pixel_y = 3
 	},
 /turf/open/floor/rogue/dirt/road,
@@ -37218,9 +37174,7 @@
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town)
 "mfF" = (
-/obj/machinery/light/rogue/firebowl/standing/green{
-	icon_state = "standingg1"
-	},
+/obj/machinery/light/rogue/firebowl/standing/green,
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/magician)
 "mfK" = (
@@ -37287,8 +37241,8 @@
 /obj/item/paper,
 /obj/item/natural/feather,
 /obj/item/book/rogue/law{
-	pixel_y = 6;
-	layer = 5
+	layer = 5;
+	pixel_y = 6
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/warden)
@@ -37456,11 +37410,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "miz" = (
 /obj/structure/fluff/railing/wood{
@@ -37592,17 +37546,17 @@
 	icon_state = "tablewood3"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "counsil2";
-	name = "Counsillor's Room II Key";
-	desc = "This key will open a Manor guest room."
+	name = "Counsillor's Room II Key"
 	},
 /obj/structure/fluff/railing/border/west{
 	pixel_x = -8
 	},
 /obj/machinery/light/rogue/wallfire/candle/l,
 /obj/item/candle/gold/lit{
-	pixel_y = 7;
-	pixel_x = 6
+	pixel_x = 6;
+	pixel_y = 7
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/manor/rockhill)
@@ -37749,11 +37703,11 @@
 /area/rogue/indoors)
 "mlV" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/grasscold,
 /area/rogue/indoors/shelter/druidgrove)
@@ -37841,9 +37795,9 @@
 "mnr" = (
 /turf/closed/wall/mineral/rogue/pipe/line{
 	density = 0;
-	name = "suspicious metal wall";
+	desc = "Solid steel made into an impenetrable obstacle... Unless..?";
 	dir = 4;
-	desc = "Solid steel made into an impenetrable obstacle... Unless..?"
+	name = "suspicious metal wall"
 	},
 /area/rogue/under/town/sewer)
 "mnu" = (
@@ -37867,9 +37821,7 @@
 /turf/open/floor/rogue/hexstone,
 /area/rogue/outdoors/beach/harbor)
 "mnQ" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/ruinedwood{
 	dir = 1;
 	icon_state = "vertw"
@@ -38087,8 +38039,8 @@
 	pixel_y = 2
 	},
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 7;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/carpet,
 /area/rogue/indoors/town/manor/rockhill)
@@ -38156,11 +38108,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "mtd" = (
 /obj/structure/mineral_door/wood/donjon{
@@ -38310,8 +38262,8 @@
 /area/rogue/outdoors/rtfield/rockhill)
 "mwV" = (
 /obj/structure/closet/crate/drawer/inn{
-	lockid = "fancyi";
-	keylock = 1
+	keylock = 1;
+	lockid = "fancyi"
 	},
 /obj/structure/rogue/trophy/deer,
 /turf/open/floor/rogue/woodturned,
@@ -38661,10 +38613,10 @@
 	dir = 4
 	},
 /obj/structure/curtain/magenta{
-	icon_state = "curtain-closed";
-	open = 0;
 	color = "#a1254a";
-	opacity = 1
+	icon_state = "curtain-closed";
+	opacity = 1;
+	open = 0
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/bath)
@@ -38776,8 +38728,8 @@
 /obj/item/rogueweapon/scabbard,
 /obj/item/quiver/bolts,
 /obj/machinery/light/rogue/wallfire/candle/l{
-	pixel_y = -32;
-	pixel_x = 0
+	pixel_x = 0;
+	pixel_y = -32
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/shop)
@@ -38891,8 +38843,8 @@
 /area/rogue/indoors/town/manor/rockhill)
 "mGi" = (
 /obj/structure/closet/crate/roguecloset/inn/south{
-	lockid = "fancyii";
-	keylock = 1
+	keylock = 1;
+	lockid = "fancyii"
 	},
 /obj/item/paper/scroll,
 /obj/item/paper/scroll,
@@ -38964,11 +38916,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "mHU" = (
 /obj/machinery/light/rogue/hearth,
@@ -39214,12 +39166,12 @@
 /area/rogue/under/town/sewer)
 "mLU" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 6
+	dir = 6;
+	icon_state = "largetable"
 	},
 /obj/item/reagent_containers/glass/cup/steel{
-	pixel_y = 11;
-	pixel_x = -4
+	pixel_x = -4;
+	pixel_y = 11
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/bath)
@@ -39322,22 +39274,22 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "mOm" = (
 /obj/effect/spawner/lootdrop/roguetown/dungeon/armor,
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "mOB" = (
 /obj/structure/fluff/railing/border{
@@ -39365,8 +39317,8 @@
 /area/rogue/indoors/town)
 "mOV" = (
 /obj/structure/lever{
-	redstone_id = "hellportal";
-	pixel_y = 9
+	pixel_y = 9;
+	redstone_id = "hellportal"
 	},
 /turf/open/floor/rogue/greenstone/runed,
 /area/rogue/outdoors/bograt/above)
@@ -39388,8 +39340,8 @@
 	pixel_y = 2
 	},
 /obj/item/candle/candlestick/gold/single/lit{
-	pixel_y = 16;
-	pixel_x = -13
+	pixel_x = -13;
+	pixel_y = 16
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/town/manor/rockhill)
@@ -39449,8 +39401,8 @@
 "mQp" = (
 /obj/structure/bed/rogue/inn/wool{
 	dir = 1;
-	pixel_y = 2;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = 2
 	},
 /obj/item/bedsheet/rogue/cloth{
 	dir = 1;
@@ -39479,9 +39431,7 @@
 /area/rogue/outdoors/bograt/above)
 "mQH" = (
 /obj/structure/stairs{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/rogue/ruinedwood/platform,
 /area/rogue/outdoors/beach/harbor)
@@ -39497,8 +39447,7 @@
 	lockid = "church"
 	},
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	icon_state = "border"
+	dir = 4
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/church)
@@ -39660,11 +39609,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "mUH" = (
 /obj/machinery/light/rogue/hearth,
@@ -39775,11 +39724,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "mWX" = (
 /turf/closed/wall/mineral/rogue/stone/moss,
@@ -39790,12 +39739,12 @@
 "mXd" = (
 /obj/structure/rack/rogue,
 /obj/item/rogueweapon/stoneaxe/woodcut{
-	pixel_y = -5;
-	pixel_x = 5
+	pixel_x = 5;
+	pixel_y = -5
 	},
 /obj/item/rogueweapon/stoneaxe/woodcut{
-	pixel_y = -5;
-	pixel_x = 5
+	pixel_x = 5;
+	pixel_y = -5
 	},
 /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick,
 /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick,
@@ -39887,8 +39836,8 @@
 	pixel_y = -4
 	},
 /obj/machinery/gear_painter{
-	pixel_y = 3;
-	pixel_x = -5
+	pixel_x = -5;
+	pixel_y = 3
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -40103,8 +40052,8 @@
 	keylock = 1;
 	locked = 1;
 	lockid = "nightmaiden";
-	pixel_x = 3;
-	name = "Favours"
+	name = "Favours";
+	pixel_x = 3
 	},
 /obj/item/reagent_containers/glass/bottle/rogue/wine,
 /obj/item/reagent_containers/glass/bottle/rogue/wine,
@@ -40170,11 +40119,11 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "ndt" = (
 /obj/structure/fermentation_keg,
@@ -40279,9 +40228,9 @@
 	pixel_y = 4
 	},
 /obj/structure/closet/crate/chest/crate{
-	pixel_y = 14;
 	locked = 1;
-	lockid = "nightmaiden"
+	lockid = "nightmaiden";
+	pixel_y = 14
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/bath)
@@ -40587,9 +40536,9 @@
 	dir = 8
 	},
 /obj/structure/closet/crate/roguecloset/dark{
-	opacity = 1;
 	anchored = 1;
-	name = "suspicious closet"
+	name = "suspicious closet";
+	opacity = 1
 	},
 /turf/open/transparent/openspace,
 /area/rogue/under/town/sewer)
@@ -40604,8 +40553,8 @@
 /area/rogue/outdoors/bograt/above)
 "njP" = (
 /obj/structure/closet/crate/roguecloset{
-	lockid = "street_shop01";
-	keylock = 1
+	keylock = 1;
+	lockid = "street_shop01"
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/town)
@@ -40851,11 +40800,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "npj" = (
 /obj/effect/wisp/prestidigitation,
@@ -40919,9 +40868,7 @@
 /area/rogue/indoors)
 "nqW" = (
 /obj/structure/stairs{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/rogue/tile{
 	icon_state = "greenstone"
@@ -40948,10 +40895,10 @@
 /area/rogue/outdoors/rtfield/rockhill/above)
 "nrW" = (
 /obj/item/roguekey{
+	desc = "This old key opens the peddler for the hightown street shop.";
 	icon_state = "brownkey";
 	lockid = "street_shop01";
-	name = "Street Shop Peddler Key";
-	desc = "This old key opens the peddler for the hightown street shop."
+	name = "Street Shop Peddler Key"
 	},
 /obj/structure/rack/rogue/shelf/biggest,
 /turf/open/floor/rogue/tile,
@@ -41003,12 +40950,12 @@
 "nsL" = (
 /obj/item/reagent_containers/glass/bowl,
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 10
+	dir = 10;
+	icon_state = "largetable"
 	},
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_y = 8;
-	pixel_x = 15
+	pixel_x = 15;
+	pixel_y = 8
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/bath)
@@ -41081,8 +41028,7 @@
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	icon_state = "border"
+	dir = 4
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/inq)
@@ -41107,9 +41053,7 @@
 /turf/open/floor/rogue/grassgrey,
 /area/rogue/outdoors/bograt/sunken)
 "nuH" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet)
 "nuZ" = (
@@ -41393,11 +41337,11 @@
 /turf/open/lava,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "nAm" = (
 /turf/open/water/river{
@@ -41755,8 +41699,8 @@
 "nHd" = (
 /obj/structure/fluff/railing/border,
 /obj/item/roguebin/water{
-	pixel_y = 2;
-	pixel_x = -5
+	pixel_x = -5;
+	pixel_y = 2
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/bath)
@@ -41776,9 +41720,9 @@
 /area/rogue/under/cavewet)
 "nHI" = (
 /obj/structure/winch{
+	gid = "firebigger";
 	name = "Lower Major Containment Chamber Gate";
-	redstone_id = "firebigger";
-	gid = "firebigger"
+	redstone_id = "firebigger"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -42107,8 +42051,8 @@
 /obj/structure/flora/roguegrass,
 /obj/structure/fluff/railing/wood{
 	dir = 8;
-	pixel_y = 4;
-	pixel_x = -9
+	pixel_x = -9;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/beach/harbor)
@@ -42167,8 +42111,8 @@
 /area/rogue/outdoors/beach/harbor)
 "nPa" = (
 /obj/item/candle/candlestick/gold/single/lit{
-	pixel_y = 13;
-	pixel_x = -10
+	pixel_x = -10;
+	pixel_y = 13
 	},
 /obj/structure/table/wood{
 	dir = 6;
@@ -42213,8 +42157,8 @@
 "nPq" = (
 /obj/structure/gate/bars{
 	gid = "vangate";
-	redstone_id = "vangate";
-	name = "Vanguard Gate"
+	name = "Vanguard Gate";
+	redstone_id = "vangate"
 	},
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -42287,8 +42231,8 @@
 "nQF" = (
 /obj/machinery/light/rogue/wallfire/candle,
 /obj/effect/decal/carpet/square{
-	pixel_y = -9;
-	pixel_x = -18
+	pixel_x = -18;
+	pixel_y = -9
 	},
 /turf/open/floor/rogue/ruinedwood{
 	dir = 1;
@@ -42334,8 +42278,8 @@
 /area/rogue/under/cave/dungeon1)
 "nRh" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - North";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - North"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet)
@@ -42382,11 +42326,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "nSb" = (
 /obj/structure/fluff/railing/border{
@@ -42445,8 +42389,8 @@
 /area/rogue/outdoors/town/roofs)
 "nTc" = (
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_y = -14;
-	layer = 1.5
+	layer = 1.5;
+	pixel_y = -14
 	},
 /turf/open/floor/rogue/tile/bath{
 	icon_state = "bathtileratwood"
@@ -42542,12 +42486,6 @@
 /obj/machinery/light/rogue/wallfire/candle/l,
 /turf/open/floor/rogue/churchrough,
 /area/rogue/indoors/town/church/chapel)
-"nUQ" = (
-/obj/structure/stairs{
-	dir = 2
-	},
-/turf/open/floor/rogue/dirt/road,
-/area/rogue/indoors)
 "nUS" = (
 /obj/structure/stairs/stone{
 	dir = 1
@@ -42556,9 +42494,9 @@
 /area/rogue/outdoors/woodsrat/south)
 "nUW" = (
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = -32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/volcanic{
 	desc = "Silky and sharp-smooth, like cracked glass"
@@ -42919,9 +42857,9 @@
 /area/rogue/under/cavewet)
 "oaz" = (
 /obj/structure/chair/wood/rogue/fancy{
-	pixel_y = 1;
+	dir = 4;
 	pixel_x = -6;
-	dir = 4
+	pixel_y = 1
 	},
 /turf/open/floor/rogue/tile/masonic{
 	dir = 1
@@ -42940,8 +42878,8 @@
 /area/rogue/under/cave)
 "oaT" = (
 /obj/structure/roguemachine/mail/r{
-	pixel_y = 11;
-	mailtag = "Church"
+	mailtag = "Church";
+	pixel_y = 11
 	},
 /obj/structure/table/wood{
 	dir = 10;
@@ -43473,8 +43411,8 @@
 "okc" = (
 /obj/structure/bell_common{
 	dir = 8;
-	pixel_y = 12;
-	pixel_x = 10
+	pixel_x = 10;
+	pixel_y = 12
 	},
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/rtfield/rockhill)
@@ -43497,9 +43435,9 @@
 "oko" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ff0d00";
-	name = "Infernal Wisp";
+	desc = "An ominous manifestation of latent ambient magick";
 	light_color = "#ff0d00";
-	desc = "An ominous manifestation of latent ambient magick"
+	name = "Infernal Wisp"
 	},
 /turf/open/floor/rogue/volcanic,
 /area/rogue/outdoors/bograt/above)
@@ -43545,14 +43483,14 @@
 /area/rogue/outdoors/town/rockhill)
 "olr" = (
 /obj/structure/roguemachine/atm{
+	location_tag = "Stewardry";
 	pixel_x = -32;
-	pixel_y = 0;
-	location_tag = "Stewardry"
+	pixel_y = 0
 	},
 /obj/structure/bell_common{
 	dir = 4;
-	pixel_y = -12;
-	pixel_x = -11
+	pixel_x = -11;
+	pixel_y = -12
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/town/rockhill)
@@ -43693,9 +43631,9 @@
 /area/rogue/indoors/town/magician)
 "ont" = (
 /obj/structure/lever/wall{
+	icon_state = "leverwall1";
 	pixel_x = 32;
-	redstone_id = "tourneytop";
-	icon_state = "leverwall1"
+	redstone_id = "tourneytop"
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/town/rockhill)
@@ -43923,8 +43861,8 @@
 /area/rogue/indoors/town/church)
 "oqN" = (
 /obj/structure/fluff/customsign{
-	name = "BEWARE!";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "BEWARE!"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/bograt/south)
@@ -44241,8 +44179,8 @@
 	pixel_y = 8
 	},
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 5
+	dir = 5;
+	icon_state = "largetable"
 	},
 /obj/item/candle/candlestick/silver/lit{
 	pixel_y = 9
@@ -44434,8 +44372,8 @@
 	pixel_x = 2
 	},
 /obj/machinery/light/rogue/firebowl/standing{
-	pixel_x = 15;
 	density = 0;
+	pixel_x = 15;
 	pixel_y = 21
 	},
 /turf/open/floor/rogue/hexstone,
@@ -44679,17 +44617,17 @@
 /area/rogue/under/town/basement)
 "oEb" = (
 /mob/living/carbon/human/species/goblin/npc/ambush/hell{
-	icon_state = "goblin_hell";
-	faction = list("infernal","neutral")
+	faction = list("infernal","neutral");
+	icon_state = "goblin_hell"
 	},
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "oEe" = (
 /obj/machinery/light/rogue/hearth,
@@ -44788,10 +44726,10 @@
 /area/rogue/outdoors/beach/harbor)
 "oFD" = (
 /obj/structure/mineral_door/wood/donjon{
+	dir = 1;
 	locked = 1;
 	lockid = "merc";
-	name = "Mercenary's Den";
-	dir = 1
+	name = "Mercenary's Den"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors)
@@ -44837,12 +44775,11 @@
 "oGW" = (
 /obj/machinery/light/rogue/wallfire/candle/weak/l,
 /obj/structure/closet/crate/chest/neu{
-	pixel_x = 0;
-	pixel_y = 2;
 	locked = 1;
-	lockid = "physician";
 	lockhash = 0;
-	name = "Revivification Supplies"
+	lockid = "physician";
+	name = "Revivification Supplies";
+	pixel_y = 2
 	},
 /obj/item/rogueweapon/mace/woodclub,
 /obj/item/reagent_containers/glass/bottle/frankenbrew{
@@ -44854,7 +44791,6 @@
 	pixel_y = 9
 	},
 /obj/structure/fluff/walldeco/med5{
-	pixel_x = 0;
 	pixel_y = 32
 	},
 /turf/open/floor/rogue/tile/brownbrick,
@@ -45083,11 +45019,11 @@
 /turf/closed/mineral/random/rogue/boglava/high,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "oJZ" = (
 /obj/structure/closet/crate/chest{
@@ -45399,11 +45335,11 @@
 /turf/closed/mineral/random/rogue/high,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "oPt" = (
 /obj/structure/fluff/railing/wood{
@@ -45571,11 +45507,11 @@
 /area/rogue/indoors)
 "oSv" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /mob/living/carbon/human/species/skeleton/npc/dungeon,
 /turf/open/floor/rogue/ruinedwood{
@@ -45673,17 +45609,17 @@
 "oUL" = (
 /obj/structure/flora/roguegrass/pyroclasticflowers,
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
-	pixel_y = -32
+	pixel_y = -32;
+	status = 1
 	},
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "oUP" = (
 /obj/structure/fluff/railing/border{
@@ -45892,27 +45828,27 @@
 /area/rogue/outdoors/beach/harbor)
 "oXf" = (
 /obj/structure/mineral_door/wood{
+	locked = 1;
 	lockid = "steward";
-	name = "Clerk's Quarters";
-	locked = 1
+	name = "Clerk's Quarters"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/town/basement/keep)
 "oXi" = (
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "oXj" = (
 /obj/structure/table/vtable,
 /obj/item/clothing/neck/roguetown/psicross{
-	pixel_y = 8;
-	pixel_x = 4
+	pixel_x = 4;
+	pixel_y = 8
 	},
 /obj/structure/fluff/walldeco/painting/seraphina{
-	pixel_y = 32;
-	pixel_x = 17
+	pixel_x = 17;
+	pixel_y = 32
 	},
 /obj/machinery/light/rogue/wallfire/candle{
 	pixel_x = -5
@@ -45957,10 +45893,10 @@
 	pixel_x = 6
 	},
 /obj/item/roguekey{
+	desc = "this key opens the guard's doors in the old goblin encampment";
 	icon_state = "spikekey";
 	lockid = "gobbo_guards";
-	name = "mean goblin key";
-	desc = "this key opens the guard's doors in the old goblin encampment"
+	name = "mean goblin key"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/town/basement{
@@ -46009,8 +45945,8 @@
 	icon_state = "churchtable_alt"
 	},
 /obj/item/reagent_containers/glass/cup/steel{
-	pixel_y = -3;
-	pixel_x = 1
+	pixel_x = 1;
+	pixel_y = -3
 	},
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/indoors/town/church)
@@ -46050,11 +45986,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "oYO" = (
 /obj/effect/landmark/start/guard_captain{
@@ -46108,8 +46044,8 @@
 "paa" = (
 /obj/item/reagent_containers/food/snacks/badrecipe,
 /obj/item/millstone{
-	pixel_y = 7;
-	pixel_x = 7
+	pixel_x = 7;
+	pixel_y = 7
 	},
 /obj/structure/table/wood/large_table/south_west{
 	pixel_x = -8
@@ -46275,7 +46211,6 @@
 /area/rogue/outdoors/town/rockhill)
 "pef" = (
 /obj/structure/fluff/railing/border{
-	icon_state = "border";
 	dir = 6;
 	layer = 2
 	},
@@ -46382,8 +46317,8 @@
 /area/rogue/under/town/basement/keep)
 "pgf" = (
 /obj/structure/mineral_door/bars{
-	lockid = "inquisition";
-	locked = 1
+	locked = 1;
+	lockid = "inquisition"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/town/rockhill)
@@ -46545,11 +46480,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "pjO" = (
 /obj/structure/table/wood/poor,
@@ -46776,8 +46711,8 @@
 /area/rogue/under/town/basement/keep)
 "pmW" = (
 /obj/structure/fluff/statue/gargoyle/moss{
-	pixel_y = 3;
-	pixel_x = -4
+	pixel_x = -4;
+	pixel_y = 3
 	},
 /obj/structure/fluff/railing/border{
 	dir = 4
@@ -46808,8 +46743,8 @@
 	icon_state = "largetable"
 	},
 /obj/item/candle/candlestick/gold/single/lit{
-	pixel_y = 13;
-	pixel_x = -10
+	pixel_x = -10;
+	pixel_y = 13
 	},
 /turf/open/floor/rogue/carpet,
 /area/rogue/indoors/town/manor/rockhill)
@@ -46850,11 +46785,11 @@
 /turf/open/lava,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "poO" = (
 /obj/structure/mineral_door/wood/donjon{
@@ -46882,11 +46817,11 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "ppi" = (
 /obj/structure/stairs{
@@ -47022,11 +46957,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "pri" = (
 /obj/effect/decal/cobbleedge{
@@ -47136,11 +47071,11 @@
 /area/rogue/outdoors/town/rockhill)
 "ptj" = (
 /obj/structure/closet/crate/roguecloset{
-	pixel_y = -4;
-	lockid = "archive";
-	locked = 1;
 	keylock = 1;
-	pixel_x = 6
+	locked = 1;
+	lockid = "archive";
+	pixel_x = 6;
+	pixel_y = -4
 	},
 /obj/item/book/rogue/cooking,
 /obj/item/book/rogue/cardgame,
@@ -47201,9 +47136,9 @@
 /area/rogue/outdoors/rtfield/rockhill)
 "ptW" = (
 /obj/structure/toilet{
+	desc = "A man's throne is his throne";
 	icon_state = "0,2";
-	name = "Very Fancy Toilet";
-	desc = "A man's throne is his throne"
+	name = "Very Fancy Toilet"
 	},
 /turf/open/floor/rogue/tile/bath,
 /area/rogue/indoors/town/manor/rockhill)
@@ -47258,8 +47193,8 @@
 	dir = 4
 	},
 /obj/structure/closet/crate/roguecloset{
-	lockid = "street_shop01";
 	keylock = 1;
+	lockid = "street_shop01";
 	pixel_y = -7
 	},
 /obj/item/candle/yellow,
@@ -47401,8 +47336,8 @@
 	pixel_y = -15
 	},
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_y = -14;
-	layer = 1.5
+	layer = 1.5;
+	pixel_y = -14
 	},
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/indoors/town/bath)
@@ -47423,10 +47358,10 @@
 "pxF" = (
 /obj/structure/table/wood/poor,
 /obj/item/roguekey{
+	desc = "This old key opens the peddler for the lowtown smithy.";
 	icon_state = "brownkey";
 	lockid = "towner_blacksmith";
-	name = "Lowtown Smithy Peddler Key";
-	desc = "This old key opens the peddler for the lowtown smithy."
+	name = "Lowtown Smithy Peddler Key"
 	},
 /turf/open/floor/rogue/blocks/stonered,
 /area/rogue/indoors)
@@ -47519,11 +47454,11 @@
 	dir = 10
 	},
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -47547,8 +47482,8 @@
 /obj/structure/roguemachine/bathvend,
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "pzz" = (
 /obj/structure/closet/crate/coffin,
@@ -47583,9 +47518,9 @@
 /turf/open/water/river{
 	dir = 4;
 	icon_state = "rockwd";
+	name = "muddy river";
 	water_color = "#705a43";
-	water_reagent = /datum/reagent/water/gross;
-	name = "muddy river"
+	water_reagent = /datum/reagent/water/gross
 	},
 /area/rogue/outdoors/bograt/north)
 "pAf" = (
@@ -47611,11 +47546,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "pAs" = (
 /obj/structure/chair/stool/rogue,
@@ -47658,11 +47593,11 @@
 /area/rogue/under/cavewet)
 "pAO" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/outdoors/bograt/sunken)
@@ -47712,9 +47647,7 @@
 /obj/structure/mineral_door/wood/deadbolt{
 	locked = 1
 	},
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors)
 "pBN" = (
@@ -47829,9 +47762,9 @@
 /obj/structure/table/wood/poor,
 /obj/item/toy/cards/deck/syndicate,
 /obj/item/reagent_containers/glass/cup/wooden{
+	layer = 4;
 	pixel_x = -9;
-	pixel_y = 13;
-	layer = 4
+	pixel_y = 13
 	},
 /obj/item/roguecoin/copper{
 	pixel_x = -9;
@@ -47842,9 +47775,9 @@
 	pixel_y = 7
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = -3;
+	layer = 4;
 	pixel_x = 9;
-	layer = 4
+	pixel_y = -3
 	},
 /obj/item/candle/yellow/lit{
 	layer = 5
@@ -47859,9 +47792,9 @@
 /area/rogue/outdoors/town/rockhill)
 "pDC" = (
 /obj/structure/stationary_bell{
+	density = 0;
 	pixel_x = -48;
-	pixel_y = -18;
-	density = 0
+	pixel_y = -18
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/church)
@@ -47919,8 +47852,8 @@
 /area/rogue/under/town/basement/keep)
 "pEc" = (
 /obj/structure/fluff/customsign{
-	name = "WELCOME TO ROCKHILL";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "WELCOME TO ROCKHILL"
 	},
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/town/rockhill)
@@ -48215,9 +48148,9 @@
 /area/rogue/outdoors/town/rockhill)
 "pKj" = (
 /obj/structure/mineral_door/wood/donjon{
+	dir = 8;
 	locked = 1;
-	lockid = "crafterguild";
-	dir = 8
+	lockid = "crafterguild"
 	},
 /obj/structure/bars/passage/shutter{
 	redstone_id = "smith_shutterbasement"
@@ -48694,8 +48627,8 @@
 /area/rogue/indoors/town/church)
 "pTg" = (
 /obj/structure/table/wood{
-	icon_state = "tablewood1";
-	dir = 1
+	dir = 1;
+	icon_state = "tablewood1"
 	},
 /obj/effect/spawner/lootdrop/roguetown/dungeon/tools{
 	loot = list(/obj/item/rogueweapon/shovel = 3, /obj/item/rogueweapon/thresher = 3, /obj/item/flint = 4, /obj/item/rogueweapon/stoneaxe/woodcut = 3, /obj/item/rogueweapon/hammer/iron = 3, /obj/item/rogueweapon/tongs = 3, /obj/item/rogueweapon/pick = 3, /obj/item/rogueweapon/sickle = 3, /obj/item/rogueweapon/huntingknife = 3, /obj/item/rogueweapon/huntingknife/scissors = 3, /obj/item/rogueweapon/hoe = 3)
@@ -48732,9 +48665,9 @@
 /area/rogue/indoors/town/manor/rockhill)
 "pTA" = (
 /obj/structure/bars/passage{
-	redstone_id = "tourneytop";
+	density = 0;
 	icon_state = "passage1";
-	density = 0
+	redstone_id = "tourneytop"
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/town/rockhill)
@@ -49098,8 +49031,8 @@
 /area/rogue/outdoors/beach/harbor)
 "qaR" = (
 /obj/structure/roguemachine/vendor{
-	name = "PEDDLER - Utility Shop";
-	keycontrol = "street_shop01"
+	keycontrol = "street_shop01";
+	name = "PEDDLER - Utility Shop"
 	},
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/indoors/town)
@@ -49255,9 +49188,7 @@
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
 "qez" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/tavern)
 "qeC" = (
@@ -49506,8 +49437,8 @@
 	},
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "qlv" = (
 /obj/structure/fluff/walldeco/wantedposter{
@@ -49570,11 +49501,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qmx" = (
 /obj/structure/rogue/trophy/deer,
@@ -49620,7 +49551,7 @@
 "qmW" = (
 /obj/structure/closet/crate/roguecloset/inn,
 /obj/item/tablecloth/silk,
-/obj/item/clothing/neck/roguetown/zcross/aalloy,
+/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy,
 /obj/item/clothing/shoes/roguetown/boots/aalloy,
 /turf/open/floor/rogue/twig,
 /area/rogue/outdoors/mountains/decap{
@@ -50019,8 +49950,8 @@
 	},
 /obj/structure/bell_common{
 	dir = 8;
-	pixel_y = -13;
-	pixel_x = 10
+	pixel_x = 10;
+	pixel_y = -13
 	},
 /turf/open/floor/rogue/metal{
 	icon_state = "plating2"
@@ -50147,8 +50078,8 @@
 	dir = 1
 	},
 /turf/closed/wall/mineral/rogue/roofwall/middle{
-	name = "reinforced roofing";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roofing"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "qxd" = (
@@ -50186,11 +50117,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qxv" = (
 /obj/effect/decal/cobbleedge{
@@ -50302,8 +50233,8 @@
 /obj/item/clothing/suit/roguetown/armor/leather/studded/bikini,
 /turf/open/floor/carpet/purple,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "qzf" = (
 /obj/structure/fluff/railing/border{
@@ -50415,11 +50346,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qBf" = (
 /turf/closed/mineral/random/rogue/boglava/high,
@@ -50589,9 +50520,9 @@
 /area/rogue/indoors/town/bath)
 "qEf" = (
 /obj/structure/mineral_door/wood/red{
+	locked = 1;
 	lockid = "farm";
-	name = "Butcher";
-	locked = 1
+	name = "Butcher"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/town/basement)
@@ -50652,8 +50583,8 @@
 	pixel_x = -8
 	},
 /obj/structure/mannequin/male{
-	name = "Anatomical Model";
-	desc = "A mostly accurate recreation of the humen body, labelled dilligently"
+	desc = "A mostly accurate recreation of the humen body, labelled dilligently";
+	name = "Anatomical Model"
 	},
 /turf/open/floor/rogue/churchbrick,
 /area/rogue/indoors/town/manor/rockhill)
@@ -50670,8 +50601,8 @@
 	icon_state = "longtable_mid"
 	},
 /obj/structure/bell_common{
-	pixel_y = 19;
-	pixel_x = 5
+	pixel_x = 5;
+	pixel_y = 19
 	},
 /obj/item/paper/scroll,
 /obj/item/natural/feather,
@@ -50853,11 +50784,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qJa" = (
 /obj/item/storage/roguebag,
@@ -50891,9 +50822,9 @@
 	dir = 8
 	},
 /obj/structure/roguemachine/musicbox{
-	pixel_y = 14;
 	layer = 4.2;
-	pixel_x = 4
+	pixel_x = 4;
+	pixel_y = 14
 	},
 /obj/structure/table/wood{
 	icon_state = "tablewood3"
@@ -50937,10 +50868,10 @@
 /area/rogue/indoors)
 "qKE" = (
 /obj/item/roguekey{
+	desc = "this key opens the guard's doors in the old goblin encampment";
 	icon_state = "spikekey";
 	lockid = "gobbo_guards";
-	name = "mean goblin key";
-	desc = "this key opens the guard's doors in the old goblin encampment"
+	name = "mean goblin key"
 	},
 /turf/open/floor/rogue/grasspurple,
 /area/rogue/under/underdark)
@@ -50966,11 +50897,11 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qLo" = (
 /obj/structure/closet/crate/roguecloset/dark{
@@ -51195,11 +51126,11 @@
 /area/rogue/under/cavewet/wizarddungeon)
 "qPK" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/indoors/shelter/druidgrove)
@@ -51421,8 +51352,8 @@
 /obj/structure/flora/ausbushes/ppflowers,
 /obj/structure/fluff/railing/wood{
 	dir = 8;
-	pixel_y = 4;
-	pixel_x = -9
+	pixel_x = -9;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/beach/harbor)
@@ -51510,11 +51441,11 @@
 /turf/open/lava,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qWq" = (
 /turf/open/floor/rogue/ruinedwood{
@@ -51561,11 +51492,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qXk" = (
 /obj/item/natural/rock,
@@ -51629,26 +51560,26 @@
 "qYG" = (
 /obj/machinery/light/rogue/wallfire/candle/l,
 /obj/structure/chair/wood/rogue/fancy{
-	pixel_y = 1;
+	dir = 4;
 	pixel_x = -6;
-	dir = 4
+	pixel_y = 1
 	},
 /turf/open/floor/rogue/carpet,
 /area/rogue/indoors/town/manor/rockhill)
 "qYH" = (
 /obj/structure/chair/stool/rogue,
 /mob/living/carbon/human/species/goblin/npc/ambush/hell{
-	icon_state = "goblin_hell";
-	faction = list("infernal")
+	faction = list("infernal");
+	icon_state = "goblin_hell"
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "qYT" = (
 /obj/structure/fluff/railing/border{
@@ -51733,6 +51664,11 @@
 /obj/structure/fluff/railing/border,
 /turf/closed/wall/mineral/rogue/decostone/cand,
 /area/rogue/indoors/town/dwarfin/rockhill)
+"qZD" = (
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/mountains/decap{
+	first_time_text = "Somewhere High"
+	})
 "qZM" = (
 /turf/closed/mineral/random/rogue/med,
 /turf/closed/mineral/random/rogue,
@@ -51766,11 +51702,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "rak" = (
 /turf/open/floor/rogue/grasscold,
@@ -51804,8 +51740,8 @@
 	pixel_y = 7
 	},
 /obj/item/candle/gold/lit{
-	pixel_y = 3;
-	pixel_x = 5
+	pixel_x = 5;
+	pixel_y = 3
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/shop)
@@ -51845,10 +51781,10 @@
 /area/rogue/outdoors/bograt/above)
 "raR" = (
 /obj/structure/mineral_door/wood/donjon{
+	dir = 4;
 	locked = 1;
 	lockid = "nightmaiden";
-	name = "Arena";
-	dir = 4
+	name = "Arena"
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/town/rockhill)
@@ -51870,8 +51806,8 @@
 /area/rogue/indoors/shelter/mountains)
 "rbr" = (
 /obj/structure/mineral_door/wood/deadbolt{
-	lockid = "farm";
-	dir = 8
+	dir = 8;
+	lockid = "farm"
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town)
@@ -51919,11 +51855,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "rct" = (
 /obj/structure/fluff/railing/border{
@@ -52034,10 +51970,10 @@
 	dir = 1
 	},
 /obj/structure/curtain/magenta{
-	icon_state = "curtain-closed";
-	open = 0;
 	color = "#a1254a";
-	opacity = 1
+	icon_state = "curtain-closed";
+	opacity = 1;
+	open = 0
 	},
 /turf/open/floor/rogue/tile/bath,
 /area/rogue/indoors/town/bath)
@@ -52080,17 +52016,17 @@
 	})
 "reX" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - Northeast";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - Northeast"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/bograt/safe)
 "rfb" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ff370f";
-	name = "Odd Wisp";
 	desc = "A peculiar natural phenomena, seemingly related to the roiling lava below";
-	light_color = "#ff5630"
+	light_color = "#ff5630";
+	name = "Odd Wisp"
 	},
 /turf/open/transparent/openspace,
 /area/rogue/under/cavewet)
@@ -52198,11 +52134,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "rgH" = (
 /obj/structure/closet/crate/drawer,
@@ -52212,9 +52148,9 @@
 	pixel_y = 8
 	},
 /obj/item/roguekey{
+	desc = "This old key opens the peddler for the local lowtown eatery.";
 	icon_state = "brownkey";
 	lockid = "ship";
-	desc = "This old key opens the peddler for the local lowtown eatery.";
 	name = "Ship Key"
 	},
 /turf/open/floor/rogue/ruinedwood{
@@ -52256,9 +52192,7 @@
 /area/rogue/indoors/town/bath)
 "rhE" = (
 /obj/structure/stairs{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/stairs{
 	dir = 1
@@ -52316,11 +52250,11 @@
 /turf/closed/wall/mineral/rogue/decostone/mossy/red/cand,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "riE" = (
 /obj/effect/landmark/mapGenerator/rogue/decap,
@@ -52372,8 +52306,8 @@
 /area/rogue/indoors/town/warden)
 "rky" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - Northwest";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - Northwest"
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cave)
@@ -52465,8 +52399,7 @@
 /area/rogue/indoors/town)
 "rlU" = (
 /obj/structure/fluff/railing/border{
-	dir = 10;
-	icon_state = "border"
+	dir = 10
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq)
@@ -52521,10 +52454,10 @@
 /area/rogue/outdoors/bograt/west)
 "rno" = (
 /obj/structure/closet/crate/roguecloset/inn/south{
-	pixel_y = 0;
 	keylock = 1;
 	locked = 1;
-	lockid = "nightman"
+	lockid = "nightman";
+	pixel_y = 0
 	},
 /obj/item/clothing/cloak/matron,
 /obj/item/clothing/under/roguetown/skirt/red,
@@ -52535,8 +52468,8 @@
 /area/rogue/indoors/town/bath)
 "rnp" = (
 /obj/structure/roguemachine/atm{
-	pixel_y = -32;
-	location_tag = "Inquisitorial Manor"
+	location_tag = "Inquisitorial Manor";
+	pixel_y = -32
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/inq)
@@ -52560,8 +52493,8 @@
 /obj/structure/rack/rogue/shelf/biggest,
 /turf/open/floor/carpet/purple,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "rnV" = (
 /obj/structure/fluff/railing/border{
@@ -52858,8 +52791,8 @@
 /obj/structure/fluff/railing/wood,
 /obj/structure/fluff/railing/wood{
 	dir = 8;
-	pixel_y = 4;
-	pixel_x = -11
+	pixel_x = -11;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/beach/harbor)
@@ -52936,9 +52869,7 @@
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/rtfield/rockhill)
 "rtz" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
@@ -53094,8 +53025,8 @@
 "rvR" = (
 /obj/structure/fluff/railing/border{
 	dir = 1;
-	pixel_x = 4;
-	layer = 3.6
+	layer = 3.6;
+	pixel_x = 4
 	},
 /obj/machinery/light/rogue/wallfire/candle/r,
 /obj/structure/fluff/psycross/copper,
@@ -53251,8 +53182,8 @@
 /area/rogue/indoors/town/tavern)
 "rzA" = (
 /obj/effect/decal/carpet/square{
-	pixel_y = 13;
-	pixel_x = 13
+	pixel_x = 13;
+	pixel_y = 13
 	},
 /turf/open/floor/rogue/tile/harem1,
 /area/rogue/indoors/town/bath)
@@ -53279,9 +53210,7 @@
 /obj/effect/spawner/lootdrop/roguetown/dungeon/medical,
 /obj/structure/fluff/railing/border,
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/item/burial_shroud,
 /obj/item/burial_shroud,
@@ -53436,11 +53365,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "rDf" = (
 /obj/item/roguecoin/copper/pile,
@@ -53448,11 +53377,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "rDg" = (
 /turf/open/floor/rogue/rooftop/green/corner1{
@@ -53508,8 +53437,8 @@
 /area/rogue/indoors/shelter/druidgrove)
 "rEd" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 6
+	dir = 6;
+	icon_state = "largetable"
 	},
 /obj/item/paper/scroll,
 /obj/item/paper/scroll,
@@ -53537,11 +53466,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "rEy" = (
 /obj/structure/chair/stool/rogue,
@@ -53872,8 +53801,8 @@
 /area/rogue/outdoors/bograt/above)
 "rKs" = (
 /obj/machinery/light/rogue/hearth{
-	pixel_y = 2;
-	pixel_x = -4
+	pixel_x = -4;
+	pixel_y = 2
 	},
 /obj/structure/rogue/trophy/deer,
 /obj/item/reagent_containers/glass/bucket/pot/stone,
@@ -54083,8 +54012,8 @@
 /area/rogue/under/cave/dungeon1)
 "rNJ" = (
 /obj/structure/roguemachine/atm{
-	pixel_y = 0;
-	location_tag = "Whitevein"
+	location_tag = "Whitevein";
+	pixel_y = 0
 	},
 /turf/closed/wall/mineral/rogue/decostone,
 /area/rogue/indoors/town/bath)
@@ -54229,8 +54158,8 @@
 /obj/structure/flora/ausbushes/ppflowers,
 /obj/structure/fluff/railing/wood{
 	dir = 8;
-	pixel_y = 4;
-	pixel_x = -9
+	pixel_x = -9;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/beach/harbor)
@@ -54297,8 +54226,8 @@
 "rRy" = (
 /obj/structure/table/wood,
 /obj/structure/globe{
-	pixel_y = 18;
-	density = 0
+	density = 0;
+	pixel_y = 18
 	},
 /obj/effect/spawner/lootdrop/cheap_candle_spawner,
 /turf/open/floor/rogue/concrete,
@@ -54395,8 +54324,8 @@
 	dir = 4
 	},
 /obj/structure/fluff/statue/gargoyle/moss{
-	pixel_y = 3;
-	pixel_x = -4
+	pixel_x = -4;
+	pixel_y = 3
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/bograt/above)
@@ -54504,14 +54433,14 @@
 /obj/structure/lever/wall{
 	dir = 8;
 	name = "bridge lever";
-	redstone_id = "gatelava";
-	pixel_y = 8
+	pixel_y = 8;
+	redstone_id = "gatelava"
 	},
 /obj/structure/lever/wall{
 	dir = 8;
 	name = "side passage lever";
-	redstone_id = "gatesidepassage";
-	pixel_y = -8
+	pixel_y = -8;
+	redstone_id = "gatesidepassage"
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/manor/rockhill)
@@ -54678,8 +54607,8 @@
 /area/rogue/indoors/town/tavern)
 "rYo" = (
 /obj/structure/closet/crate/roguecloset/dark{
-	lockid = "fancyiii";
-	keylock = 1
+	keylock = 1;
+	lockid = "fancyiii"
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/tavern)
@@ -55135,8 +55064,8 @@
 /area/rogue/outdoors/bograt/north)
 "sfZ" = (
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_x = -4;
 	icon_state = "floorcandlee1";
+	pixel_x = -4;
 	pixel_y = -16
 	},
 /turf/open/floor/rogue/concrete,
@@ -55569,9 +55498,7 @@
 /turf/closed/wall/mineral/rogue/decostone/cand,
 /area/rogue/indoors/town/bath)
 "soC" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/under/cave)
 "soF" = (
@@ -55795,8 +55722,8 @@
 /area/rogue/outdoors/bograt/north)
 "ssv" = (
 /obj/structure/globe{
-	pixel_y = 32;
-	density = 0
+	density = 0;
+	pixel_y = 32
 	},
 /turf/closed/wall/mineral/rogue/stone,
 /area/rogue/indoors/town/magician)
@@ -55837,8 +55764,8 @@
 	},
 /turf/closed/wall/mineral/rogue/roofwall/middle{
 	dir = 4;
-	name = "reinforced roofing";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roofing"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "stm" = (
@@ -55987,11 +55914,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "svx" = (
 /turf/open/floor/rogue/rooftop/green/corner1{
@@ -56039,8 +55966,8 @@
 /area/rogue/indoors)
 "svR" = (
 /obj/structure/mineral_door/wood/red{
-	lockid = "puritan";
-	locked = 1
+	locked = 1;
+	lockid = "puritan"
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq/office)
@@ -56064,9 +55991,9 @@
 	},
 /obj/item/candle/gold/lit,
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom1";
-	name = "Manor Guestroom I Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom I Key"
 	},
 /turf/open/floor/rogue/tile/masonic/inverted,
 /area/rogue/indoors/town/manor/rockhill)
@@ -56131,8 +56058,8 @@
 	},
 /obj/structure/bell_common{
 	dir = 1;
-	pixel_y = -9;
-	pixel_x = -12
+	pixel_x = -12;
+	pixel_y = -9
 	},
 /obj/structure/roguemachine/vendor/innrockhill{
 	pixel_y = 8
@@ -56165,8 +56092,8 @@
 "sxv" = (
 /obj/structure/stairs{
 	dir = 8;
-	pixel_y = 6;
-	pixel_x = -3
+	pixel_x = -3;
+	pixel_y = 6
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/town/church/chapel)
@@ -56287,8 +56214,8 @@
 	pixel_x = 32
 	},
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	pixel_y = 13;
-	pixel_x = 32
+	pixel_x = 32;
+	pixel_y = 13
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/bath)
@@ -56399,8 +56326,8 @@
 /area/rogue/indoors/town/church)
 "sBZ" = (
 /obj/structure/fluff/nest{
-	pixel_y = 7;
-	pixel_x = -1
+	pixel_x = -1;
+	pixel_y = 7
 	},
 /obj/item/reagent_containers/food/snacks/grown/wheat,
 /obj/structure/fluff/railing/border,
@@ -56408,9 +56335,9 @@
 /obj/structure/fluff/railing/border/north,
 /obj/item/reagent_containers/food/snacks/grown/wheat,
 /mob/living/simple_animal/pet/cat/rogue/rat{
+	dir = 4;
 	pixel_x = -16;
-	pixel_y = -6;
-	dir = 4
+	pixel_y = -6
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/town/basement/keep)
@@ -56828,17 +56755,17 @@
 "sKw" = (
 /obj/structure/flora/roguegrass/pyroclasticflowers,
 /mob/living/carbon/human/species/goblin/npc/ambush/hell{
-	icon_state = "goblin_hell";
-	faction = list("infernal","neutral")
+	faction = list("infernal","neutral");
+	icon_state = "goblin_hell"
 	},
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "sKx" = (
 /obj/structure/fluff/railing/border{
@@ -57049,8 +56976,8 @@
 	},
 /obj/item/reagent_containers/glass/cup/wooden,
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_x = 19;
 	icon_state = "floorcandlee1";
+	pixel_x = 19;
 	pixel_y = -18
 	},
 /turf/open/floor/carpet/inn,
@@ -57226,10 +57153,10 @@
 /area/rogue/outdoors/woodsrat/north)
 "sQE" = (
 /obj/structure/mineral_door/wood/donjon{
-	name = "Rooftop Exit";
-	lockid = "puritan";
+	dir = 1;
 	locked = 1;
-	dir = 1
+	lockid = "puritan";
+	name = "Rooftop Exit"
 	},
 /obj/structure/fluff/walldeco/maidendrape{
 	pixel_y = 0
@@ -57326,11 +57253,11 @@
 /area/rogue/outdoors/town/roofs)
 "sSE" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/under/cave/dungeon1)
@@ -57440,8 +57367,8 @@
 /area/rogue/under/cave)
 "sUo" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - North";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - North"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/bograt/south)
@@ -57693,11 +57620,11 @@
 /turf/open/floor/rogue/greenstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "sYM" = (
 /obj/structure/bed/rogue/inn/hay,
@@ -57928,11 +57855,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "tcf" = (
 /turf/open/floor/rogue/naturalstone,
@@ -58073,8 +58000,8 @@
 /area/rogue/indoors/town/garrison)
 "ten" = (
 /obj/structure/roguemachine/lottery_roguetown{
-	pixel_y = 0;
-	pixel_x = 32
+	pixel_x = 32;
+	pixel_y = 0
 	},
 /obj/structure/chair/stool/rogue,
 /turf/open/floor/rogue/carpet,
@@ -58281,9 +58208,9 @@
 	pixel_y = -2
 	},
 /obj/machinery/light/rogue/wallfire/candle/floorcandle{
-	pixel_y = 4;
+	layer = 1;
 	pixel_x = 2;
-	layer = 1
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/town/bath)
@@ -58454,8 +58381,8 @@
 /area/rogue/under/cavewet)
 "tkA" = (
 /obj/structure/mineral_door/wood/red{
-	lockid = "inquisition";
 	locked = 1;
+	lockid = "inquisition";
 	name = "Orthodixist's Chamber"
 	},
 /turf/open/floor/rogue/concrete,
@@ -58495,13 +58422,13 @@
 	icon_state = "borderfall"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "counsil3";
-	name = "Counsillor's Room III Key";
-	desc = "This key will open a Manor guest room."
+	name = "Counsillor's Room III Key"
 	},
 /obj/item/candle/gold/lit{
-	pixel_y = 7;
-	pixel_x = 6
+	pixel_x = 6;
+	pixel_y = 7
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/manor/rockhill)
@@ -58548,11 +58475,11 @@
 "tmr" = (
 /obj/structure/flora/newleaf,
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -58587,8 +58514,8 @@
 	pixel_x = 32
 	},
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	pixel_y = 13;
-	pixel_x = 32
+	pixel_x = 32;
+	pixel_y = 13
 	},
 /turf/open/water/bath,
 /area/rogue/indoors/town/bath)
@@ -58710,8 +58637,7 @@
 	dir = 1
 	},
 /obj/structure/fluff/railing/border{
-	dir = 8;
-	icon_state = "border"
+	dir = 8
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/inq)
@@ -58720,8 +58646,8 @@
 /area/rogue/under/town/basement/keep)
 "toW" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - Northeast";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - Northeast"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/bograt/west)
@@ -58974,8 +58900,8 @@
 /area/rogue/indoors)
 "tuD" = (
 /obj/structure/bed/rogue/inn/wool{
-	pixel_y = 8;
-	dir = 8
+	dir = 8;
+	pixel_y = 8
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/church)
@@ -59215,8 +59141,8 @@
 	pixel_x = -8
 	},
 /obj/structure/chair/bench/church/smallbench{
-	pixel_y = 25;
-	pixel_x = 30
+	pixel_x = 30;
+	pixel_y = 25
 	},
 /obj/structure/bookcase/random,
 /turf/open/floor/rogue/grass,
@@ -59420,11 +59346,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "tCk" = (
 /obj/structure/fluff/statue/tdummy,
@@ -59435,13 +59361,13 @@
 	pixel_y = 26
 	},
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 4
+	dir = 4;
+	icon_state = "largetable"
 	},
 /obj/structure/roguemachine/mail/l{
+	mailtag = "Manor Gatehouse";
 	pixel_x = -29;
-	pixel_y = 6;
-	mailtag = "Manor Gatehouse"
+	pixel_y = 6
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/manor/rockhill)
@@ -59456,9 +59382,9 @@
 	},
 /obj/item/natural/feather,
 /obj/structure/roguemachine/atm{
+	location_tag = "Hightown Streetshop";
 	pixel_x = -32;
-	pixel_y = 0;
-	location_tag = "Hightown Streetshop"
+	pixel_y = 0
 	},
 /turf/open/floor/rogue/woodturned/nosmooth,
 /area/rogue/indoors/town)
@@ -59600,11 +59526,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "tFm" = (
 /obj/structure/bed/rogue/bedroll,
@@ -59723,34 +59649,34 @@
 /obj/item/roguekey/walls,
 /obj/item/roguekey/walls,
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom1";
-	name = "Manor Guestroom I Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom I Key"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom1";
-	name = "Manor Guestroom I Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom I Key"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom2";
-	name = "Manor Guestroom II Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom II Key"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom2";
-	name = "Manor Guestroom II Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom II Key"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom3";
-	name = "Manor Guestroom III Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom III Key"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "guestroom3";
-	name = "Manor Guestroom III Key";
-	desc = "This key will open a Manor guest room."
+	name = "Manor Guestroom III Key"
 	},
 /obj/item/roguekey/manor,
 /obj/item/roguekey/manor,
@@ -59850,8 +59776,8 @@
 	pixel_y = -1
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = 5;
-	pixel_x = -8
+	pixel_x = -8;
+	pixel_y = 5
 	},
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/indoors)
@@ -60296,9 +60222,9 @@
 /turf/open/water/river{
 	dir = 1;
 	icon_state = "rockwd";
+	name = "muddy river";
 	water_color = "#705a43";
-	water_reagent = /datum/reagent/water/gross;
-	name = "muddy river"
+	water_reagent = /datum/reagent/water/gross
 	},
 /area/rogue/outdoors/bograt/north)
 "tQN" = (
@@ -60450,9 +60376,7 @@
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/woodsrat/south)
 "tTH" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/ruinedwood{
 	dir = 1;
 	icon_state = "wooden_floor2"
@@ -60654,8 +60578,8 @@
 "tXY" = (
 /obj/structure/rogue/trophy/deer,
 /obj/structure/fluff/pillow/blue{
-	dir = 1;
-	color = "#2762cf"
+	color = "#2762cf";
+	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/manor/rockhill)
@@ -60772,8 +60696,8 @@
 "uaw" = (
 /obj/structure/bell_common{
 	dir = 1;
-	pixel_y = 30;
-	pixel_x = -20
+	pixel_x = -20;
+	pixel_y = 30
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/town/rockhill)
@@ -60863,11 +60787,11 @@
 "ucV" = (
 /obj/structure/flora/roguegrass/bush/wall,
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/shelter/druidgrove)
@@ -61178,8 +61102,8 @@
 /area/rogue/outdoors/bograt/south)
 "ujr" = (
 /obj/item/candle/candlestick/silver/lit{
-	pixel_y = 12;
-	pixel_x = -8
+	pixel_x = -8;
+	pixel_y = 12
 	},
 /obj/structure/table/wood{
 	dir = 6;
@@ -61403,8 +61327,8 @@
 /area/rogue/outdoors/bograt/above)
 "unO" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 6
+	dir = 6;
+	icon_state = "largetable"
 	},
 /obj/item/paper,
 /obj/item/natural/feather{
@@ -61534,9 +61458,7 @@
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/rtfield/rockhill)
 "upu" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/under/cave)
 "upE" = (
@@ -61987,19 +61909,19 @@
 /area/rogue/outdoors/beach/harbor)
 "uyU" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 10
+	dir = 10;
+	icon_state = "largetable"
 	},
 /obj/item/roguekey/nightmaiden{
+	icon_state = "spikekey";
 	lockid = "punishroom";
 	name = "punishment room key";
-	icon_state = "spikekey";
 	pixel_y = 9
 	},
 /obj/item/roguekey/nightmaiden{
+	icon_state = "spikekey";
 	lockid = "punishroom";
 	name = "punishment room key";
-	icon_state = "spikekey";
 	pixel_y = 9
 	},
 /obj/machinery/light/rogue/wallfire/candle/blue/r,
@@ -62036,18 +61958,18 @@
 /area/rogue/outdoors/rtfield/rockhill)
 "uAg" = (
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = 32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "uAi" = (
 /turf/closed/wall/mineral/rogue/decostone/long,
@@ -62421,10 +62343,10 @@
 /area/rogue/outdoors/bograt/south)
 "uIY" = (
 /obj/structure/table/wood{
+	density = 0;
 	dir = 10;
 	icon_state = "2,0";
-	pixel_x = 32;
-	density = 0
+	pixel_x = 32
 	},
 /turf/closed/wall/mineral/rogue/stonebrick,
 /area/rogue/indoors/town/bath)
@@ -62724,9 +62646,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/tavern)
 "uNM" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town)
 "uNO" = (
@@ -62785,9 +62705,7 @@
 	},
 /area/rogue/indoors/town/magician)
 "uOD" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/outdoors/town/rockhill)
 "uOH" = (
@@ -62918,8 +62836,8 @@
 /obj/structure/bars/steel,
 /obj/structure/curtain/red,
 /obj/structure/curtain/red{
-	open = 0;
-	icon_state = "curtain-closed"
+	icon_state = "curtain-closed";
+	open = 0
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/inq)
@@ -62938,11 +62856,11 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "uRp" = (
 /obj/structure/fluff/walldeco/maidendrape{
@@ -63013,8 +62931,8 @@
 /area/rogue/indoors/town/manor/rockhill)
 "uSg" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - Northeast";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - Northeast"
 	},
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/bograt/safe)
@@ -63141,8 +63059,8 @@
 /area/rogue/indoors/town)
 "uTX" = (
 /obj/structure/mineral_door/wood/violet{
-	lockid = "nightman";
 	locked = 1;
+	lockid = "nightman";
 	name = "Nighmaster's Room"
 	},
 /turf/open/floor/rogue/concrete,
@@ -63214,11 +63132,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "uVq" = (
 /turf/closed/wall/mineral/rogue/stone/window/moss,
@@ -63279,8 +63197,8 @@
 /area/rogue/outdoors/bograt/south)
 "uWv" = (
 /obj/effect/decal/carpet{
-	pixel_y = 11;
-	pixel_x = -1
+	pixel_x = -1;
+	pixel_y = 11
 	},
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/indoors/town/bath)
@@ -63393,9 +63311,9 @@
 "uYX" = (
 /turf/open/water/river{
 	icon_state = "rockwd";
+	name = "muddy river";
 	water_color = "#705a43";
-	water_reagent = /datum/reagent/water/gross;
-	name = "muddy river"
+	water_reagent = /datum/reagent/water/gross
 	},
 /area/rogue/outdoors/bograt/north)
 "uZb" = (
@@ -63537,28 +63455,28 @@
 "vcd" = (
 /obj/item/natural/bundle/curred_hide{
 	amount = 10;
-	pixel_y = 10;
-	icon_state = "leatherroll2"
+	icon_state = "leatherroll2";
+	pixel_y = 10
 	},
 /obj/item/reagent_containers/food/snacks/tallow{
-	pixel_x = 6;
-	layer = 2.9
+	layer = 2.9;
+	pixel_x = 6
 	},
 /obj/item/reagent_containers/food/snacks/tallow{
-	pixel_x = 6;
-	layer = 2.9
+	layer = 2.9;
+	pixel_x = 6
 	},
 /obj/item/reagent_containers/food/snacks/tallow{
-	pixel_x = 6;
-	layer = 2.9
+	layer = 2.9;
+	pixel_x = 6
 	},
 /obj/item/natural/bundle/silk{
-	pixel_x = -8;
-	amount = 6
+	amount = 6;
+	pixel_x = -8
 	},
 /obj/item/natural/bundle/silk{
-	pixel_x = -8;
-	amount = 6
+	amount = 6;
+	pixel_x = -8
 	},
 /obj/machinery/light/rogue/wallfire/candle/l,
 /obj/structure/closet/crate/roguecloset{
@@ -63588,11 +63506,11 @@
 /area/rogue/indoors/town/church)
 "vcs" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/twig,
 /area/rogue/indoors/shelter/druidgrove)
@@ -63717,8 +63635,8 @@
 /area/rogue/indoors/town/tavern)
 "vex" = (
 /obj/structure/fluff/customsign{
-	name = "EVIL ASS MOUNTAIN ZONE - UNDER CONSTRUCTION!!";
 	icon_state = "signwrote";
+	name = "EVIL ASS MOUNTAIN ZONE - UNDER CONSTRUCTION!!";
 	pixel_y = 3
 	},
 /turf/open/floor/rogue/dirt/road,
@@ -63752,11 +63670,11 @@
 /turf/closed/mineral/rogue,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "vfh" = (
 /obj/structure/noose,
@@ -63789,10 +63707,10 @@
 /area/rogue/outdoors/town/rockhill)
 "vfM" = (
 /obj/structure/table/wood{
+	density = 0;
 	dir = 10;
 	icon_state = "0,1";
-	pixel_x = -32;
-	density = 0
+	pixel_x = -32
 	},
 /turf/closed/wall/mineral/rogue/stonebrick,
 /area/rogue/indoors/town/bath)
@@ -63833,21 +63751,21 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "vgK" = (
 /turf/open/floor/rogue/metal,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "vgW" = (
 /obj/structure/mineral_door/wood{
@@ -64046,11 +63964,11 @@
 	dir = 4
 	},
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/twig,
 /area/rogue/indoors/shelter/druidgrove)
@@ -64108,9 +64026,9 @@
 /area/rogue/outdoors/rtfield/rockhill)
 "vmQ" = (
 /obj/structure/bars/passage{
-	redstone_id = "gatesidepassage";
+	density = 0;
 	icon_state = "passage1";
-	density = 0
+	redstone_id = "gatesidepassage"
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/manor/rockhill)
@@ -64544,11 +64462,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "vtg" = (
 /obj/effect/decal/cleanable/blood/splatter,
@@ -64615,9 +64533,9 @@
 	dir = 8
 	},
 /obj/structure/bed/rogue/inn/wool{
-	pixel_y = 5;
+	dir = 8;
 	pixel_x = 6;
-	dir = 8
+	pixel_y = 5
 	},
 /obj/machinery/light/rogue/wallfire/candle/l{
 	pixel_x = -21
@@ -64684,9 +64602,7 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet)
 "vuN" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
@@ -64833,9 +64749,9 @@
 /area/rogue/under/underdark)
 "vxh" = (
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = -32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/greenstone/runed,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -64873,11 +64789,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "vyn" = (
 /turf/closed/wall/mineral/rogue/wooddark/window,
@@ -64916,8 +64832,8 @@
 /area/rogue/indoors/town/Academy)
 "vzs" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 10
+	dir = 10;
+	icon_state = "largetable"
 	},
 /obj/item/reagent_containers/food/snacks/rogue/bread,
 /obj/item/rogueweapon/huntingknife/chefknife,
@@ -65168,11 +65084,11 @@
 "vEI" = (
 /obj/structure/flora/roguegrass/water,
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/water/swamp/deep,
 /area/rogue/indoors/shelter/druidgrove)
@@ -65228,9 +65144,9 @@
 /turf/open/water/river{
 	dir = 8;
 	icon_state = "rockwd";
+	name = "muddy river";
 	water_color = "#705a43";
-	water_reagent = /datum/reagent/water/gross;
-	name = "muddy river"
+	water_reagent = /datum/reagent/water/gross
 	},
 /area/rogue/outdoors/bograt/north)
 "vFf" = (
@@ -65383,8 +65299,8 @@
 "vIj" = (
 /obj/structure/bars/steel,
 /obj/structure/curtain/red{
-	open = 0;
-	icon_state = "curtain-closed"
+	icon_state = "curtain-closed";
+	open = 0
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/inq)
@@ -65469,8 +65385,8 @@
 /area/rogue/under/underdark)
 "vJe" = (
 /obj/structure/bell_common{
-	pixel_y = -11;
-	pixel_x = -12
+	pixel_x = -12;
+	pixel_y = -11
 	},
 /turf/open/floor/rogue/metal,
 /area/rogue/outdoors/town/rockhill)
@@ -65566,20 +65482,20 @@
 /area/rogue/indoors/town/manor/rockhill)
 "vKl" = (
 /obj/machinery/light/rogue/wallfire/candle/blue{
-	status = 1;
 	pixel_x = 32;
-	pixel_y = 0
+	pixel_y = 0;
+	status = 1
 	},
 /turf/open/floor/rogue/volcanic{
 	desc = "Silky and sharp-smooth, like cracked glass"
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "vKp" = (
 /obj/structure/bed/rogue/shit,
@@ -65630,8 +65546,8 @@
 /area/rogue/indoors/town/bath)
 "vKQ" = (
 /obj/machinery/light/rogue/wallfire/candle{
-	pixel_y = 33;
-	pixel_x = 16
+	pixel_x = 16;
+	pixel_y = 33
 	},
 /turf/open/floor/rogue/carpet/lord/left,
 /area/rogue/indoors/town/manor/rockhill)
@@ -65844,9 +65760,9 @@
 "vPI" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ff370f";
-	name = "Odd Wisp";
 	desc = "A peculiar natural phenomena, seemingly related to the roiling lava below";
-	light_color = "#ff5630"
+	light_color = "#ff5630";
+	name = "Odd Wisp"
 	},
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/bograt/north)
@@ -66208,8 +66124,8 @@
 /area/rogue/under/cavewet)
 "vWv" = (
 /obj/structure/table/wood{
-	icon_state = "tablewood1";
-	dir = 1
+	dir = 1;
+	icon_state = "tablewood1"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/indoors)
@@ -66248,8 +66164,8 @@
 /area/rogue/indoors/town/bath)
 "vXS" = (
 /obj/structure/closet/crate/roguecloset/inn/south{
-	lockid = "roomii";
-	keylock = 1
+	keylock = 1;
+	lockid = "roomii"
 	},
 /turf/open/floor/carpet/purple,
 /area/rogue/indoors/town/tavern)
@@ -66564,8 +66480,8 @@
 /area/rogue/outdoors/rtfield/rockhill/above)
 "wbR" = (
 /obj/machinery/light/rogue/wallfire/candle/l{
-	pixel_y = -32;
-	pixel_x = 0
+	pixel_x = 0;
+	pixel_y = -32
 	},
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/dwarfin/rockhill)
@@ -66715,13 +66631,6 @@
 /obj/machinery/light/rogue/wallfire/candle/blue/l,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/Academy)
-"wet" = (
-/obj/structure/fluff/railing/fence{
-	dir = 4;
-	pixel_y = 0
-	},
-/turf/open/floor/rogue/blocks,
-/area/rogue/outdoors/bograt/above)
 "wew" = (
 /obj/structure/table/wood{
 	icon_state = "longtable"
@@ -66878,8 +66787,8 @@
 	pixel_y = 8
 	},
 /obj/structure/flora/ausbushes/reedbush{
-	pixel_y = 4;
-	pixel_x = 6
+	pixel_x = 6;
+	pixel_y = 4
 	},
 /turf/open/water/bath,
 /area/rogue/indoors/town/bath)
@@ -66889,8 +66798,8 @@
 /obj/item/candle/yellow,
 /obj/item/candle/yellow,
 /obj/structure/closet/crate/roguecloset/inn/south{
-	pixel_y = 4;
-	pixel_x = 4
+	pixel_x = 4;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors)
@@ -66911,9 +66820,7 @@
 /area/rogue/indoors/town/Academy)
 "whR" = (
 /obj/structure/stairs{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/mineral_door/wood/deadbolt{
 	dir = 4;
@@ -66939,8 +66846,8 @@
 /area/rogue/outdoors/beach/harbor)
 "wig" = (
 /obj/structure/chair/stool/rogue{
-	pixel_y = 13;
-	pixel_x = 14
+	pixel_x = 14;
+	pixel_y = 13
 	},
 /turf/open/floor/rogue/herringbone,
 /area/rogue/indoors/inq)
@@ -67133,10 +67040,10 @@
 "wlh" = (
 /obj/structure/rack/rogue,
 /obj/machinery/light/rogue/wallfire/candle/floorcandle/pink{
-	plane = -7;
-	pixel_y = 4;
+	desc = "These candles produces a heady vapor, warding away the less pleasing scents of the sewer.";
 	name = "scented candles";
-	desc = "These candles produces a heady vapor, warding away the less pleasing scents of the sewer."
+	pixel_y = 4;
+	plane = -7
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/under/town/sewer)
@@ -67395,12 +67302,6 @@
 /obj/item/clothing/head/roguetown/wizhat,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/magician)
-"woZ" = (
-/mob/living/carbon/human/species/goblin/npc/ambush/cave{
-	wander = 0
-	},
-/turf/open/floor/rogue/naturalstone,
-/area/rogue/under/cavewet)
 "wpf" = (
 /obj/structure/flora/ausbushes/reedbush,
 /turf/closed/wall/mineral/rogue/stone/moss,
@@ -67447,8 +67348,8 @@
 "wpM" = (
 /obj/effect/decal/carpet/kover_darkred{
 	dir = 8;
-	pixel_y = 17;
-	pixel_x = 15
+	pixel_x = 15;
+	pixel_y = 17
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/bath)
@@ -67493,9 +67394,9 @@
 /obj/effect/decal/cleanable/debris/woody,
 /obj/effect/wisp/prestidigitation{
 	color = "#ff0d00";
-	name = "Infernal Wisp";
+	desc = "An ominous manifestation of latent ambient magick";
 	light_color = "#ff0d00";
-	desc = "An ominous manifestation of latent ambient magick"
+	name = "Infernal Wisp"
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -67626,17 +67527,17 @@
 /area/rogue/indoors/town/warehouse)
 "wtl" = (
 /obj/structure/bookcase/random{
-	pixel_y = -5;
+	density = 0;
 	pixel_x = 3;
-	density = 0
+	pixel_y = -5
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/cavewet/wizarddungeon)
 "wtp" = (
 /obj/structure/bell_common{
 	dir = 8;
-	pixel_y = 9;
-	pixel_x = 11
+	pixel_x = 11;
+	pixel_y = 9
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/Academy)
@@ -67668,8 +67569,7 @@
 /area/rogue/indoors/town/manor/rockhill)
 "wtG" = (
 /obj/structure/fluff/railing/border{
-	dir = 6;
-	icon_state = "border"
+	dir = 6
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq)
@@ -67715,9 +67615,9 @@
 	},
 /obj/item/toy/cards/deck/syndicate,
 /obj/item/reagent_containers/glass/cup/wooden{
+	layer = 4;
 	pixel_x = -9;
-	pixel_y = 13;
-	layer = 4
+	pixel_y = 13
 	},
 /obj/item/roguecoin/copper{
 	pixel_x = -9;
@@ -67728,9 +67628,9 @@
 	pixel_y = 7
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = -3;
+	layer = 4;
 	pixel_x = 9;
-	layer = 4
+	pixel_y = -3
 	},
 /obj/item/candle/yellow/lit{
 	layer = 5
@@ -67739,11 +67639,11 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "wuY" = (
 /obj/structure/chair/wood/rogue/fancy{
@@ -67868,8 +67768,8 @@
 /area/rogue/indoors/town)
 "wxi" = (
 /obj/structure/closet/crate/roguecloset/dark{
-	opacity = 1;
-	anchored = 1
+	anchored = 1;
+	opacity = 1
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/under/town/sewer)
@@ -68053,12 +67953,12 @@
 "wzT" = (
 /obj/structure/chair/wood/rogue/fancy{
 	dir = 1;
-	pixel_y = 5;
-	pixel_x = 2
+	pixel_x = 2;
+	pixel_y = 5
 	},
 /obj/machinery/light/rogue/firebowl/standing{
-	pixel_x = 17;
 	density = 0;
+	pixel_x = 17;
 	pixel_y = -1
 	},
 /turf/open/floor/rogue/hexstone,
@@ -68782,9 +68682,9 @@
 /area/rogue/indoors/town/bath)
 "wNW" = (
 /obj/structure/mineral_door/wood/donjon{
+	dir = 1;
 	locked = 1;
 	lockid = "dungeon";
-	dir = 1;
 	name = "Solitary"
 	},
 /turf/open/floor/rogue/blocks,
@@ -69045,17 +68945,17 @@
 	icon_state = "tablewood3"
 	},
 /obj/item/roguekey/manor{
+	desc = "This key will open a Manor guest room.";
 	lockid = "counsil1";
-	name = "Counsillor's Room I Key";
-	desc = "This key will open a Manor guest room."
+	name = "Counsillor's Room I Key"
 	},
 /obj/structure/fluff/railing/border/west{
 	pixel_x = -8
 	},
 /obj/machinery/light/rogue/wallfire/candle/l,
 /obj/item/candle/gold/lit{
-	pixel_y = 7;
-	pixel_x = 6
+	pixel_x = 6;
+	pixel_y = 7
 	},
 /turf/open/floor/carpet/inn,
 /area/rogue/indoors/town/manor/rockhill)
@@ -69169,8 +69069,8 @@
 	icon_state = "churchtable_end_alt"
 	},
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 17;
-	pixel_x = -11
+	pixel_x = -11;
+	pixel_y = 17
 	},
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/indoors/town/church)
@@ -69182,8 +69082,8 @@
 	pixel_x = -8
 	},
 /obj/item/reagent_containers/food/snacks/tallow/red{
-	pixel_y = 3;
-	pixel_x = 8
+	pixel_x = 8;
+	pixel_y = 3
 	},
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/inq)
@@ -69403,8 +69303,8 @@
 "wWs" = (
 /obj/machinery/light/rogue/wallfire/candle/blue/r,
 /obj/item/millstone{
-	pixel_y = 8;
-	pixel_x = 7
+	pixel_x = 7;
+	pixel_y = 8
 	},
 /obj/structure/table/wood/large_table/south_west,
 /turf/open/floor/rogue/wood,
@@ -69424,8 +69324,8 @@
 	keylock = 1;
 	locked = 1;
 	lockid = "nightmaiden";
-	pixel_x = 3;
-	name = "Tools"
+	name = "Tools";
+	pixel_x = 3
 	},
 /obj/item/lockpickring/mundane,
 /obj/item/rope/chain,
@@ -69781,11 +69681,11 @@
 /turf/open/floor/rogue/greenstone/runed,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "xdm" = (
 /obj/effect/landmark/quest_spawner/medium,
@@ -69852,8 +69752,8 @@
 /area/rogue/indoors/town/manor/rockhill)
 "xen" = (
 /obj/structure/table/wood{
-	icon_state = "largetable";
-	dir = 5
+	dir = 5;
+	icon_state = "largetable"
 	},
 /obj/item/needle/thorn,
 /obj/item/natural/cloth,
@@ -69964,8 +69864,8 @@
 /area/rogue/indoors/town/manor/rockhill)
 "xgJ" = (
 /obj/structure/bell_common{
-	pixel_y = -12;
-	pixel_x = -10
+	pixel_x = -10;
+	pixel_y = -12
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors)
@@ -70184,7 +70084,6 @@
 	pixel_y = -7
 	},
 /obj/structure/rack/rogue/shelf{
-	pixel_x = 0;
 	pixel_y = 22
 	},
 /obj/effect/decal/cobbleedge{
@@ -70224,7 +70123,6 @@
 /obj/structure/table/wood/poor,
 /obj/item/reagent_containers/glass/cup/ceramic/fancy,
 /obj/item/reagent_containers/glass/bucket/pot/teapot/fancy{
-	pixel_x = 0;
 	pixel_y = 12
 	},
 /turf/open/floor/rogue/wood,
@@ -70531,16 +70429,16 @@
 	pixel_x = -11
 	},
 /obj/structure/bearpelt{
-	pixel_y = 15;
-	pixel_x = -2
+	pixel_x = -2;
+	pixel_y = 15
 	},
 /turf/open/floor/rogue/blocks/stonered/tiny,
 /area/rogue/indoors/town/tavern)
 "xpC" = (
 /obj/structure/roguemachine/mail{
 	mailtag = "Artisan Guild";
-	pixel_y = 0;
-	pixel_x = -32
+	pixel_x = -32;
+	pixel_y = 0
 	},
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/dwarfin/rockhill)
@@ -70650,8 +70548,8 @@
 "xrQ" = (
 /obj/structure/fluff/railing/wood{
 	dir = 8;
-	pixel_y = 4;
-	pixel_x = -9
+	pixel_x = -9;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/beach/harbor)
@@ -70777,9 +70675,9 @@
 "xtL" = (
 /obj/effect/wisp/prestidigitation{
 	color = "#ff370f";
-	name = "Odd Wisp";
 	desc = "A peculiar natural phenomena, seemingly related to the roiling lava below";
-	light_color = "#ff5630"
+	light_color = "#ff5630";
+	name = "Odd Wisp"
 	},
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/woodsrat/south)
@@ -70805,9 +70703,7 @@
 	pixel_y = -9
 	},
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/rogue/churchbrick,
 /area/rogue/indoors/town/manor/rockhill)
@@ -70837,11 +70733,11 @@
 /area/rogue/outdoors/beach/harbor)
 "xuC" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/bograt/sunken)
@@ -71244,8 +71140,7 @@
 /area/rogue/indoors/town/shop)
 "xAW" = (
 /obj/structure/fluff/railing/border{
-	dir = 8;
-	icon_state = "border"
+	dir = 8
 	},
 /turf/open/floor/rogue/tile,
 /area/rogue/indoors/inq)
@@ -71410,8 +71305,8 @@
 /area/rogue/indoors/town/dwarfin/rockhill)
 "xDT" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - East";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - East"
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/bograt/west)
@@ -71543,9 +71438,9 @@
 /area/rogue/outdoors/town/roofs)
 "xFq" = (
 /obj/structure/closet/crate/drawer{
+	keylock = 1;
 	lockid = "Cphysician";
-	pixel_y = 5;
-	keylock = 1
+	pixel_y = 5
 	},
 /obj/item/roguekey/physician,
 /obj/item/roguekey/physician,
@@ -71605,8 +71500,8 @@
 /obj/structure/table/wood/large_table,
 /obj/item/cooking/platter,
 /obj/item/reagent_containers/glass/bowl{
-	pixel_y = 14;
-	pixel_x = -9
+	pixel_x = -9;
+	pixel_y = 14
 	},
 /turf/open/floor/rogue/twig,
 /area/rogue/outdoors/bograt/above)
@@ -71836,8 +71731,8 @@
 /obj/machinery/light/roguestreet/orange/walllamp,
 /obj/structure/bell_common{
 	dir = 1;
-	pixel_y = 16;
-	pixel_x = -5
+	pixel_x = -5;
+	pixel_y = 16
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/town/rockhill)
@@ -71847,11 +71742,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "xLh" = (
 /obj/machinery/light/rogue/wallfire/candle/l,
@@ -71891,15 +71786,13 @@
 /area/rogue/under/town/basement/keep)
 "xLX" = (
 /obj/structure/closet/crate/chest{
-	lockid = "physician";
-	locked = 1
+	locked = 1;
+	lockid = "physician"
 	},
 /obj/item/reagent_containers/powder/ozium,
 /obj/item/reagent_containers/powder/ozium,
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/effect/spawner/lootdrop/potion_ingredient/herb,
 /obj/effect/spawner/lootdrop/potion_ingredient/herb,
@@ -71925,8 +71818,7 @@
 /obj/structure/bed/rogue/inn/double,
 /obj/item/bedsheet/rogue/fabric_double,
 /obj/structure/fluff/walldeco/stone{
-	pixel_x = 32;
-	pixel_y = 0
+	pixel_x = 32
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/manor/rockhill)
@@ -72045,8 +71937,7 @@
 /area/rogue/indoors/town/church)
 "xOt" = (
 /obj/structure/fluff/railing/border{
-	dir = 10;
-	icon_state = "border"
+	dir = 10
 	},
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town)
@@ -72229,9 +72120,9 @@
 /area/rogue/outdoors/town/rockhill)
 "xRK" = (
 /obj/structure/bookcase/random{
-	pixel_y = -4;
+	density = 0;
 	pixel_x = 6;
-	density = 0
+	pixel_y = -4
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -72269,9 +72160,9 @@
 /obj/item/paper,
 /obj/item/paper,
 /obj/structure/roguemachine/atm{
+	location_tag = "Academy";
 	pixel_x = 32;
-	pixel_y = 0;
-	location_tag = "Academy"
+	pixel_y = 0
 	},
 /obj/item/flashlight/flare/torch/metal,
 /obj/item/candle/yellow,
@@ -72392,24 +72283,24 @@
 /area/rogue/under/town/basement/keep)
 "xTz" = (
 /obj/structure/winch{
+	gid = "firebigger";
 	name = "Lower Major Containment Chamber Gate";
-	redstone_id = "firebigger";
-	gid = "firebigger"
+	redstone_id = "firebigger"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "xTA" = (
 /obj/structure/bookcase/random{
-	pixel_y = 7;
+	density = 0;
 	pixel_x = 3;
-	density = 0
+	pixel_y = 7
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -72424,8 +72315,8 @@
 /area/rogue/indoors/town/bath)
 "xTN" = (
 /obj/effect/decal/carpet/square/black{
-	pixel_y = -6;
-	pixel_x = 19
+	pixel_x = 19;
+	pixel_y = -6
 	},
 /turf/open/floor/carpet/purple,
 /area/rogue/indoors/town/bath)
@@ -72445,9 +72336,9 @@
 /area/rogue/indoors/shelter/mountains)
 "xTT" = (
 /obj/structure/mineral_door/wood/red{
+	locked = 1;
 	lockid = "farm";
-	name = "Butcher";
-	locked = 1
+	name = "Butcher"
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/indoors)
@@ -72487,7 +72378,6 @@
 "xUs" = (
 /obj/machinery/light/rogue/wallfire/candle/blue,
 /obj/structure/fluff/railing/border{
-	icon_state = "border";
 	dir = 6
 	},
 /turf/open/floor/rogue/cobble/mossy,
@@ -72536,8 +72426,8 @@
 /area/rogue/under/cavewet)
 "xVG" = (
 /obj/structure/fluff/customsign{
-	name = "Rockhill - Northwest";
-	icon_state = "signwrote"
+	icon_state = "signwrote";
+	name = "Rockhill - Northwest"
 	},
 /turf/open/floor/rogue/grasscold,
 /area/rogue/outdoors/woodsrat/safe)
@@ -72649,8 +72539,8 @@
 /obj/machinery/light/rogue/wallfire/candle/blue/r,
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/exposed/bath/vault{
-	droning_sound_night = null;
-	droning_sound_dusk = null
+	droning_sound_dusk = null;
+	droning_sound_night = null
 	})
 "xXq" = (
 /turf/open/floor/rogue/metal,
@@ -72697,8 +72587,8 @@
 	},
 /turf/closed/wall/mineral/rogue/roofwall/outercorner{
 	dir = 1;
-	name = "reinforced roofing";
-	max_integrity = 1600
+	max_integrity = 1600;
+	name = "reinforced roofing"
 	},
 /area/rogue/indoors/town/manor/rockhill)
 "xYd" = (
@@ -72744,16 +72634,16 @@
 /obj/structure/table/wood,
 /obj/structure/table/wood/poor,
 /obj/item/candle/candlestick/gold/lit{
-	pixel_y = 12;
-	pixel_x = 5
+	pixel_x = 5;
+	pixel_y = 12
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = -3;
-	pixel_x = 9
+	pixel_x = 9;
+	pixel_y = -3
 	},
 /obj/item/reagent_containers/glass/cup/wooden{
-	pixel_y = -2;
-	pixel_x = -6
+	pixel_x = -6;
+	pixel_y = -2
 	},
 /turf/open/floor/rogue/tile{
 	icon_state = "bfloorz"
@@ -72864,11 +72754,11 @@
 /area/rogue/indoors/town)
 "yaQ" = (
 /obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
 	color = "#ffff00";
-	light_color = "#33ff00"
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	light_color = "#33ff00";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/grassgrey,
 /area/rogue/outdoors/bograt/sunken)
@@ -73125,11 +73015,11 @@
 	},
 /area/rogue/indoors/town/fire_chamber{
 	ambientsounds = list('sound/ambience/hell1.ogg');
-	droning_sound_night = null;
-	droning_sound_dusk = null;
 	droning_sound = 'sound/music/area/inferno.ogg';
-	name = "firezone";
-	first_time_text = "Another Place"
+	droning_sound_dusk = null;
+	droning_sound_night = null;
+	first_time_text = "Another Place";
+	name = "firezone"
 	})
 "yeY" = (
 /obj/structure/rack/rogue,
@@ -73173,9 +73063,7 @@
 /turf/open/floor/rogue/carpet/lord/center,
 /area/rogue/indoors/town/manor/rockhill)
 "yfE" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
@@ -73464,9 +73352,9 @@
 	},
 /obj/effect/wisp/prestidigitation{
 	color = "#ff0d00";
-	name = "Infernal Wisp";
+	desc = "An ominous manifestation of latent ambient magick";
 	light_color = "#ff0d00";
-	desc = "An ominous manifestation of latent ambient magick"
+	name = "Infernal Wisp"
 	},
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/bograt/above)
@@ -196945,7 +196833,7 @@ whb
 whb
 whb
 whb
-woZ
+cDW
 aaf
 aaf
 whb
@@ -197378,7 +197266,7 @@ whb
 whb
 whb
 hrT
-woZ
+cDW
 whb
 whb
 whb
@@ -214592,7 +214480,7 @@ uaL
 qvR
 pOX
 jCh
-nUQ
+bbf
 hHF
 hth
 pOX
@@ -252498,7 +252386,7 @@ gMO
 lqx
 lHb
 lqt
-laG
+spQ
 dWF
 tLK
 rRb
@@ -427702,8 +427590,8 @@ aob
 aDN
 hkb
 dQm
-wet
-wet
+hkb
+hkb
 aDN
 fMQ
 dQm
@@ -430292,7 +430180,7 @@ bPq
 kKp
 dQm
 aDN
-wet
+hkb
 kKp
 kKp
 kKp
@@ -473234,7 +473122,7 @@ fZJ
 fZJ
 wtF
 wtF
-bLx
+pjY
 jRC
 jRC
 jRC
@@ -551172,11 +551060,11 @@ fON
 fON
 elI
 elI
+pQt
 elI
 elI
-elI
-elI
-elI
+pQt
+pQt
 tAB
 tAB
 elI
@@ -551603,14 +551491,14 @@ fON
 fON
 fON
 tmH
-elI
+cWK
 elI
 elI
 kyc
-elI
+cWK
 tAB
 tAB
-elI
+pQt
 elI
 elI
 tAB
@@ -552035,16 +551923,16 @@ fON
 fON
 fON
 tmH
-aWy
+qZD
+qZD
+pQt
+pQt
+pQt
 elI
-elI
-elI
-elI
-elI
-elI
-elI
-elI
-elI
+qZD
+pQt
+qZD
+pQt
 tAB
 tAB
 tAB
@@ -552466,11 +552354,11 @@ fON
 fON
 fON
 fON
-tmH
+axe
+qZD
 elI
 elI
-elI
-elI
+qZD
 elI
 elI
 kyc
@@ -552479,7 +552367,7 @@ elI
 elI
 tAB
 tAB
-elI
+pQt
 elI
 elI
 elI
@@ -552899,19 +552787,19 @@ fON
 fON
 fON
 tmH
+qZD
+qZD
 elI
+pQt
+qZD
+pQt
+qZD
 elI
-elI
-elI
-elI
-elI
-elI
-elI
-elI
+pQt
 tAB
 tAB
 tAB
-elI
+pQt
 elI
 elI
 aWy
@@ -553331,14 +553219,14 @@ tmH
 tmH
 tmH
 tmH
-elI
-elI
-elI
+caU
+qZD
+pQt
 kyc
+caU
+pQt
 elI
-elI
-elI
-elI
+pQt
 tAB
 tAB
 tAB
@@ -553764,7 +553652,7 @@ tmH
 tmH
 tmH
 tmH
-elI
+pQt
 elI
 elI
 elI

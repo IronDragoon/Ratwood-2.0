@@ -71,7 +71,7 @@
 /obj/structure/roguemachine/vendor/attackby(obj/item/P, mob/user, params)
 	if(istype(P, /obj/item/roguecoin/aalloy))
 		return
-	if(istype(P, /obj/item/roguecoin/inqcoin))	
+	if(istype(P, /obj/item/roguecoin/inqcoin))
 		return
 	if(istype(P, /obj/item/roguecoin))
 		budget += P.get_real_price()
@@ -89,7 +89,7 @@
 		else
 			if(!locked)
 				insert(P, user)
-			else	
+			else
 				to_chat(user, span_warning("Wrong key."))
 				return
 	if(istype(P, /obj/item/storage/keyring))
@@ -399,21 +399,21 @@
 	keycontrol = "tavern"
 
 /obj/structure/roguemachine/vendor/innrockhill/Initialize()
-    . = ..()
-    
-    // Add room keys with a price of 20
-    for (var/X in list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi))
-        var/obj/P = new X(src)
-        held_items[P] = list()
-        held_items[P]["NAME"] = P.name
-        held_items[P]["PRICE"] = 20
+	. = ..()
 
-    // Add fancy keys with a price of 100
-    for (var/Y in list(/obj/item/roguekey/fancyroomi, /obj/item/roguekey/fancyroomii, /obj/item/roguekey/fancyroomiii))
-        var/obj/Q = new Y(src)
-        held_items[Q] = list()
-        held_items[Q]["NAME"] = Q.name
-        held_items[Q]["PRICE"] = 100
+	// Add room keys with a price of 20
+	for (var/X in list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi))
+		var/obj/P = new X(src)
+		held_items[P] = list()
+		held_items[P]["NAME"] = P.name
+		held_items[P]["PRICE"] = 20
+
+	// Add fancy keys with a price of 100
+	for (var/Y in list(/obj/item/roguekey/fancyroomi, /obj/item/roguekey/fancyroomii, /obj/item/roguekey/fancyroomiii))
+		var/obj/Q = new Y(src)
+		held_items[Q] = list()
+		held_items[Q]["NAME"] = Q.name
+		held_items[Q]["PRICE"] = 100
 
 	// Add fancy keys with a price of 100
 	for (var/Y in list(/obj/item/roguekey/fancyroomi, /obj/item/roguekey/fancyroomii, /obj/item/roguekey/fancyroomiii, /obj/item/roguekey/fancyroomiv, /obj/item/roguekey/fancyroomv))

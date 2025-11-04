@@ -506,7 +506,7 @@
 //You'd think think it'd look for subtypes, but no.
 	invalid_blades = list(
 		/obj/item/rogueweapon/sword/long/exe,
-		/obj/item/rogueweapon/sword/long/exe/astrata
+		/obj/item/rogueweapon/sword/long/exe/astrata,
 		/obj/item/rogueweapon/sword/long/martyr
 	)
 
@@ -546,7 +546,7 @@
 /obj/item/rogueweapon/scabbard/sword/kazengun/noparry
 	name = "ceremonial kazengun scabbard"
 	desc = "A simple wooden scabbard, trimmed with bronze. Unlike its steel cousins, this one cannot parry."
-	
+
 	valid_blade = /obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo
 	can_parry = FALSE
 

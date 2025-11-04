@@ -29,21 +29,25 @@
 	var/fuck_that_guy_multiplier = 1.6//On par with divine blast against undead, more-or-less.
 	var/biotype_we_look_for = MOB_UNDEAD
 
-/obj/projectile/magic/lightning/astratablast/on_hit(target)
-	if(!ismob(target))
-		return FALSE
-	var/mob/living/M = target
-	if(M.anti_magic_check())
-		visible_message(span_warning("[src] fizzles on contact with [target]!"))
-		playsound(get_turf(target), 'sound/magic/magic_nulled.ogg', 100)
-		qdel(src)
-		return BULLET_ACT_BLOCK
-	if(M.mob_biotypes & biotype_we_look_for || istype(M, /mob/living/simple_animal/hostile/rogue/skeleton))
-		damage *= fuck_that_guy_multiplier
-	M.adjust_fire_stacks(4)
-	M.ignite_mob()
-	visible_message(span_warning("[src] ignites [target] in holy flame!"))
-	return TRUE
+/obj/projectile/magic/astratablast/on_hit(target)
+	. = ..()
+	if(ismob(target))
+		var/mob/living/M = target
+		if(M.anti_magic_check())
+			visible_message(span_warning("[src] fizzles on contact with [target]!"))
+			playsound(get_turf(target), 'sound/magic/magic_nulled.ogg', 100)
+			qdel(src)
+			return BULLET_ACT_BLOCK
+		if(M.mob_biotypes & biotype_we_look_for || istype(M, /mob/living/simple_animal/hostile/rogue/skeleton))
+			damage *= fuck_that_guy_multiplier
+			M.adjust_fire_stacks(10)
+			visible_message(span_warning("[target] erupts in flame upon being struck by [src]!"))
+			M.ignite_mob()
+		else
+			M.adjust_fire_stacks(4)
+			visible_message(span_warning("[src] ignites [target]!"))
+			M.ignite_mob()
+	return FALSE
 
 /obj/effect/proc_holder/spell/invoked/ignition
 	name = "Ignition"
@@ -123,7 +127,7 @@
 		S.AOE_flash(user, range = 8)
 	if(target.mob_biotypes & MOB_UNDEAD) //positive energy harms the undead
 		target.visible_message(
-			span_danger("[target] is unmade by holy light!"), 
+			span_danger("[target] is unmade by holy light!"),
 			span_userdanger("I'm unmade by holy light!")
 		)
 		target.gib()

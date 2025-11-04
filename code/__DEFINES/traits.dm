@@ -84,6 +84,7 @@
 #define TRAIT_BLACKLEG	"Blackleg" //Rig coin flips and dice. Fluvian exclusive.
 #define TRAIT_DEATHBYSNUSNU "Bed Breaker" //What do you think? Pelvis crushing and increased pain.
 #define TRAIT_HUMEN_INGENUITY "Humen Ingenuity"//25% cheaper sleep levels.
+#define TRAIT_JACKOFALLTRADES "Jack of All Trades"	//Reduces skill up cost
 #define TRAIT_HELLSPAWN "Hellspawn"//15% chance to avoid ignition.
 #define TRAIT_WING_BOUND "Wing Bound"//Welcome back, OldAcrobat. Offbalance (12s) and stun(2s) from falling 1Z, but no damage.
 #define TRAIT_DWARF_REPAIR "Dwarvish Knowledge"//Squire Repair, but very slightly worse. Only for needle / hammer.
@@ -179,6 +180,7 @@
 #define TRAIT_LEPROSY "Leprosy"
 #define TRAIT_NUDE_SLEEPER "Nude Sleeper"
 #define TRAIT_SILVER_BLESSED "Silverblessed"
+#define TRAIT_OUTLANDER "Outlander"
 #define TRAIT_OUTLAW "Outlaw"
 #define TRAIT_KNOWNCRIMINAL "Known Criminal"
 #define TRAIT_BIGGUY "Big Guy"
@@ -455,11 +457,11 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DWARF_REPAIR = span_info("Never again will there be a people like ours. Repairs come easy to me."),
 	TRAIT_DRUNK_HEALING = span_info("A little drinking never hurt!"),
 	TRAIT_RESONANCE = span_suppradio("My miracles will <b><u>fortify</u></b> others nearby."),
-	TRAIT_SIMPLESPEECH = span_info("I can not say hard words.")
+	TRAIT_SIMPLESPEECH = span_info("I can not say hard words."),
 	TRAIT_ENGINEERING_GOGGLES = span_warning("I can see structural details others can't."),
 	TRAIT_ASSASSIN = span_warning("My soul has been tainted by foul spirits, through them I honor my pact."),
-	TRAIT_MASTER_CARPENTER = span_warning("I've been trained to make the most of wood"), 
-	TRAIT_MASTER_MASON = span_warning("I've been trained to make the most of stone"), 
+	TRAIT_MASTER_CARPENTER = span_warning("I've been trained to make the most of wood"),
+	TRAIT_MASTER_MASON = span_warning("I've been trained to make the most of stone"),
 	TRAIT_EQUESTRIAN = span_warning("I am a capable rider. My mount is an extension of me."),
 	TRAIT_BLOODPOOL_BORN = span_bloody("I emerged from the bloodpool of a Vampire Lord. There is no possibility for redemption for me in this land."),
 	TRAIT_ROYALSERVANT = span_greentext("I've been serving the royal family for long enough to know their exotic tastes."),

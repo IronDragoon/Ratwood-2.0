@@ -15,14 +15,14 @@
 	// Name for the expert level of this skill on Homesteader
 	var/expert_name
 	var/color = null
-
+	var/max_skillbook_level = 6
 	// Maximum level a player can reach in this skill without any enabling traits
-	var/max_untraited_level = SKILL_LEVEL_LEGENDARY 
-	// If the player has a certain trait(s), what is the maximum level they can reach in this skill  
+	var/max_untraited_level = SKILL_LEVEL_LEGENDARY
+	// If the player has a certain trait(s), what is the maximum level they can reach in this skill
 	var/list/trait_uncap
 	// Example:
 	// list(TRAIT_EXAMPLE = SKILL_LEVEL_MAXIMUM_WITH_TRAIT, TRAIT_EXAMPLE2 = SKILL_LEVEL_MAXIMUM_WITH_TRAIT2)
-	// Originally designed for Medicine Expert and now used to protect economic roles's niche 
+	// Originally designed for Medicine Expert and now used to protect economic roles's niche
 
 /datum/skill/proc/get_skill_speed_modifier(level)
 	return
