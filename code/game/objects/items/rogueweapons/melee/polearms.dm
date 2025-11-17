@@ -101,12 +101,14 @@
 	clickcd = CLICK_CD_CHARGED
 
 /datum/intent/sword/bash
-	name = "pommel bash"
+	name = "crossguard bash"
 	blade_class = BCLASS_BLUNT
 	icon_state = "inbash"
 	attack_verb = list("bashes", "strikes")
 	penfactor = BLUNT_DEFAULT_PENFACTOR
-	damfactor = NONBLUNT_BLUNT_DAMFACTOR
+	damfactor = 1.2
+	swingdelay = 13
+	clickcd = 13
 	item_d_type = "blunt"
 	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
 
