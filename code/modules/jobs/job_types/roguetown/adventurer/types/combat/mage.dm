@@ -108,26 +108,26 @@
 				beltr = /obj/item/rogueweapon/scabbard/sword
 				r_hand = /obj/item/rogueweapon/sword/long
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			if("Falchion & Wooden Shield")
 				beltr = /obj/item/rogueweapon/scabbard/sword
 				backr = /obj/item/rogueweapon/shield/wood
 				r_hand = /obj/item/rogueweapon/sword/short/falchion
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_APPRENTICE, TRUE)
 			if("Messer & Wooden Shield")
 				beltr = /obj/item/rogueweapon/scabbard/sword
 				backr = /obj/item/rogueweapon/shield/wood
 				r_hand = /obj/item/rogueweapon/sword/short/messer/iron
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_APPRENTICE, TRUE)
 			if("Hwando")
 				r_hand = /obj/item/rogueweapon/sword/sabre/mulyeog // Meant to not have the special foreign scabbards.
 				beltr = /obj/item/rogueweapon/scabbard/sword
 				armor = /obj/item/clothing/suit/roguetown/armor/basiceast
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			if("Spear")
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/rogueweapon/spear
