@@ -45,7 +45,7 @@
 			follower.reagents.add_reagent(/datum/reagent/consumable/nutriment, 3)//Just a small sum.
 
 		//Can the Martyr hear this?
-		if(!patron in ALL_INHUMEN_PATRONS)
+		if(!(patron in ALL_INHUMEN_PATRONS))
 			for (var/mob/living/player in GLOB.player_list)
 				if (player.stat == DEAD || isbrain(player))
 					continue

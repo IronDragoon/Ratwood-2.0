@@ -24,7 +24,8 @@
 		TRAIT_EMPATH,
 		TRAIT_MEDICINE_EXPERT,
 		TRAIT_DUALWIELDER,
-		TRAIT_VOTARY
+		TRAIT_VOTARY,
+		TRAIT_CONVICTION
 	)
 
 	//No undeath-adjacent virtues for a role that can sacrifice itself. The Ten like their sacrifices 'pure'. (I actually didn't want to code returning those virtue traits post-sword use)
@@ -105,7 +106,7 @@
 
 /datum/outfit/job/roguetown/martyr/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
-	var/boons = list("Endurance", "Indefatigable", "Hollow", "Conviction")
+	var/boons = list("Endurance", "Indefatigable", "Hollow")
 	var/boon_choice = input(H,"Choose your BOON.", "TAKE UP THE SEE'S GIFT") as anything in boons
 	switch(boon_choice)
 //Generic boons.
@@ -117,6 +118,4 @@
 			ADD_TRAIT(H, TRAIT_ANTIMAGIC, TRAIT_GENERIC)//While you're immune to it...
 			ADD_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)//... you may NEVER cast magic.
 			ADD_TRAIT(H, TRAIT_COUNTERCOUNTERSPELL, TRAIT_GENERIC)//Because it's funny.
-		if("Conviction")//Prayers heal and nourish you. You can hear Tennite prayers.
-			ADD_TRAIT(H, TRAIT_CONVICTION, TRAIT_GENERIC)
 //Patron boons. LATER.
