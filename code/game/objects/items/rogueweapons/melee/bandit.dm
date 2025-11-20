@@ -4,7 +4,7 @@
 	desc = "A lethal and perfectly balanced weapon. The longsword is the protagonist of endless tales and myths all across Psydonia, seen in the hands of noblemen and an ever-decreasing quantity of master duelists. This one has brass limbs and a rontz pommel."
 	icon = 'icons/roguetown/weapons/special/bandits.dmi'
 	icon_state = "death"
-	max_blade_int = 225	//+25 max sharpness, because it's just a cooler longsword.
+	max_blade_int = 305	//+25 max sharpness, because it's just a cooler longsword.
 
 /obj/item/rogueweapon/spear/death
 	icon_state = "spear"
