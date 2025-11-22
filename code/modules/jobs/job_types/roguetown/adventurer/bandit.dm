@@ -95,8 +95,10 @@
 	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
 	if(!bandit_job)
 		return
-
-	var/free_capacity = SSgamemode.get_antag_cap() - SSgamemode.get_antag_count()	//Making use of our storyteller calculations for how many slots ought to be open for bandits at any point
+	var/banditcount = 0
+	for(var/datum/antagonist/bandit/A in GLOB.antagonists)
+		banditcount += 1
+	var/free_capacity = SSgamemode.get_antag_cap() - SSgamemode.get_antag_count() + banditcount	//Making use of our storyteller calculations for how many slots ought to be open for bandits at any point
 	free_capacity = max(free_capacity, 0)
 	// Baseline: 1 bandit slot if ANY antag capacity exists.
 	var/slots
