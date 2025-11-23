@@ -844,7 +844,7 @@
 /datum/anvil_recipe/weapons/silver/poleaxe
 	name = "Poleaxe, Silver (+2 Silver, +2 Small Logs)"
 	req_bar = /obj/item/ingot/silver
-	additional_items = list(/obj/item/ingot/silver, /obj/item/grown/log/tree/small, /obj/item/grown/log/tree/small)
+	additional_items = list(/obj/item/ingot/silver, obj/item/ingot/silver, /obj/item/grown/log/tree/small, /obj/item/grown/log/tree/small)
 	created_item = /obj/item/rogueweapon/greataxe/silver
 
 /datum/anvil_recipe/weapons/silver/mace
