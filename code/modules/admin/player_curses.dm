@@ -138,7 +138,8 @@
 			for(var/obj/item/I in L.get_equipped_items())
 				L.dropItemToGround(I, TRUE)
 		if("slip")
-			L.liquid_slip(total_time = 1 SECONDS, stun_duration = 1 SECONDS, height = 12, flip_count = 0)
+			spawn(0)
+				L.liquid_slip(total_time = 1 SECONDS, stun_duration = 1 SECONDS, height = 12, flip_count = 0)
 			/*
 		if("jail in arcyne walls")
 			var/turf/target = get_turf(L)
