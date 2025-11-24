@@ -17360,10 +17360,6 @@
 "fsr" = (
 /turf/closed/wall/mineral/rogue/wooddark/window,
 /area/rogue/outdoors/beach/harbor)
-"fss" = (
-/obj/structure/fluff/psycross/psycrucifix/stone,
-/turf/open/floor/rogue/blocks,
-/area/rogue/indoors/inq/basement)
 "fsu" = (
 /turf/open/floor/rogue/ruinedwood/turned,
 /area/rogue/indoors/shelter/mountains)
@@ -51794,13 +51790,6 @@
 "qkr" = (
 /turf/closed/wall/mineral/rogue/stone/blue_moss,
 /area/rogue/under/cavewet/wizarddungeon)
-"qkB" = (
-/obj/structure/fluff/psycross/psycrucifix/silver{
-	pixel_x = -9;
-	pixel_y = -14
-	},
-/turf/closed/mineral/rogue,
-/area/rogue/indoors/shelter/mountains)
 "qkG" = (
 /turf/open/floor/rogue/greenstone,
 /area/rogue/indoors/town/warden)
@@ -59220,6 +59209,10 @@
 	},
 /turf/open/floor/rogue/tile/masonic/inverted,
 /area/rogue/indoors/town/manor/rockhill)
+"sGk" = (
+/obj/structure/fluff/psycross/psycrucifix/stone,
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/inq/basement)
 "sGq" = (
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1;
@@ -348050,7 +348043,7 @@ vIa
 vIa
 vIa
 uSS
-fss
+sGk
 gLo
 gLo
 atU
@@ -456916,7 +456909,7 @@ vIa
 vIa
 vIa
 vIa
-qkB
+vIa
 vIa
 vIa
 vIa
