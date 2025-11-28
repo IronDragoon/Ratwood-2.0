@@ -345,8 +345,6 @@
 	var/mob/living/carbon/C = owner
 	. = ..()
 	if(C && !special)
-		if(HAS_TRAIT_FROM(C, TRAIT_PONYGIRL_RIDEABLE, BODY_ZONE_TAUR))
-			REMOVE_TRAIT(C, TRAIT_PONYGIRL_RIDEABLE, BODY_ZONE_TAUR)
 		if(C.legcuffed)
 			C.legcuffed.forceMove(C.drop_location())
 			C.legcuffed.dropped(C)
@@ -403,8 +401,6 @@
 	moveToNullspace()
 	owner = C
 	C.bodyparts += src
-	if(src.body_zone == BODY_ZONE_TAUR)
-		ADD_TRAIT(C, TRAIT_PONYGIRL_RIDEABLE, BODY_ZONE_TAUR)
 	if(held_index)
 		if(held_index > C.hand_bodyparts.len)
 			C.hand_bodyparts.len = held_index
