@@ -144,7 +144,7 @@
 	var/missing_nose = HAS_TRAIT(src, TRAIT_MISSING_NOSE)
 	var/obj/item/bodypart/affecting
 	var/target_zone = user.zone_selected
-	if(src.get_bodypart(BODY_ZONE_TAUR))
+	if(src.get_bodypart(BODY_ZONE_TAUR)) // respect taur bodies
 		if(target_zone == BODY_ZONE_L_LEG || target_zone == BODY_ZONE_R_LEG || target_zone == BODY_ZONE_PRECISE_L_FOOT || target_zone == BODY_ZONE_PRECISE_R_FOOT)
 			target_zone = BODY_ZONE_TAUR
 	affecting = get_bodypart(check_zone(target_zone))
