@@ -1607,3 +1607,36 @@
 		added_int = 0,\
 		added_def = 0,\
 	)
+
+
+//Elven weapons added by Jam
+/obj/item/rogueweapon/sword/sabre/elf2
+	name = "elven sword"
+	desc = "This flowing sword is of elven design."
+	icon_state = "elfsword"
+/obj/item/rogueweapon/greatsword/elf
+	name = "claymore"
+	desc = "This is much longer than a common greatsword, and well balanced too!"
+	icon_state = "claymore"
+	smeltresult = /obj/item/ingot/iron
+	smelt_bar_num = 3
+	max_blade_int = 220
+	wdefense = 4
+	force = 14
+	force_wielded = 35
+
+/obj/item/rogueweapon/greatsword/elf
+	name = "claymore"
+	desc = "This is much longer than a common greatsword, and well balanced too!"
+	icon_state = "claymore"
+	smeltresult = /obj/item/ingot/iron
+	smelt_bar_num = 3
+	max_blade_int = 220
+	wdefense = 4
+	force = 14
+	force_wielded = 35
+
+/obj/item/rogueweapon/spear/naginata/elf
+	name = "Elven Glaive"
+	desc = "An elven weapon that combines the elegant, curved slicing blade with a lengthy handle."
+	icon_state = "elfglaive"
