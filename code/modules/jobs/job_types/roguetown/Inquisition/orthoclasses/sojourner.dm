@@ -15,7 +15,7 @@
 	traits_applied = list(
 		TRAIT_MAGEARMOR,
 		TRAIT_ALCHEMY_EXPERT,
-		TRAIT_ARCYNE_T3,
+		TRAIT_ARCYNE_T1,//They're not meant to get more spellpoints. If they do, via Arcyne virtue, for example, T1 only.
 	)
 	subclass_stats = list(//This does not follow the typical 8 stat setup.
 		STATKEY_INT = 3,
@@ -38,7 +38,8 @@
 	subclass_stashed_items = list(
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
 	)
-	extra_context = "This subclass has multiple unique spells, including one in the form of an 'arcyne barrier'. So long as it's active, the user is immune to magic, yet still capable of casting it."
+	extra_context = "This subclass has multiple unique spells, including one in the form of an 'arcyne barrier'. \
+	So long as it's active, the user is immune to magic, yet still capable of casting it."
 
 /datum/outfit/job/roguetown/sojourner
 	job_bitflag = BITFLAG_HOLY_WARRIOR
@@ -71,7 +72,7 @@
 	head = /obj/item/clothing/head/roguetown/roguehood/sojourner
 	mask = /obj/item/clothing/mask/rogue/lordmask/naledi/sojourner
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/cloth/naledi
-	neck = /obj/item/clothing/neck/roguetown/psicross/g //Naledians covet gold far more than the Orthodoxists cover silver. Emphasizes their nature as 'visitors', more-so than anything else.
+	neck = /obj/item/clothing/neck/roguetown/psicross/g //Naledians covet gold far more than typical Orthodoxists covet silver.
 	id = /obj/item/clothing/ring/signet
 	r_hand = /obj/item/rogueweapon/woodstaff/sojourner//A very questionable spear. No pen. Middling CDR on cast.
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
