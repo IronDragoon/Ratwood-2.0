@@ -1609,7 +1609,7 @@
 	)
 
 
-//Elven weapons added by Jam
+//Elven weapons sprited and added by Jam
 
 /obj/item/rogueweapon/greatsword/elf
 	possible_item_intents = list(/datum/intent/sword/chop,/datum/intent/sword/strike) //bash is for nonlethal takedowns, only targets limbs
