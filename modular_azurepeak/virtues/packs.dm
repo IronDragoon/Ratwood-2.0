@@ -52,7 +52,7 @@
 // Traveling Scholar Pack: Linguist + Rich and Shrewd + Equestrian
 // For worldly scholars who have traveled extensively and accumulated wealth and knowledge
 /datum/virtue/pack/travelingscholar
-	name = "Traveling Scholar (-6	 TRI)"
+	name = "Traveling Scholar (-6 TRI)"
 	desc = "My travels across distant lands have made me wealthy in both coin and wisdom. I speak many tongues, understand the value of all things, and ride with practiced ease. The world is my library, and every road teaches me something new."
 	triumph_cost = 6
 	granted_virtues = list(
