@@ -100,8 +100,6 @@
 		"abandon": "maroon",
 		"abandoned": "marooned",
 		"mercy": "quarter",
-		"flog": "meet the ropes' end",
-		"flogged": "met the ropes' end",
 		"sink": "scuttle",
 		"sank": "scuttled",
 		"sunk": "scuttled",
@@ -113,7 +111,6 @@
 		"h": "'"
     },
     "end": {
-		"g": "'"
     },
 	"multiword": {
 		"you are": "ye be",
