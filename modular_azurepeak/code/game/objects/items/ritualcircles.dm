@@ -1859,7 +1859,7 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 	name = "Rune of Hedonism"
 	desc = "A Holy Rune of Baotha. Relief for the broken hearted."
 	icon_state = "baotha_chalky"
-	var/baotharites = list("Conversion")
+	var/baotharites = list("Conversion", "Unholy Boon of Fertility")
 
 /obj/structure/ritualcircle/baotha/attack_hand(mob/living/user)
 	if((user.patron?.type) != /datum/patron/inhumen/baotha)
@@ -1871,12 +1871,12 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 	if(user.has_status_effect(/datum/status_effect/debuff/ritesexpended))
 		to_chat(user,span_smallred("I have performed enough rituals for the day... I must rest before communing more."))
 		return
+	if(!Adjacent(user))
+		to_chat(user, "You must stand close to the rune to receive Baotha's blessing.")
+		return
 	var/riteselection = input(user, "Rituals of Desire", src) as null|anything in baotharites
 	switch(riteselection) // put ur rite selection here
 		if("Conversion")
-			if(!Adjacent(user))
-				to_chat(user, "You must stand close to the rune to receive Baotha's blessing.")
-				return
 			var/list/valids_on_rune = list()
 			for(var/mob/living/carbon/human/peep in range(0, loc))
 				if(HAS_TRAIT(peep, TRAIT_DEPRAVED))
@@ -1897,6 +1897,27 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 						if(do_after(user, 50))
 							icon_state = "baotha_active"
 							baothaconversion(target) // removed CD bc it's gonna be coal to sit there and wait for it to go off rite cooldown, this one is purely social in its nature
+							spawn(120)
+								icon_state = "baotha_chalky"
+		if("Unholy Boon of Fertility")
+			var/list/valids_on_rune = list()
+			for(var/mob/living/carbon/human/peep in range(0, loc))
+				valids_on_rune += peep
+			if(!valids_on_rune.len)
+				to_chat(user, "No valid targets on the rune!")
+				return
+			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in valids_on_rune
+			if(!target || QDELETED(target) || target.loc != loc)
+				return
+			if(do_after(user, 50))
+				user.say("Purple flame, awaken desire!")
+				if(do_after(user, 50))
+					user.say("Claim this body, shape it to your will!")
+					if(do_after(user, 50))
+						user.say("Let them burn for thee alone!")
+						if(do_after(user, 50))
+							icon_state = "baotha_active" 
+							baothablessing(target)
 							spawn(120)
 								icon_state = "baotha_chalky"
 
@@ -1955,6 +1976,39 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 		target.apply_damage(100, BURN, BODY_ZONE_HEAD)
 		loc.visible_message(span_cult("[target] is violently thrashing atop the rune, writhing, as they dare to defy Baotha."))
 
+/obj/structure/ritualcircle/baotha/proc/baothablessing(mob/living/carbon/human/target)
+	if(!target || QDELETED(target) || target.loc != loc)
+		to_chat(usr, "Selected target is not on the rune! [target.p_they(TRUE)] must be directly on top of the rune to receive Baotha's blessing.")
+		return
+	if(HAS_TRAIT(target, TRAIT_BAOTHA_FERTILITY_BOON))
+		loc.visible_message(span_cult("They have already been blessed!"))
+		return
+	var/prompt = alert(target, "The Goddess of corrupted affection is about to give you the boon of fertility; to bear children!",, "Let it happen...", "Resist!")
+	if(prompt == "Let it happen...")
+		to_chat(target, span_warning("A strange feeling of warmth spreads inside your abdomen, growing hotter and hotter untill it almost feels like you are on fire, but pain actually never comes..."))
+		target.Stun(60)
+		target.Knockdown(60)
+		target.sexcon.set_arousal(100)
+		loc.visible_message(span_cult("[target] moans and shivers on top of the rune. Lashes of purple flame dance across their lower abdomen as a new marking appears against their form."))
+		spawn(20)
+			var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[target.gender == "male" ? "m" : "f"]", -BODY_LAYER)
+			target.add_overlay(marking_overlay)
+			target.update_body_parts()
+			playsound(target, 'sound/health/fastbeat.ogg', 60)
+			spawn(40)
+				to_chat(target, span_purple("Enjoy the new you!"))
+				ADD_TRAIT(target, TRAIT_BAOTHA_FERTILITY_BOON, TRAIT_GENERIC)
+				var/obj/item/organ/vagina/vagina = target.getorganslot(ORGAN_SLOT_VAGINA)
+				if(vagina && !vagina.fertility)
+					vagina.fertility = TRUE
+	if(prompt == "Resist!")
+		to_chat(target, span_warning("I sincerely proposed you my greatest blessing, and you rejected me? How foolish!"))
+		target.Stun(60)
+		target.Knockdown(60)
+		to_chat(target, span_userdanger("UNIMAGINABLE PAIN!"))
+		target.emote("Agony")
+		target.apply_damage(100, BRUTE, BODY_ZONE_CHEST)
+		loc.visible_message(span_cult("[target] is violently thrashing atop the rune, writhing, as they dare to defy Baotha."))
 
 //TIME FOR THE ONE. Exclusive to ABSOLVERS. Allowing conversion, deconversion and removal of rite armour.
 //'Lesser' expenditure allows us to have a stopgap to this, while not entirely making poultice farming useless.

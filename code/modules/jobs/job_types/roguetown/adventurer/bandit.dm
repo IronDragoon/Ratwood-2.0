@@ -3,8 +3,8 @@
 	flag = BANDIT
 	department_flag = PEASANTS
 	faction = "Station"
-	total_positions = 7
-	spawn_positions = 7
+	total_positions = 3	//bare minimum of three on round start, regardless of garrison/holywarrior count
+	spawn_positions = 3
 	antag_job = TRUE
 	allowed_races = RACES_ALL_KINDS
 	tutorial = "Long ago you did a crime worthy of your bounty being hung on the wall outside of the local inn. You now live with your fellow freemen in the bog, and generally get up to no good."
@@ -90,3 +90,22 @@
 	if (!my_crime)
 		my_crime = "Brigandry"
 	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
+
+/proc/update_bandit_slots()
+	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
+	if(!bandit_job)
+		return
+
+	var/player_count = length(GLOB.joined_player_list)
+	var/slots = 3
+
+	//Add 1 slot for every 12 players over 30.
+	if(player_count > 42)
+		var/extra = floor((player_count - 42) / 12)
+		slots += extra
+
+	//3 slots minimum, 7 maximum.
+	slots = min(slots, 7)
+
+	bandit_job.total_positions = slots
+	bandit_job.spawn_positions = slots

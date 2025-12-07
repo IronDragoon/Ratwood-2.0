@@ -523,6 +523,19 @@
 		O.update_hands(src)
 		update_grab_intents()
 
+//Free resists ahead.
+//This is STUPID strong.
+//We're stuck with it for economy reasons.
+//As of now, you get a free resist if either is met:
+// - Grabbed character skill at master or higher(5).
+// - Grabbing character skill at journeymen or lower(3).
+	if(isliving(AM))
+		var/mob/living/M = AM
+		if(M.mind)
+			if(M.cmode && M.stat == CONSCIOUS && !M.restrained(ignore_grab = TRUE))
+				if(M.get_skill_level(/datum/skill/combat/wrestling) >= 5 || src.get_skill_level(/datum/skill/combat/wrestling) <= 3)
+					M.resist_grab(freeresist = TRUE) //Automatically attempt to break a passive grab if defender's combat mode is on. Anti-grabspam measure.
+
 /mob/living/proc/is_limb_covered(obj/item/bodypart/limb)
 	if(!limb)
 		return FALSE
@@ -542,8 +555,7 @@
 	if(M.buckled)
 		return //don't make them change direction or offset them if they're buckled into something.
 	if(M.dir != turn(get_dir(M,src), 180))
-		if(!((cmode || M.cmode) && M.grab_state < GRAB_AGGRESSIVE))
-			M.setDir(get_dir(M, src))
+		M.setDir(get_dir(M, src))
 	var/offset = 0
 	switch(grab_state)
 		if(GRAB_PASSIVE)
@@ -554,34 +566,19 @@
 			offset = GRAB_PIXEL_SHIFT_NECK
 		if(GRAB_KILL)
 			offset = GRAB_PIXEL_SHIFT_NECK
-	if((cmode || M.cmode) && M.grab_state < GRAB_AGGRESSIVE)
-		switch(get_dir(src, M))
-			if(NORTH)
-				set_mob_offsets("pulledby", 0, 0+offset)
-				layer = MOB_LAYER+0.05
-			if(SOUTH)
-				set_mob_offsets("pulledby", 0, 0-offset)
-				layer = MOB_LAYER-0.05
-			if(EAST)
-				set_mob_offsets("pulledby", 0+offset, 0)
-				layer = MOB_LAYER
-			if(WEST)
-				set_mob_offsets("pulledby", 0-offset, 0)
-				layer = MOB_LAYER
-	else
-		switch(get_dir(M, src))
-			if(NORTH)
-				M.set_mob_offsets("pulledby", 0, 0+offset)
-				M.layer = MOB_LAYER+0.05
-			if(SOUTH)
-				M.set_mob_offsets("pulledby", 0, 0-offset)
-				M.layer = MOB_LAYER-0.05
-			if(EAST)
-				M.set_mob_offsets("pulledby", 0+offset, 0)
-				M.layer = MOB_LAYER
-			if(WEST)
-				M.set_mob_offsets("pulledby", 0-offset, 0)
-				M.layer = MOB_LAYER
+	switch(get_dir(M, src))
+		if(NORTH)
+			M.set_mob_offsets("pulledby", 0, 0+offset)
+			M.layer = MOB_LAYER+0.05
+		if(SOUTH)
+			M.set_mob_offsets("pulledby", 0, 0-offset)
+			M.layer = MOB_LAYER-0.05
+		if(EAST)
+			M.set_mob_offsets("pulledby", 0+offset, 0)
+			M.layer = MOB_LAYER
+		if(WEST)
+			M.set_mob_offsets("pulledby", 0-offset, 0)
+			M.layer = MOB_LAYER
 
 /mob/living/proc/reset_pull_offsets(mob/living/M, override)
 	if(!override && M.buckled)
@@ -643,8 +640,6 @@
 				var/obj/item/grabbing/I = get_inactive_held_item()
 				if(I.grabbed == pulling)
 					dropItemToGround(I, silent = FALSE)
-	reset_offsets("pulledby")
-	reset_pull_offsets(src)
 
 	. = ..()
 

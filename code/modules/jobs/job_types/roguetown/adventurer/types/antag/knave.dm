@@ -9,9 +9,9 @@
 	subclass_social_rank = SOCIAL_RANK_PEASANT
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_DEATHBYSNUSNU)//gets dodge expert but no medium armor training - gotta stay light
 	subclass_stats = list(
-		STATKEY_SPD = 3,//It's all about speed and perception
-		STATKEY_PER = 2,
-		STATKEY_LCK = 2,
+		STATKEY_SPD = 3,	//It's all about speed and perception
+		STATKEY_PER = 3,	//-LCK +PER
+		STATKEY_LCK = 1,
 		STATKEY_STR = 1,
 		STATKEY_WIL = 1,
 		STATKEY_CON = 1

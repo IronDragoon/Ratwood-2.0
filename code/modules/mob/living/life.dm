@@ -34,44 +34,34 @@
 	if(!loc)
 		return
 
+	//Breathing, if applicable - CURRENTLY NOT IMPLEMENTED
+	//handle_breathing(times_fired)
+
 	if(HAS_TRAIT(src, TRAIT_SIMPLE_WOUNDS))
 		handle_wounds()
 		handle_embedded_objects()
 		handle_blood()
 		//passively heal even wounds with no passive healing
-	var/list/wounds = get_wounds()
-	if (islist(wounds))
-		for (var/entry in wounds)
-			// get_wounds() нередко возвращает вложенные списки (по конечностям и т.п.)
-			if (islist(entry))
-				for (var/sub in entry)
-					var/datum/wound/W = sub
-					W?.heal_wound(1)
-			else
-				var/datum/wound/W = entry
-				W?.heal_wound(1)
+		heal_wounds(1)
 
-	/// ENDVRE AS HE DOES.
-	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
+	//You don't heal your wounds if below a certain blood volume, or you're skullcracked. Sorry, buddy.
+	//Death is checked in on_life for wounds, so no need to set it here.
+	//Corpses don't passive heal wounds, regardless.
+	if(blood_volume > BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(src, TRAIT_PARALYSIS))
 		handle_wounds()
-		//passively heal wounds, but not if you're skullcracked OR DEAD.
-	if (blood_volume > BLOOD_VOLUME_SURVIVE)
-		var/list/wounds2 = get_wounds()
-		if (islist(wounds2))
-			for (var/entry in wounds2)
-				if (islist(entry))
-					for (var/sub in entry)
-						var/datum/wound/W2 = sub
-						W2?.heal_wound(0.6)
-				else
-					var/datum/wound/W2 = entry
-					W2?.heal_wound(0.6)	
+	//Funny thing here, however. If they ARE skullcracked, we throw them a bone. In direct opposition to the above.
+	//Passive heals until they get out of skullcrack state. Just so they're not perma skullcracked without doctors.
+	//You can still break legs and the like without it passive healing. Do that instead.
+	if(HAS_TRAIT(src, TRAIT_PARALYSIS))
+		var/list/wounds = get_wounds()
+		if(wounds.len > 0)
+			heal_wounds(0.3, list(/datum/wound/fracture/head, /datum/wound/fracture/head/brain, /datum/wound/fracture/neck))
 
 	if(QDELETED(src)) // diseases can qdel the mob via transformations
 		return
 
 	handle_environment()
-	
+
 	//Random events (vomiting etc)
 	handle_random_events()
 
@@ -102,7 +92,7 @@
 				return
 			if(istype(drownrelay.loc, /turf/open/water))
 				handle_inwater(drownrelay.loc, extinguish = FALSE, force_drown = TRUE)
-			if(istype(loc, /turf/open/water)) // Extinguish ourselves if our body is in water.	
+			if(istype(loc, /turf/open/water)) // Extinguish ourselves if our body is in water.
 				extinguish_mob()
 			return
 	. =..()
@@ -143,14 +133,13 @@
 	return
 
 /mob/living/proc/handle_wounds()
-	if(stat >= DEAD)
-		for(var/datum/wound/wound in get_wounds())
-			wound.on_death()
+	for(var/datum/wound/wound as anything in get_wounds())
+		if(istype(wound, /datum/wound))
+			if (stat != DEAD)
+				wound.on_life()
+			else
+				wound.on_death()
 
-		return
-
-	for(var/datum/wound/wound in get_wounds())
-		wound.on_life()
 
 /obj/item/proc/on_embed_life(mob/living/user, obj/item/bodypart/bodypart)
 	return
