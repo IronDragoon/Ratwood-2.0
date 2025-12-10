@@ -40,7 +40,6 @@
 	update_hair()
 	update_body()
 	var/obj/item/bodypart/head/head = get_bodypart(BODY_ZONE_HEAD)
-	head.sellprice = 40
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/npc_idle()
 	if(m_intent == MOVE_INTENT_SNEAK)
@@ -67,8 +66,15 @@
 		shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 	pants = /obj/item/clothing/under/roguetown/platelegs/paalloy
 	belt = /obj/item/storage/belt/rogue/leather
-	if(prob(33))
-		beltl = /obj/item/reagent_containers/glass/bottle/alchemical/healthpot
+	if(prob(15))
+		beltl = /obj/item/storage/belt/rogue/pouch/medicine
+	if(prob(60))
+		beltr = /obj/item/storage/belt/rogue/pouch/treasure/
+	if(prob(20))
+		beltr = /obj/item/storage/belt/rogue/pouch/treasure/lucky
+	id = /obj/item/clothing/ring/aalloy
+	if(prob(20))
+		id = /obj/item/clothing/ring/silver
 	head = /obj/item/clothing/head/roguetown/menacing/mad_touched_treasure_hunter
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
 	gloves = /obj/item/clothing/gloves/roguetown/plate/paalloy

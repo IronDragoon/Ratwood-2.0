@@ -58,7 +58,6 @@ GLOBAL_LIST_INIT(searaider_aggro, world.file2list("strings/rt/searaideraggroline
 	var/beard = pick(list(/datum/sprite_accessory/hair/facial/viking,
 						/datum/sprite_accessory/hair/facial/manly,
 						/datum/sprite_accessory/hair/facial/longbeard))
-	head.sellprice = 30 // 50% More than gobbo
 
 	var/datum/bodypart_feature/hair/head/new_hair = new()
 	var/datum/bodypart_feature/hair/facial/new_facial = new()
@@ -149,6 +148,15 @@ GLOBAL_LIST_INIT(searaider_aggro, world.file2list("strings/rt/searaideraggroline
 			r_hand = /obj/item/rogueweapon/greataxe
 		if(4)
 			r_hand = /obj/item/rogueweapon/greatsword/zwei
+	belt = /obj/item/storage/belt/rogue/leather/rope
+	if(prob(5))
+		beltl = /obj/item/reagent_containers/glass/bottle/alchemical/healthpot
+	if(prob(50))
+		beltr = /obj/item/storage/belt/rogue/pouch/treasure/
+	else
+		beltr = /obj/item/storage/belt/rogue/pouch/coins/poor/
+	if(prob(20))
+		id = /obj/item/clothing/ring/gold
 		
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather
 	H.STASPD = 9
