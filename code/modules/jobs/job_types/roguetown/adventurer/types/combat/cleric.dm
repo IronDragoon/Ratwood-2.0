@@ -11,7 +11,7 @@
 	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_OUTLANDER)
 	subclass_stats = list(
 		STATKEY_WIL = 3,
-		STATKEY_STR = 2,
+		STATKEY_SPD = 2,
 		STATKEY_CON = 2,
 	)
 	subclass_skills = list(
@@ -32,7 +32,7 @@
 	)
 	extra_context = "This subclass can choose from multiple disciplines. \
 	The further your chosen discipline strays from unarmed combat, however, the greater your skills in fistfighting and wrestling will atrophy. \
-	Taking a Quarterstaff removes your strength bonus in exchange for speed, providing 'Expert Dodger' and removing the 'Critical Resistance' trait."
+	Taking a Quarterstaff removes your speed bonus in exchange for strength, providing 'Critical Resistance' and removing the 'Expert Dodger' trait."
 
 /datum/outfit/job/roguetown/adventurer/cleric
 	allowed_patrons = ALL_PATRONS
@@ -75,11 +75,11 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 4, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, 4, TRUE)
 				gloves = /obj/item/clothing/gloves/roguetown/bandages/pugilist//Just this and disciple, effectively.
-				ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
+				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			if("Katar")
 				beltl = /obj/item/rogueweapon/katar/bronze
 				gloves = /obj/item/clothing/gloves/roguetown/bandages
-				ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
+				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			if("Knuckledusters")
 				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
 					beltl = /obj/item/rogueweapon/knuckles/psydon/old
@@ -87,13 +87,13 @@
 				else
 					beltl = /obj/item/rogueweapon/knuckles/bronzeknuckles
 					gloves = /obj/item/clothing/gloves/roguetown/bandages
-				ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
+				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			if("Quarterstaff")
 				H.adjust_skillrank_up_to(/datum/skill/combat/staves, 3, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 2, TRUE)
-				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)//...  for speed based defense.
-				H.change_stat(STATKEY_SPD, 2)//As above.
-				H.change_stat(STATKEY_STR, -2)//Same here. You're no longer strength based.
+				ADD_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)//Staves rely on parry, so DE isn't as important.
+				H.change_stat(STATKEY_STR, 2)//As above. Hit 'em over the head, instead.
+				H.change_stat(STATKEY_SPD, -2)//You're no longer speed based.
 				r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/iron
 				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 				wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
