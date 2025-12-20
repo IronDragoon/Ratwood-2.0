@@ -430,6 +430,20 @@
 	density = FALSE
 	opacity = FALSE
 
+/obj/structure/bars/passage/shutter/hidden/redstone_triggered()
+	if(obj_broken)
+		return
+	if(density)
+		icon_state = "shutter1"
+		density = FALSE
+		opacity = FALSE
+		alpha = 60
+	else
+		icon_state = "shutter0"
+		density = TRUE
+		opacity = TRUE
+		alpha = 255
+
 /obj/structure/bars/passage/attackby(obj/item/I, mob/user, params)
 	. = ..()
 	var/obj/item = user.get_active_held_item()
