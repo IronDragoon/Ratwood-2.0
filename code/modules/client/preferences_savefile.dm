@@ -477,60 +477,80 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["loadout"] >> loadout_type
 	if (loadout_type)
 		loadout = new loadout_type()
+	else
+		loadout = null
 
 /datum/preferences/proc/_load_loadout2(S)
 	var/loadout_type2
 	S["loadout2"] >> loadout_type2
 	if (loadout_type2)
 		loadout2 = new loadout_type2()
+	else
+		loadout2 = null
 
 /datum/preferences/proc/_load_loadout3(S)
 	var/loadout_type3
 	S["loadout3"] >> loadout_type3
 	if (loadout_type3)
 		loadout3 = new loadout_type3()
+	else
+		loadout3 = null
 
 /datum/preferences/proc/_load_loadout4(S)
 	var/loadout_type4
 	S["loadout4"] >> loadout_type4
 	if (loadout_type4)
 		loadout4 = new loadout_type4()
+	else
+		loadout4 = null
 
 /datum/preferences/proc/_load_loadout5(S)
 	var/loadout_type5
 	S["loadout5"] >> loadout_type5
 	if (loadout_type5)
 		loadout5 = new loadout_type5()
+	else
+		loadout5 = null
 
 /datum/preferences/proc/_load_loadout6(S)
 	var/loadout_type6
 	S["loadout6"] >> loadout_type6
 	if (loadout_type6)
 		loadout6 = new loadout_type6()
+	else
+		loadout6 = null
 
 /datum/preferences/proc/_load_loadout7(S)
 	var/loadout_type7
 	S["loadout7"] >> loadout_type7
 	if (loadout_type7)
 		loadout7 = new loadout_type7()
+	else
+		loadout7 = null
 
 /datum/preferences/proc/_load_loadout8(S)
 	var/loadout_type8
 	S["loadout8"] >> loadout_type8
 	if (loadout_type8)
 		loadout8 = new loadout_type8()
+	else
+		loadout8 = null
 
 /datum/preferences/proc/_load_loadout9(S)
 	var/loadout_type9
 	S["loadout9"] >> loadout_type9
 	if (loadout_type9)
 		loadout9 = new loadout_type9()
+	else
+		loadout9 = null
 
 /datum/preferences/proc/_load_loadout10(S)
 	var/loadout_type10
 	S["loadout10"] >> loadout_type10
 	if (loadout_type10)
 		loadout10 = new loadout_type10()
+	else
+		loadout10 = null
 
 /datum/preferences/proc/_load_loadout_colours(S)
 	S["loadout_1_hex"] >> loadout_1_hex

@@ -966,14 +966,21 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 							if(istype(I, /obj/item/clothing))
 								var/obj/item/clothing/C = I
 								C.prevent_crits = null
+								// Set armor class to LIGHT for all loadout armor
+								if(C.armor_class != ARMOR_CLASS_NONE)
+									C.armor_class = ARMOR_CLASS_LIGHT
 							
-							// Reduce weapon damage by 50%
+							// Reduce weapon damage by 30% (rounded down)
 							if(I.force > 0)
-								I.force = round(I.force * 0.5)
+								I.force = round(I.force * 0.7)
 							
-							// Reduce armor ratings by 70% (rounded down)
+							// Halve weapon defense (wdefense) values
+							if(I.wdefense > 0)
+								I.wdefense = round(I.wdefense * 0.5)
+							
+							// Reduce armor ratings by 50% (rounded down)
 							if(I.armor)
-								I.armor = I.armor.multiplymodifyAllRatings(0.7)
+								I.armor = I.armor.multiplymodifyAllRatings(0.5)
 						
 						// Apply custom color if set (for clothing and weapons) - BEFORE putting in hands
 						var/dye = user.client?.prefs.resolve_loadout_to_color(path2item)

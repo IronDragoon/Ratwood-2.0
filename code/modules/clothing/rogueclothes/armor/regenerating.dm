@@ -106,5 +106,8 @@
 	max_integrity = 300
 	repair_time = 20 SECONDS
 
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/weak
+	name = "tough skin"
+	desc = "My skin... my flesh... it shall persist and renew through my sheer willpower alone."
 
 

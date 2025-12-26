@@ -181,6 +181,24 @@
 				flex-wrap: wrap;
 				gap: 5px;
 			}
+			.info-box {
+				background: rgba(227, 192, 111, 0.1);
+				border: 1px solid #e3c06f;
+				padding: 15px;
+				margin: 15px 0;
+				border-radius: 4px;
+				color: #e3c06f;
+			}
+			.info-box h3 {
+				margin: 0 0 10px 0;
+				color: #e3c06f;
+				font-size: 1.1em;
+			}
+			.info-box p {
+				margin: 5px 0;
+				font-size: 0.9em;
+				color: #ccc;
+			}
 		</style>
 		<body>
 			<div class="header">
@@ -190,6 +208,13 @@
 					<span class="triumph-spent">Spent: [spent_triumphs]</span> / 
 					<span>Total: [total_triumphs]</span>
 				</div>
+			</div>
+			
+			<div class="info-box">
+				<h3>⚠ Loadout Item Modifications ⚠</h3>
+				<p><b>ARMOR & HELMETS:</b> Armor rating reduced by 90% • Crit prevention removed</p>
+				<p><b>WEAPONS:</b> Damage reduced by 25%</p>
+				<p><b>ALL ITEMS:</b> Sell price set to 0</p>
 			</div>
 			
 			<div class="loadout-grid">

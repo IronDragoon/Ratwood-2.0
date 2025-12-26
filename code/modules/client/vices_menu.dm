@@ -673,6 +673,14 @@
 					<span style='color: [theme["text"]];'>Spent (Loadout): [loadout_spent]</span> / 
 					<span>Total Points: [total_points]</span>
 				</div>
+				<div style='background: rgba(123, 83, 83, 0.2); border: 1px solid [theme["border"]]; padding: 8px; margin-top: 8px; font-size: 0.7em;'>
+					<div style='font-weight: bold; color: [theme["text"]]; margin-bottom: 4px;'>⚠ Loadout Item Modifications:</div>
+					<div style='color: [theme["label"]]; line-height: 1.4;'>
+						<b>ARMOR:</b> Reduced by 50% • Crit prevention removed • Armor class set to Light<br>
+						<b>WEAPONS:</b> Damage reduced by 30% • Weapon defense reduced by 50%<br>
+						<b>ALL ITEMS:</b> Sell price set to 0
+					</div>
+				</div>
 			</div>
 			<div style='display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;'>
 	"}
@@ -849,6 +857,70 @@
 
 /datum/preferences/Topic(href, href_list)
 	. = ..()
+	
+	// Handle loadout item selection from icon menu
+	if(href_list["select_loadout_item"])
+		if(!GLOB.temp_loadout_selection)
+			return
+		
+		var/item_id = href_list["select_loadout_item"]
+		var/slot = text2num(href_list["slot"])
+		var/list/selection_data = GLOB.temp_loadout_selection
+		
+		if(selection_data["prefs"] != src)
+			return
+		
+		var/list/items = selection_data["items"]
+		var/datum/loadout_item/selected = items[item_id]
+		
+		if(!selected || !slot)
+			GLOB.temp_loadout_selection = null
+			usr << browse(null, "window=loadout_select")
+			return
+		
+		var/slot_var = (slot == 1) ? "loadout" : "loadout[slot]"
+		
+		// Check if this item is already selected in another slot
+		for(var/i = 1 to 10)
+			if(i == slot)
+				continue
+			var/datum/loadout_item/other_item = vars[i == 1 ? "loadout" : "loadout[i]"]
+			if(other_item && other_item.type == selected.type)
+				to_chat(usr, span_warning("This item is already selected in slot [i]! Each item can only be selected once."))
+				GLOB.temp_loadout_selection = null
+				usr << browse(null, "window=loadout_select")
+				return
+		
+		// Check point cost against shared pool
+		if(selected.triumph_cost)
+			var/total_points = get_total_points()
+			var/spent_points = 0
+			
+			// Calculate current loadout spent (excluding this slot if changing)
+			for(var/i = 1 to 10)
+				if(i == slot)
+					continue
+				var/datum/loadout_item/other_slot = vars[i == 1 ? "loadout" : "loadout[i]"]
+				if(other_slot && other_slot.triumph_cost)
+					spent_points += other_slot.triumph_cost
+			
+			// Include language spend
+			spent_points += get_language_points_spent()
+			
+			if(spent_points + selected.triumph_cost > total_points)
+				to_chat(usr, span_warning("Not enough points! Need [selected.triumph_cost], but only have [total_points - spent_points] remaining."))
+				GLOB.temp_loadout_selection = null
+				usr << browse(null, "window=loadout_select")
+				return
+		
+		vars[slot_var] = selected
+		to_chat(usr, span_notice("Selected [selected.name] for slot [slot]."))
+		
+		GLOB.temp_loadout_selection = null
+		usr << browse(null, "window=loadout_select")
+		save_character()
+		open_vices_menu(usr)
+		return
 	
 	if(href_list["virtue_action"])
 		var/action = href_list["virtue_action"]
@@ -1027,6 +1099,93 @@
 						selected_items += existing_item
 						selected_loadouts += existing_item.type
 				
+				// Build HTML menu with icons
+				var/html = {"
+					<html>
+					<head>
+					<style>
+						body {
+							font-family: Verdana, Arial, sans-serif;
+							background: #100000 url('flowers.png') repeat;
+							color: #aa8f8f;
+							margin: 0;
+							padding: 10px;
+						}
+						.search-container {
+							margin-bottom: 15px;
+						}
+						.search-box {
+							width: 100%;
+							padding: 8px;
+							background: #00000044;
+							border: 1px solid #7b5353;
+							color: #aa8f8f;
+							font-family: Verdana, Arial, sans-serif;
+							font-size: 0.9em;
+							box-sizing: border-box;
+						}
+						.search-box:focus {
+							outline: none;
+							border-color: #aa8f8f;
+						}
+						.item-list {
+							display: flex;
+							flex-direction: column;
+							gap: 5px;
+						}
+						.item-entry {
+							display: flex;
+							align-items: center;
+							background: #00000044;
+							border: 1px solid #7b5353;
+							padding: 8px;
+							cursor: pointer;
+							transition: all 0.2s;
+						}
+						.item-entry:hover {
+							background: rgba(123, 83, 83, 0.3);
+							border-color: #7b5353;
+						}
+						.item-entry.hidden {
+							display: none;
+						}
+						.item-icon {
+							width: 32px;
+							height: 32px;
+							margin-right: 10px;
+							image-rendering: pixelated;
+							flex-shrink: 0;
+						}
+						.item-info {
+							flex: 1;
+						}
+						.item-name {
+							font-weight: bold;
+							color: #aa8f8f;
+							font-size: 0.85em;
+						}
+						.item-cost {
+							color: #ff6b6b;
+							font-size: 0.75em;
+						}
+						h2 {
+							color: #aa8f8f;
+							text-align: center;
+							border-bottom: 2px solid #7b5353;
+							padding-bottom: 10px;
+							margin-top: 0;
+						}
+					</style>
+					</head>
+					<body>
+					<h2>Select Item for Slot [slot]</h2>
+					<div class='search-container'>
+						<input type='text' id='searchBox' class='search-box' placeholder='Search items...' onkeyup='filterItems()'>
+					</div>
+					<div class='item-list'>
+				"}
+				
+				var/icon_counter = 0
 				for(var/path as anything in GLOB.loadout_items)
 					var/datum/loadout_item/item = GLOB.loadout_items[path]
 					
@@ -1040,45 +1199,59 @@
 					if(item.type in selected_loadouts && current_item?.type != item.type)
 						continue
 					
+					icon_counter++
+					
+					// Get item icon
+					var/obj/item/sample = item.path
+					var/icon_file = initial(sample.icon)
+					var/icon_state_name = initial(sample.icon_state)
+					
+					// Send icon resource
+					if(icon_file && icon_state_name)
+						usr << browse_rsc(icon(icon_file, icon_state_name), "loadout_select_[icon_counter].png")
+					
 					// Show point cost in name
 					var/display_name = item.name
+					var/cost_text = ""
 					if(item.triumph_cost)
-						display_name = "[item.name] (-[item.triumph_cost] PT)"
+						cost_text = "<span class='item-cost'>(-[item.triumph_cost] PT)</span>"
 					
-					loadouts_available[display_name] = item
-				
-				var/choice = tgui_input_list(usr, "Select an item for slot [slot]:", "Loadout Selection", loadouts_available)
-				
-				if(choice && choice != "None")
-					var/datum/loadout_item/selected = loadouts_available[choice]
+					html += {"
+						<div class='item-entry' data-name='[display_name]' onclick='window.location="byond://?src=\ref[src];select_loadout_item=[icon_counter];slot=[slot]"'>
+							<img class='item-icon' src='loadout_select_[icon_counter].png' onerror='this.style.display=\"none\"'>
+							<div class='item-info'>
+								<div class='item-name'>[display_name] [cost_text]</div>
+							</div>
+						</div>
+					"}
 					
-					// Check point cost against shared pool
-					if(selected.triumph_cost)
-						var/total_points = get_total_points()
-						var/spent_points = 0
-						
-						// Calculate current loadout spent (excluding this slot if changing)
-						for(var/i = 1 to 10)
-							if(i == slot)
-								continue
-							var/datum/loadout_item/other_slot = vars[i == 1 ? "loadout" : "loadout[i]"]
-							if(other_slot && other_slot.triumph_cost)
-								spent_points += other_slot.triumph_cost
-						
-						// Include language spend
-						spent_points += get_language_points_spent()
-						
-						if(spent_points + selected.triumph_cost > total_points)
-							to_chat(usr, span_warning("Not enough points! Need [selected.triumph_cost], but only have [total_points - spent_points] remaining."))
-							return
-					
-					vars[slot_var] = selected
-					to_chat(usr, span_notice("Selected [selected.name] for slot [slot]."))
-				else
-					vars[slot_var] = null
+					loadouts_available["[icon_counter]"] = item
 				
-				save_character()
-				open_vices_menu(usr)
+				html += {"
+					</div>
+					<script>
+						function filterItems() {
+							var searchValue = document.getElementById('searchBox').value.toLowerCase();
+							var items = document.getElementsByClassName('item-entry');
+							var idx;
+							for(idx = 0; idx < items.length; idx++) {
+								var itemName = items\[idx].getAttribute('data-name').toLowerCase();
+								if(itemName.includes(searchValue)) {
+									items\[idx].classList.remove('hidden');
+								} else {
+									items\[idx].classList.add('hidden');
+								}
+							}
+						}
+					</script>
+					</body>
+					</html>
+				"}
+				
+				usr << browse(html, "window=loadout_select;size=500x600")
+				// Store the available items temporarily for callback
+				GLOB.temp_loadout_selection = list("prefs" = src, "items" = loadouts_available, "slot" = slot)
+				return
 			
 			if("clear")
 				vars[slot_var] = null

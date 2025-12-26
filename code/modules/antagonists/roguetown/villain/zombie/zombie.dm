@@ -126,9 +126,6 @@
 	//Just need to clear it to snapshot. May get things we don't want to get.
 	for(var/status_effect in zombie.status_effects)
 		zombie.remove_status_effect(status_effect)
-	zombie.grant_language(/datum/language/undead)
-	var/datum/language_holder/language_holder = zombie.get_language_holder()
-	language_holder.selected_default_language = /datum/language/undead
 
 	src.STASTR = zombie.STASTR
 	src.STASPD = zombie.STASPD
@@ -258,6 +255,9 @@
 	zombie.faction += "undead"
 	zombie.faction += "zombie"
 	zombie.faction -= "neutral"
+	zombie.grant_language(/datum/language/undead)
+	var/datum/language_holder/language_holder = zombie.get_language_holder()
+	language_holder.selected_default_language = /datum/language/undead
 	zombie.verbs |= /mob/living/carbon/human/proc/zombie_seek
 	for(var/obj/item/bodypart/zombie_part as anything in zombie.bodyparts)
 		if(!zombie_part.rotted && !zombie_part.skeletonized)
