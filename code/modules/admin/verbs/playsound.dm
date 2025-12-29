@@ -83,7 +83,7 @@
 	set name = "ChangeVolPower"
 
 	if(prefs)
-		var/vol = input(usr, "Current volume power: [prefs.mastervol]",, 100) as null|num
+		var/vol = input(usr, "Current master volume power (affects all sounds except music and ambience): [prefs.mastervol]",, 100) as null|num
 		if(!vol)
 			if(vol != 0)
 				return
@@ -91,7 +91,20 @@
 		prefs.mastervol = vol
 		prefs.save_preferences()
 
-		mob.update_channel_volume(CHANNEL_AMBIENCE, prefs.mastervol)
+/client/verb/change_ambience_vol()
+	set category = "Options"
+	set name = "ChangeAmbiencePower"
+
+	if(prefs)
+		var/vol = input(usr, "Current ambience power: [prefs.ambiencevol]",, 100) as null|num
+		if(!vol)
+			if(vol != 0)
+				return
+		vol = min(vol, 100)
+		prefs.ambiencevol = vol
+		prefs.save_preferences()
+
+		mob.update_channel_volume(CHANNEL_AMBIENCE, prefs.ambiencevol)
 /*
 /client/verb/help_rpguide()
 	set category = "Options"
