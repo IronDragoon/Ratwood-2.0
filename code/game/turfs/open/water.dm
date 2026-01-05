@@ -240,6 +240,12 @@
 					var/obj/item/reagent_containers/glass/bottle/waterskin/purifier/P = C
 					P.cleanwater(user)
 			return
+
+	if(ishuman(user) && istype(C, /obj/item/handmirror))
+		var/mob/living/carbon/human/H = user
+		if(HAS_TRAIT(H, TRAIT_MIRROR_MAGIC))
+			to_chat(H, span_notice("To change yourself via water reflection, use your bare hands on the water."))
+			return
 	. = ..()
 
 /turf/open/water/attack_right(mob/user)
