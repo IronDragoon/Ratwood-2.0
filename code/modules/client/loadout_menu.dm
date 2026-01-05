@@ -1,5 +1,7 @@
 // Maximum cache size to prevent unbounded growth
+#ifndef MAX_ICON_CACHE_SIZE
 #define MAX_ICON_CACHE_SIZE 200
+#endif
 
 /datum/preferences/proc/open_loadout_menu(mob/user)
 	if(!user || !user.client)
