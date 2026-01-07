@@ -414,29 +414,31 @@
 
 	var/turf/turf_user = get_turf(user)
 	var/turf/turf_corpse = get_turf(corpse)
-	var/direction_name = "unknown"
+	var/list/directions = list()
+	// Vertical (Z-level) direction
 	if(turf_user.z != turf_corpse.z)
 		if(turf_corpse.z > turf_user.z)
-			direction_name = "above"
+			directions += "upwards"
 		else
-			direction_name = "below"
-	else
-		var/direction = get_dir(user, corpse)
+			directions += "downwards"
+
+	// Horizontal direction (only if we can meaningfully compare)
+	if(turf_user.x != turf_corpse.x || turf_user.y != turf_corpse.y)
+		var/direction = get_dir(turf_user, turf_corpse)
 		switch(direction)
-			if(NORTH)
-				direction_name = "north"
-			if(SOUTH)
-				direction_name = "south"
-			if(EAST)
-				direction_name = "east"
-			if(WEST)
-				direction_name = "west"
-			if(NORTHEAST)
-				direction_name = "northeast"
-			if(NORTHWEST)
-				direction_name = "northwest"
-			if(SOUTHEAST)
-				direction_name = "southeast"
-			if(SOUTHWEST)
-				direction_name = "southwest"
-	to_chat(user, span_notice("The Undermaiden pulls on your hand, guiding you [direction_name]."))
+			if(NORTH)      directions += "north"
+			if(SOUTH)      directions += "south"
+			if(EAST)       directions += "east"
+			if(WEST)       directions += "west"
+			if(NORTHEAST)  directions += "northeast"
+			if(NORTHWEST)  directions += "northwest"
+			if(SOUTHEAST)  directions += "southeast"
+			if(SOUTHWEST)  directions += "southwest"
+
+	var/direction_text
+	if(length(directions))
+		direction_text = english_list(directions, and_text = " and ")
+	else
+		direction_text = "nowhere discernible"
+
+	to_chat(user, span_notice("The Undermaiden pulls on your hand, guiding you [direction_text]."))
