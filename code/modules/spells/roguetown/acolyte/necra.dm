@@ -375,7 +375,10 @@
 	for(var/mob/living/C in GLOB.dead_mob_list)
 		if(!C.mind)
 			continue
-
+		if(istype(C, /mob/living/carbon/human))
+			var/mob/living/carbon/human/B = C
+			if(B.buried)
+				continue
 		var/time_dead = 0
 		if(C.timeofdeath)
 			time_dead = world.time - C.timeofdeath
