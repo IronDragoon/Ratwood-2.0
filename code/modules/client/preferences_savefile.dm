@@ -613,18 +613,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 /datum/preferences/proc/_save_loadout_presets(S)
 	// Save loadout presets as JSON
-	if(loadout_preset_1)
-		WRITE_FILE(S["loadout_preset_1"] , json_encode(loadout_preset_1))
-	else
-		WRITE_FILE(S["loadout_preset_1"] , null)
-	if(loadout_preset_2)
-		WRITE_FILE(S["loadout_preset_2"] , json_encode(loadout_preset_2))
-	else
-		WRITE_FILE(S["loadout_preset_2"] , null)
-	if(loadout_preset_3)
-		WRITE_FILE(S["loadout_preset_3"] , json_encode(loadout_preset_3))
-	else
-		WRITE_FILE(S["loadout_preset_3"] , null)
+	WRITE_FILE(S["loadout_preset_1"] , loadout_preset_1 ? json_encode(loadout_preset_1) : null)
+	WRITE_FILE(S["loadout_preset_2"] , loadout_preset_2 ? json_encode(loadout_preset_2) : null)
+	WRITE_FILE(S["loadout_preset_3"] , loadout_preset_3 ? json_encode(loadout_preset_3) : null)
 
 
 /datum/preferences/proc/_load_loadout_colours(S)
@@ -973,7 +964,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["uplink_loc"]			, uplink_spawn_loc)
 	WRITE_FILE(S["randomise"]			, randomise)
 	WRITE_FILE(S["species"]				, pref_species.name)
-	WRITE_FILE(S["charflaw"]			, charflaw.type)
+	WRITE_FILE(S["charflaw"]			, charflaw?.type)
 	// Save new vice system
 	WRITE_FILE(S["vice1"], vice1?.type)
 	WRITE_FILE(S["vice2"], vice2?.type)
@@ -1037,14 +1028,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["pronouns"] , pronouns)
 	WRITE_FILE(S["statpack"] , statpack?.type)
 	// Save virtues with explicit null-safety
-	if(virtue && virtue.type)
-		WRITE_FILE(S["virtue"] , virtue.type)
-	else
-		WRITE_FILE(S["virtue"] , /datum/virtue/none)
-	if(virtuetwo && virtuetwo.type)
-		WRITE_FILE(S["virtuetwo"], virtuetwo.type)
-	else
-		WRITE_FILE(S["virtuetwo"], /datum/virtue/none)
+	WRITE_FILE(S["virtue"] , (virtue && virtue.type) ? virtue.type : /datum/virtue/none)
+	WRITE_FILE(S["virtuetwo"], (virtuetwo && virtuetwo.type) ? virtuetwo.type : /datum/virtue/none)
 	WRITE_FILE(S["race_bonus"], race_bonus)
 	WRITE_FILE(S["combat_music"], combat_music.type)
 	WRITE_FILE(S["body_size"] , features["body_size"])
@@ -1052,46 +1037,16 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["erpprefs"] , html_decode(erpprefs))
 	WRITE_FILE(S["img_gallery"] , img_gallery)
 	WRITE_FILE(S["nsfw_img_gallery"] , nsfw_img_gallery)
-	if(loadout)
-		WRITE_FILE(S["loadout"] , loadout.type)
-	else
-		WRITE_FILE(S["loadout"] , null)
-	if(loadout2)
-		WRITE_FILE(S["loadout2"] , loadout2.type)
-	else
-		WRITE_FILE(S["loadout2"] , null)
-	if(loadout3)
-		WRITE_FILE(S["loadout3"] , loadout3.type)
-	else
-		WRITE_FILE(S["loadout3"] , null)
-	if(loadout4)
-		WRITE_FILE(S["loadout4"] , loadout4.type)
-	else
-		WRITE_FILE(S["loadout4"] , null)
-	if(loadout5)
-		WRITE_FILE(S["loadout5"] , loadout5.type)
-	else
-		WRITE_FILE(S["loadout5"] , null)
-	if(loadout6)
-		WRITE_FILE(S["loadout6"] , loadout6.type)
-	else
-		WRITE_FILE(S["loadout6"] , null)
-	if(loadout7)
-		WRITE_FILE(S["loadout7"] , loadout7.type)
-	else
-		WRITE_FILE(S["loadout7"] , null)
-	if(loadout8)
-		WRITE_FILE(S["loadout8"] , loadout8.type)
-	else
-		WRITE_FILE(S["loadout8"] , null)
-	if(loadout9)
-		WRITE_FILE(S["loadout9"] , loadout9.type)
-	else
-		WRITE_FILE(S["loadout9"] , null)
-	if(loadout10)
-		WRITE_FILE(S["loadout10"] , loadout10.type)
-	else
-		WRITE_FILE(S["loadout10"] , null)
+	WRITE_FILE(S["loadout"] , loadout?.type)
+	WRITE_FILE(S["loadout2"] , loadout2?.type)
+	WRITE_FILE(S["loadout3"] , loadout3?.type)
+	WRITE_FILE(S["loadout4"] , loadout4?.type)
+	WRITE_FILE(S["loadout5"] , loadout5?.type)
+	WRITE_FILE(S["loadout6"] , loadout6?.type)
+	WRITE_FILE(S["loadout7"] , loadout7?.type)
+	WRITE_FILE(S["loadout8"] , loadout8?.type)
+	WRITE_FILE(S["loadout9"] , loadout9?.type)
+	WRITE_FILE(S["loadout10"] , loadout10?.type)
 
 	_save_loadout_presets(S)
 
