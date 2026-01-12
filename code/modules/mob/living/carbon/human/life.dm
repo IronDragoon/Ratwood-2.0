@@ -72,8 +72,16 @@
 	handle_heart()
 	update_stamina()
 	update_energy()
-	if(charflaw && !charflaw.ephemeral && mind)
+	
+	// Process all vices
+	if(mind && length(vices))
+		for(var/datum/charflaw/vice in vices)
+			if(!vice.ephemeral)
+				vice.flaw_on_life(src)
+	// Legacy single vice support
+	else if(charflaw && !charflaw.ephemeral && mind)
 		charflaw.flaw_on_life(src)
+	
 	if(health <= 0)
 		adjustOxyLoss(0.5)
 	if(mode == NPC_AI_OFF && !client && !HAS_TRAIT(src, TRAIT_NOSLEEP))

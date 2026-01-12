@@ -1265,6 +1265,17 @@
 			if("wielded")
 				return list("shrink" = 0.8,"sx" = 8,"sy" = 0,"nx" = -1,"ny" = 0,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
 
+// Decorative Naledi staff for loadout - regular staff with Naledi appearance
+/obj/item/rogueweapon/woodstaff/decorative
+	name = "decorative naledian staff"
+	desc = "A staff styled after the war scholars' crescent moon design. While it carries the aesthetic of the Naledian warstaff, it lacks the refined balance and arcane attunement of the genuine article."
+	icon_state = "naledistaff"
+	possible_item_intents = list(/datum/intent/mace/strike/wood)
+	gripped_intents = list(/datum/intent/mace/strike/wood)
+	force = 10
+	force_wielded = 15
+	max_integrity = 150
+
 //Only a 'woodenstaff' for the purpose of CDR on spells.
 /obj/item/rogueweapon/woodstaff/sojourner
 	name = "sojourner staff"

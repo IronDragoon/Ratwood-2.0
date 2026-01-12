@@ -1692,7 +1692,7 @@ generate/load female uniform sprites matching all previously decided variables
 			standing.pixel_y += L["y"]
 
 	standing.alpha = alpha
-	standing.color = color
+	standing.color = color // Always apply color (will be null if no color set, which is fine)
 
 	if(istype(clip_mask)) //For taur bodies/tails clipping off parts of uniforms and suits.
 		standing.filters += filter(type = "alpha", icon = clip_mask)
