@@ -750,7 +750,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 /client/proc/force_say(mob/living/L in GLOB.mob_list)
 	set category = "-Special Verbs-"
-	set name = "Force Say"
+	set name = "Force Speech"
 	set desc = ""
 	
 	if(!L)
