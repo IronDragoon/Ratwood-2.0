@@ -18,8 +18,7 @@
 
 /datum/weakref/Destroy(force)
 	var/datum/target = resolve()
-	if(target)
-		qdel(target)
+	qdel(target)
 
 	if(!force)
 		return QDEL_HINT_LETMELIVE	//Let BYOND autoGC thiswhen nothing is using it anymore.
