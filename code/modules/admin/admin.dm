@@ -96,6 +96,10 @@
 			patron = initial(living.patron.name)
 		body += "<br><br>Current Patron: [patron]"
 
+		// Role and Advclass display
+		body += "<br>Role: [M.job ? M.job : "None"]"
+		body += "<br>Advclass: [M.advjob ? M.advjob : "None"]"
+
 		var/idstatus = "<br>ID Status: "
 		if(!M.ckey)
 			idstatus += "No key!"
@@ -496,7 +500,12 @@
 				body += " <A href='?_src_=holder;[HrefToken()];target=[REF(M)];inventory_action=view_contents;item=[REF(I)]'>(Contents)</A>"
 			
 			body += "</td>"
-			body += "<td>[I.obj_integrity] / [I.max_integrity] ([integrity_percent]%)</td>"
+			body += "<td>[I.obj_integrity] / [I.max_integrity] ([integrity_percent]%)"
+			// Sharpness info below integrity if item has sharpness
+			if(I.max_blade_int > 0)
+				var/sharpness_percent = round((I.blade_int / I.max_blade_int) * 100)
+				body += "<br>Sharpness: [I.blade_int] / [I.max_blade_int] ([sharpness_percent]%)"
+			body += "</td>"
 			body += "<td>"
 			body += "<A href='?_src_=holder;[HrefToken()];target=[REF(M)];inventory_action=repair_item;item=[REF(I)]'>Repair</A> | "
 			body += "<A href='?_src_=holder;[HrefToken()];target=[REF(M)];inventory_action=drop_item;item=[REF(I)]'>Drop</A> | "
@@ -509,7 +518,7 @@
 	
 	body += "</body></html>"
 
-	usr << browse(body, "window=adminplayeropts-inventory[REF(M)];size=750x600")
+	usr << browse(body, "window=adminplayeropts-inventory[REF(M)];size=760x600")
 
 /datum/admins/proc/show_item_contents_panel(mob/living/M, obj/item/container)
 	if(!M || !container)
@@ -550,7 +559,14 @@
 				body += " <A href='?_src_=holder;[HrefToken()];target=[REF(M)];inventory_action=view_contents;item=[REF(O)]'>(Contents)</A>"
 			
 			body += "</td>"
-			body += "<td>[integrity_text]</td>"
+			body += "<td>[integrity_text]"
+			// Sharpness info below integrity if item has sharpness
+			if(istype(O, /obj/item))
+				var/obj/item/I = O
+				if(I.max_blade_int > 0)
+					var/sharpness_percent = round((I.blade_int / I.max_blade_int) * 100)
+					body += "<br>Sharpness: [I.blade_int] / [I.max_blade_int] ([sharpness_percent]%)"
+			body += "</td>"
 			body += "<td>"
 			if(istype(O, /obj/item))
 				var/obj/item/I = O
@@ -566,7 +582,7 @@
 	
 	body += "</body></html>"
 	
-	usr << browse(body, "window=adminplayeropts-contents[REF(container)];size=750x600")
+	usr << browse(body, "window=adminplayeropts-contents[REF(container)];size=760x600")
 
 
 /datum/admins/proc/handle_inventory_panel_topic(href_list)
@@ -589,6 +605,9 @@
 					I.obj_integrity = I.max_integrity
 					I.update_icon()
 					repaired_count++
+				// Also restore sharpness
+				if(I && I.max_blade_int > 0 && I.blade_int < I.max_blade_int)
+					I.blade_int = I.max_blade_int
 			
 			if(ishuman(target))
 				var/mob/living/carbon/human/H = target
@@ -597,6 +616,9 @@
 						I.obj_integrity = I.max_integrity
 						I.update_icon()
 						repaired_count++
+					// Also restore sharpness
+					if(I.max_blade_int > 0 && I.blade_int < I.max_blade_int)
+						I.blade_int = I.max_blade_int
 			
 			to_chat(usr, span_notice("Repaired [repaired_count] items for [target.name]."))
 			to_chat(target, span_notice("Your equipment has been magically repaired!"))
@@ -653,6 +675,9 @@
 			var/obj/item/I = locate(href_list["item"])
 			if(I && I.max_integrity)
 				I.obj_integrity = I.max_integrity
+				// Also restore sharpness
+				if(I.max_blade_int > 0)
+					I.blade_int = I.max_blade_int
 				I.update_icon()
 				to_chat(usr, span_notice("Repaired [I.name]."))
 				message_admins("[key_name_admin(usr)] repaired [I.name] for [key_name_admin(target)].")
