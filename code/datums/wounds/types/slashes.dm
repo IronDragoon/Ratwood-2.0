@@ -323,3 +323,10 @@
 	woundpain = 22
 	sewn_woundpain = 14
 	sew_threshold = 95
+
+/datum/wound/slash/incision/construct
+	name = "open hatch"
+	check_name = span_bloody("<B>OPEN HATCH</B>")
+	bleed_rate = 0
+	sewn_bleed_rate = 0.0
+	bypass_bloody_wound_check = TRUE
