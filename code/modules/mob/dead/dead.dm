@@ -72,22 +72,21 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		timer_text = "Time To Start: DELAYED"
 	else
 		timer_text = "Time To Start: SOON"
-	src << output(timer_text, "lobby_browser:update_timer")
+	src << output(timer_text, "lobby_window.browser:update_timer")
 
 	// Update players ready!!
 	src << output(
-    "Total players ready: [SSticker.totalPlayersReady]",
-    "lobby_browser:update_ready_count"
+	"Total players ready: [SSticker.totalPlayersReady]",
+	"lobby_window.browser:update_ready_count"
 	)
 	// Ready bonus
 	var/bonus_html
 	if (src.ready)
-		bonus_html = span_good("Ready Bonus!") \
-			+ "<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a>"
+		bonus_html = span_good("Ready Bonus!")
 	else
-		bonus_html = span_highlight("No bonus! Ready up!") \
-			+ "<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a>"
-	src << output(bonus_html, "lobby_browser:update_ready_bonus")
+		bonus_html = span_highlight("No bonus! Ready up!")
+	bonus_html += "<a href='?src=[REF(src)];explainreadyupbonus=1'>(?)</a>"
+	src << output(bonus_html, "lobby_window.browser:update_ready_bonus")
 	var/list/dat = list()
 	var/list/ready_players_by_job = list()
 	var/list/wanderer_jobs = list(
@@ -95,7 +94,7 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		"Wretch",
 		"Court Agent"
 	)
-
+	dat += "<center><b>Classes:</b></center><hr>"
 	for (var/mob/dead/new_player/player in GLOB.player_list)
 		if (player.client?.ckey in GLOB.hiderole)
 			continue
@@ -173,20 +172,19 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 			dat += "<h3><center><font color='[job_department_colors[department]]'>----- [department] -----</font></center></h3>"
 			dat += jobs_under_department
 
-	src << output(dat.Join(), "lobby_browser:update_jobs")
+	src << output(dat.Join(), "lobby_window.browser:update_jobs")
 
 /mob/dead/new_player/proc/open_lobby()
-    if (!client)
-        return
+	if (!client)
+		return
 
-    if (winexists(src, "lobby_window"))
-        return
+	if (winexists(src, "lobby_window"))
+		return
 
-    src << browse(
-        file("html/lobby/lobby.html"),
-        "window=lobby_window;control=lobby_browser;size=330x430"
-    )
-
+	src << browse(
+		file("html/lobby/lobby.html"),
+		"window=lobby_window;size=330x430"
+	)
 /mob/dead/proc/server_hop()
 	set category = "OOC"
 	set name = "Server Hop!"
