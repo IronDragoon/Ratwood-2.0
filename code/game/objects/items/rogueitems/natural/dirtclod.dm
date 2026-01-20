@@ -28,13 +28,15 @@
 		var/dirtcount = 1
 		var/list/dirts = list()
 		for(var/obj/item/natural/dirtclod/D in T)
-			dirtcount++
-			dirts += D
+			if(D != src)
+				dirtcount++
+				dirts += D
 		if(dirtcount >=5)
 			for(var/obj/item/I in dirts)
 				qdel(I)
-			qdel(src)
 			new /obj/structure/fluff/clodpile(T)
+			qdel(src)
+			return
 
 /obj/item/natural/dirtclod/attack_self(mob/living/user)
 	user.visible_message(span_warning("[user] scatters [src]."))

@@ -1237,6 +1237,8 @@
 	var/wrestling_diff = 0
 	var/resist_chance = 55
 	var/mob/living/L = pulledby
+	if(!L)
+		return TRUE
 	var/combat_modifier = 1
 	var/agg_grab = FALSE
 

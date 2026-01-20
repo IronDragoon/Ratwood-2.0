@@ -216,7 +216,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 		return
 	for(var/mob/M as anything in thingshearing)
 		thingshearing -= M
-		if(!M.client)
+		if (!M?.client)
 			continue
 		var/list/L = M.client.played_loops[src]
 		M.client.played_loops -= src

@@ -28,7 +28,7 @@ GLOBAL_LIST_INIT(wisdoms, world.file2list("strings/rt/wisdoms.txt"))
 	var/glass_on_impact = FALSE // If TRUE, bottle will generate glass shard on impact. Otherwise it won't.
 
 /obj/item/reagent_containers/glass/bottle/update_icon(dont_fill=FALSE)
-	if(!fill_icon_thresholds || dont_fill)
+	if(!fill_icon_thresholds || dont_fill || !reagents)
 		return
 
 	cut_overlays()

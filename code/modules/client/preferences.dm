@@ -948,7 +948,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 //	dat += "<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>"
 
 
-	if(user.client.is_new_player())
+	if(user.client?.is_new_player())
 		dat = list("<center>REGISTER!</center>")
 
 	winshow(user, "preferencess_window", TRUE)
@@ -2286,7 +2286,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						charflaw = C
 						if(charflaw.desc)
 							to_chat(user, "<span class='info'>[charflaw.desc]</span>")
-				
+
 				if("vices_menu")
 					open_vices_menu(user)
 					return
@@ -2920,7 +2920,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 			// Set first vice as the legacy charflaw for compatibility
 			if(i == 1)
 				character.charflaw = new_vice
-	
+
 	// Legacy single vice support (if new system not used)
 	if(!length(character.vices) && charflaw)
 		character.charflaw = new charflaw.type()

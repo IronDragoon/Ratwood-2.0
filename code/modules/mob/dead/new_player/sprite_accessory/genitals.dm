@@ -37,7 +37,7 @@
 */
 
 /datum/sprite_accessory/penis/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	if(owner.sexcon.bottom_exposed == TRUE)
+	if(owner.sexcon && owner.sexcon.bottom_exposed == TRUE)
 		return TRUE
 	if(owner.underwear)
 		return FALSE
@@ -124,7 +124,7 @@
 	var/obj/item/organ/penis/pp = owner.getorganslot(ORGAN_SLOT_PENIS)
 	if(pp && pp.sheath_type == SHEATH_TYPE_SLIT)
 		return FALSE
-	if(owner.sexcon.bottom_exposed == TRUE)
+	if(owner.sexcon && owner.sexcon.bottom_exposed == TRUE)
 		return TRUE
 	if(owner.underwear)
 		return FALSE

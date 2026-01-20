@@ -428,7 +428,7 @@
 			pathing_frustration++
 			NPC_THINK("MOVEMENT TURN [movement_turn]: Move failed! Strike [pathing_frustration]!")
 			sleep(1)
-		else if(loc == myPath[1]) // if we made it to the right part of our path
+		else if(length(myPath) && loc == myPath[1]) // if we made it to the right part of our path
 			.++
 			pathing_frustration = 0
 			myPath -= myPath[1]
