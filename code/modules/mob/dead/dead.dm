@@ -77,6 +77,8 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 		timer_text = "Time To Start: DELAYED"
 	else
 		timer_text = "Time To Start: SOON"
+		src << browse(null, "window=lobby_window")
+		return
 	src << output(timer_text, "lobby_window.browser:update_timer")
 
 	// Update players ready!!
@@ -135,7 +137,7 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 			key = SSjob.bitflag_to_department(J.department_flag)
 
 		var/list/job_players = ready_players_by_job[job_name]
-		job_list_by_department[key] += "<B>[job_name]</B> ([job_players.len]) - [job_players.Join(", ")]"
+		job_list_by_department[key] += "<B>[job_name]</B> ([job_players.len]) - [job_players.Join(", ")]<br>"
 
 	for(var/department in job_list_by_department)
 		var/list/jobs_under_department = job_list_by_department[department]
