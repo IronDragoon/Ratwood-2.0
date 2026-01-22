@@ -24,7 +24,7 @@
 		STATKEY_CON = -1,		//You're not really fight-y. Get behind your knight, punk. Expert swords bc you probably danced a lot with it but otherwise you suck.
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 2,
-		STATKEY_FOR = 1,
+		STATKEY_LCK = 1,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/swords= SKILL_LEVEL_EXPERT,
