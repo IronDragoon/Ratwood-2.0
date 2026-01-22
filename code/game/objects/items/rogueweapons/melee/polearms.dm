@@ -808,8 +808,7 @@
 	name = "psydonic halberd"
 	desc = "A reliable design that has served humenkind to fell the enemy and defend Psydon's flock - now fitted with a lengthier blade and twin, silver-tipped beaks."
 	icon_state = "silverhalberd"
-	force = 10
-	force_wielded = 25
+	force = 10//Use the spear instead if you're going to one-hand this.
 	minstr = 11
 	wdefense = 7
 	is_silver = TRUE
@@ -818,10 +817,10 @@
 /obj/item/rogueweapon/halberd/psyhalberd/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
-		pre_blessed = BLESSING_PSYDONIAN,\
+		pre_blessed = BLESSING_NONE,\
 		silver_type = SILVER_PSYDONIAN,\
 		added_force = 0,\
-		added_blade_int = 0,\
+		added_blade_int = 50,\
 		added_int = 50,\
 		added_def = 2,\
 	)
@@ -1063,7 +1062,7 @@
 		pre_blessed = BLESSING_NONE,\
 		silver_type = SILVER_PSYDONIAN,\
 		added_force = 0,\
-		added_blade_int = 0,\
+		added_blade_int = 50,\
 		added_int = 50,\
 		added_def = 2,\
 	)
