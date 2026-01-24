@@ -759,6 +759,9 @@
 /obj/item/bedsheet/rogue/cloth,
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/under/cave/inhumen/wretch/camp)
+"cl" = (
+/turf/open/floor/rogue/blocks/flipped,
+/area/rogue/indoors/ravoxarena)
 "cn" = (
 /obj/structure/flora/roguegrass,
 /turf/open/floor/rogue/snowrough,
@@ -2752,6 +2755,17 @@
 /obj/item/candle/skull/lit,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/banditcamp)
+"nS" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/structure/bars/grille,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/ravoxarena)
 "nT" = (
 /obj/structure/flora/roguegrass,
 /turf/open/floor/rogue/grass,
@@ -4520,7 +4534,6 @@
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors)
 "yU" = (
-/obj/structure/bars/grille,
 /turf/open/floor/rogue/dirt,
 /area/rogue/indoors/ravoxarena)
 "yV" = (
@@ -5740,6 +5753,9 @@
 /obj/effect/solid_invisible_barrier,
 /turf/open/floor/rogue/underworld/space/sparkle_quiet,
 /area/rogue)
+"FF" = (
+/turf/open/floor/rogue/cobble,
+/area/rogue/indoors/ravoxarena)
 "FH" = (
 /obj/structure/fluff/railing/border{
 	dir = 9
@@ -8303,8 +8319,7 @@
 /turf/open/floor/rogue/dirt,
 /area/rogue/under/cave/inhumen/wretch/temple)
 "VS" = (
-/obj/structure/bars/grille,
-/turf/open/floor/rogue/ruinedwood/spiral,
+/turf/open/floor/rogue/metal,
 /area/rogue/indoors/ravoxarena)
 "VU" = (
 /obj/structure/fluff/walldeco/vinez/blue,
@@ -20613,9 +20628,9 @@ mL
 va
 va
 mL
-va
 cC
-va
+VS
+cC
 iE
 va
 va
@@ -21264,10 +21279,10 @@ XX
 ks
 Ke
 yU
-yU
+cl
 yU
 Ke
-BE
+nS
 TA
 NE
 GV
@@ -21393,9 +21408,9 @@ yI
 XX
 OT
 yU
-VS
-VS
-VS
+FF
+cl
+FF
 yU
 NR
 TA
@@ -21523,9 +21538,9 @@ EJ
 XX
 mC
 yU
-VS
+FF
 Ch
-VS
+FF
 yU
 ds
 fL
@@ -21653,9 +21668,9 @@ yI
 xv
 MP
 yU
-VS
-VS
-VS
+cl
+FF
+cl
 yU
 mU
 TA
@@ -21784,7 +21799,7 @@ XX
 dT
 Ke
 yU
-yU
+FF
 yU
 Ke
 qP
@@ -22433,9 +22448,9 @@ yI
 va
 va
 iE
-va
 cC
-va
+VS
+cC
 yI
 va
 va
