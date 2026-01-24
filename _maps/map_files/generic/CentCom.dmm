@@ -6373,12 +6373,6 @@
 	name = "Wretches Camp"
 	})
 "Ch" = (
-/obj/effect/wisp/prestidigitation{
-	desc = "A small, fiery ball of light made up of mystical energy.";
-	name = "Will-o'-the-wisp";
-	pixel_x = 0;
-	pixel_y = 6
-	},
 /obj/effect/decal/edge{
 	color = "#3f3f3f";
 	dir = 4
@@ -6393,6 +6387,12 @@
 /obj/effect/decal/edge{
 	color = "#3f3f3f";
 	dir = 8
+	},
+/obj/effect/wisp/prestidigitation{
+	desc = "A small, fiery ball of light made up of mystical energy.";
+	name = "Will-o'-the-wisp";
+	pixel_x = 0;
+	pixel_y = 6
 	},
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/ravoxarena)
