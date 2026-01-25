@@ -51,8 +51,7 @@
 	cloak = /obj/item/clothing/cloak/cape/nomad
 	beltl = /obj/item/flashlight/flare/torch/lantern
 	beltr = /obj/item/reagent_containers/glass/bottle/waterskin
-	backpack_contents = list(/obj/item/recipe_book/survival = 1,
-							/obj/item/rogueweapon/huntingknife = 1,
+	backpack_contents = list(/obj/item/rogueweapon/huntingknife = 1,
 							/obj/item/rogueweapon/scabbard/sheath = 1)
 
 	if(H.mind)

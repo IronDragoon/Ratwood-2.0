@@ -30,7 +30,7 @@
 	var/obj/item/organ/penis/penis = H.getorganslot(ORGAN_SLOT_PENIS)
 	if(!penis)
 		return FALSE
-	if(H.sexcon.bottom_exposed == TRUE)
+	if(H.sexcon && H.sexcon.bottom_exposed == TRUE)
 		return TRUE
 	if(H.underwear)
 		return FALSE
@@ -50,15 +50,18 @@
 			adjective = "an average"
 		if(3)
 			adjective = "a large"
-	switch(H.sexcon.arousal)
-		if(80 to INFINITY)
-			arousal_modifier = ", throbbing violently"
-		if(50 to 80)
-			arousal_modifier = ", turgid and leaky"
-		if(20 to 50)
-			arousal_modifier = ", stiffened and twitching"
-		else
-			arousal_modifier = ", soft and flaccid"
+	if(H.sexcon)
+		switch(H.sexcon.arousal)
+			if(80 to INFINITY)
+				arousal_modifier = ", throbbing violently"
+			if(50 to 80)
+				arousal_modifier = ", turgid and leaky"
+			if(20 to 50)
+				arousal_modifier = ", stiffened and twitching"
+			else
+				arousal_modifier = ", soft and flaccid"
+	else
+		arousal_modifier = ", soft and flaccid"
 	var/used_name
 	if(penis.erect_state != ERECT_STATE_HARD && penis.sheath_type != SHEATH_TYPE_NONE)
 		switch(penis.sheath_type)
@@ -89,7 +92,7 @@
 		return FALSE
 	if(!testes)
 		return FALSE
-	if(H.sexcon.bottom_exposed == TRUE)
+	if(H.sexcon && H.sexcon.bottom_exposed == TRUE)
 		return TRUE
 	if(H.underwear)
 		return FALSE

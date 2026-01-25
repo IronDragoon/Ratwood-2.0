@@ -46,7 +46,6 @@
 	beltr = /obj/item/rogueweapon/sword/long/shotel
 	backpack_contents = list(/obj/item/rope/chain = 2,
 							/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
-							/obj/item/recipe_book/survival = 1,
 							/obj/item/rogueweapon/huntingknife = 1)
 
 
