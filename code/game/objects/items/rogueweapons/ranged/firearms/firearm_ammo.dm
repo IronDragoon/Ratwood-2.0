@@ -177,13 +177,6 @@
 /obj/item/quiver/bullet/update_icon()
 	return
 
-/obj/item/quiver/bullet/runed/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/ammo_casing/caseless/bullet/runelock/R = new()
-		arrows += R
-	update_icon()
-
 /obj/item/quiver/bullet/lead/Initialize()
 	. = ..()
 	for(var/i in 1 to max_storage)
