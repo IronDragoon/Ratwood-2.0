@@ -56,7 +56,7 @@
 /datum/supply_pack/rogue/Knight/skettle
 	name = "Slitted Kettle Helm"
 	cost = 40
-	contains = list(//obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle)
+	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle)
 
 //////////
 // NECK //
