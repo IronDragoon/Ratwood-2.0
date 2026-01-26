@@ -15487,10 +15487,6 @@
 /obj/machinery/light/rogue/wallfire/candle,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/inq)
-"eIO" = (
-/obj/structure/mineral_door/wood,
-/turf/closed/wall/mineral/rogue/stone/moss,
-/area/rogue/outdoors/bograt/above)
 "eIZ" = (
 /obj/structure/gravemarker,
 /obj/structure/closet/dirthole/closed/loot,
@@ -324320,7 +324316,7 @@ hnd
 dQm
 dQm
 dQm
-eIO
+iyM
 dQm
 dQm
 lES
