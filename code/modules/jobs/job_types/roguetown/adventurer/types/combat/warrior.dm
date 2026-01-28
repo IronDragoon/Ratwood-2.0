@@ -97,7 +97,7 @@
 	belt = /obj/item/storage/belt/rogue/leather
 	backl = /obj/item/storage/backpack/rogue/satchel
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
-	shoes = /obj/item/clothing/shoes/roguetown/boots
+	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	cloak = /obj/item/clothing/cloak/raincloak/furcloak/brown
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
