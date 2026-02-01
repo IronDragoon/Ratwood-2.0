@@ -11,18 +11,21 @@
 		"mercenary": "sellsword",
 		"tailor": "stitcher",
 		"doctor": "shurgeon",
+		"archivist": "bookie",
 		"su": "shu",
 		"my": "m'",
         "you": "yew",
         "your": "yous",
 		"butt": "arse",
+		"copper": "coppen",
 		"something": "some'n",
 		"aren't": "aintch"
     },
     "end": {
 		"ing": "in'",
 		"re": "s",
-		"ve": "s'a"
+		"ve": "s'a",
+		"he": "'"
     },
 	"multiword": {
 	},
