@@ -35,6 +35,8 @@
 	/// The bed (if) we're occupying, update on starting an action
 	var/obj/structure/bed/rogue/bed = null
 	var/target_on_bed = FALSE
+	/// The bush (if) we're on top of, update on starting an action
+	var/obj/structure/flora/roguegrass/grassy_knoll = null
 	/// If this person has a collar that rings on
 	var/collar_bell_user = FALSE
 	var/collar_bell_target = FALSE
@@ -74,6 +76,7 @@
 	user = null
 	target = null
 	bed = null
+	grassy_knoll = null
 	collar_bell_user = FALSE
 	collar_bell_target = FALSE
 	if(knotted_status)
@@ -121,6 +124,11 @@
 			animate(target, pixel_y = target_y, time = time)
 			animate(pixel_y = oldy, time = time)
 		bed.damage_bed(force > SEX_FORCE_HIGH ? 0.5 : 0.25)
+	else if(grassy_knoll)
+		if (!istype(grassy_knoll) || QDELETED(grassy_knoll))
+			grassy_knoll = null
+			return
+		SEND_SIGNAL(grassy_knoll, COMSIG_MOVABLE_CROSSED, user)
 	
 	if((collar_bell_user || collar_bell_target) && (force > SEX_FORCE_MID))
 		playsound(collar_bell_target && target ? target : user, SFX_COLLARJINGLE, 50, TRUE, ignore_walls = FALSE)
@@ -822,6 +830,7 @@
 	current_action = null
 	bed = null
 	target_on_bed = FALSE
+	grassy_knoll = null
 	collar_bell_user = FALSE
 	collar_bell_target = FALSE
 	using_zones = list()
@@ -843,6 +852,7 @@
 	current_action = action_type
 	bed = null
 	target_on_bed = FALSE
+	grassy_knoll = null
 	collar_bell_user = FALSE
 	collar_bell_target = FALSE
 	var/datum/sex_action/action = SEX_ACTION(current_action)
@@ -871,6 +881,7 @@
 		if(desire_stop)
 			break
 		find_occupying_bed()
+		find_occupying_grass()
 		find_ringing_collar()
 		action.on_perform(user, target)
 		// It could want to finish afterwards the performed action
@@ -898,6 +909,12 @@
 		target_on_bed = TRUE
 	if(!bed && !(user.mobility_flags & MOBILITY_STAND) && isturf(user.loc)) // find our bed
 		bed = locate() in user.loc
+
+/datum/sex_controller/proc/find_occupying_grass()
+	if(grassy_knoll)
+		return
+	if(isturf(user.loc)) // find our grass
+		grassy_knoll = locate() in user.loc
 
 /datum/sex_controller/proc/find_ringing_collar()
 	var/obj/item/clothing/neck/roguetown/collar/collar
