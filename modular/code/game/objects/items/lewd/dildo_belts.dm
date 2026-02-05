@@ -19,7 +19,7 @@
 	if(!istype(I, /obj/item/dildo/))
 		return ..()
 	var/obj/item/dildo/held_dildo = I
-	if(held_dildo?.is_attached_to_belt) // this dildo is already attached to a belt, don't attempt to attach to another belt
+	if(held_dildo.is_attached_to_belt) // this dildo is already attached to a belt, don't attempt to attach to another belt
 		return
 	if(!attached_toy) // belt doesn't have attachment
 		if(user.transferItemToLoc(held_dildo, null)) // we're not storing the dildo inside the belt, rather we're moving it to nullspace then restoring it on delete/deattachment
