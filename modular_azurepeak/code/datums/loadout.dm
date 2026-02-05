@@ -986,6 +986,10 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	name = "Eastern Craft Robe"
 	path = /obj/item/clothing/suit/roguetown/armor/basiceast/crafteast
 
+/datum/loadout_item/doboeast
+	name = "Eastern Dobo Robe"
+	path = /obj/item/clothing/suit/roguetown/armor/basiceast
+
 // HEADWEAR
 /datum/loadout_item/nochood
 	name = "Noc Hood"
