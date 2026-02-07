@@ -751,4 +751,5 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/hemophage/on_mob_creation(mob/living/carbon/human/vamp_wannabe)
 	ADD_TRAIT(vamp_wannabe, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
+	ADD_TRAIT(vamp_wannabe, TRAIT_VAMPBITE, TRAIT_GENERIC)
 	vamp_wannabe.adjust_triumphs(1)

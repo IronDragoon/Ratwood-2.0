@@ -56,10 +56,10 @@
 			addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, vomit), 0, TRUE), rand(8 SECONDS, 15 SECONDS))
 		if(HAS_TRAIT(src, TRAIT_HEMOPHAGE) && ishuman(src))
 			var/mob/living/carbon/human/H = src
-			H.adjust_nutrition(10)
-			H.adjust_hydration(10)
+			H.adjust_nutrition(35)
+			H.adjust_hydration(35)
 			if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-				H.blood_volume = min(H.blood_volume + 20, BLOOD_VOLUME_NORMAL)
+				H.blood_volume = min(H.blood_volume + 35, BLOOD_VOLUME_NORMAL)
 		return
 
 	if(victim.mind?.has_antag_datum(/datum/antagonist/werewolf) || (victim.stat != DEAD && victim.mind?.has_antag_datum(/datum/antagonist/zombie)))
