@@ -14,7 +14,7 @@ GLOBAL_LIST_EMPTY(loadout_items)
 		if(ckeywhitelist)
 			donoritem = TRUE
 	if (triumph_cost)
-		desc += "<b>Costs [triumph_cost] Points.</b>"
+		desc += "Costs [triumph_cost] Points."
 
 /datum/loadout_item/proc/donator_ckey_check(key)
 	if(ckeywhitelist && ckeywhitelist.Find(key))
@@ -230,6 +230,10 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	name = "Bard Hat"
 	path = /obj/item/clothing/head/roguetown/bardhat
 
+/datum/loadout_item/duelhat
+	name = "Duelist Hat"
+	path = /obj/item/clothing/head/roguetown/duelisthat
+
 /datum/loadout_item/fancyhat
 	name = "Fancy Hat"
 	path = /obj/item/clothing/head/roguetown/fancyhat
@@ -346,6 +350,10 @@ GLOBAL_LIST_EMPTY(loadout_items)
 /datum/loadout_item/halfcloak
 	name = "Halfcloak"
 	path = /obj/item/clothing/cloak/half
+
+/datum/loadout_item/duelcape
+	name = "Duelist Cape"
+	path = /obj/item/clothing/cloak/half/duelistcape
 
 /datum/loadout_item/ridercloak
 	name = "Rider Cloak"
@@ -507,6 +515,10 @@ GLOBAL_LIST_EMPTY(loadout_items)
 /datum/loadout_item/bottomtunic
 	name = "Low-cut Tunic"
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/lowcut
+
+/datum/loadout_item/tribalrag
+	name = "Tribal Rag"
+	path = /obj/item/clothing/suit/roguetown/shirt/tribalrag
 
 /datum/loadout_item/tunic
 	name = "Tunic"
@@ -974,6 +986,10 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	name = "Eastern Craft Robe"
 	path = /obj/item/clothing/suit/roguetown/armor/basiceast/crafteast
 
+/datum/loadout_item/doboeast
+	name = "Eastern Dobo Robe"
+	path = /obj/item/clothing/suit/roguetown/armor/basiceast
+
 // HEADWEAR
 /datum/loadout_item/nochood
 	name = "Noc Hood"
@@ -1236,6 +1252,58 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	path = /obj/item/clothing/cloak/templar/ravox
 
 // CLOTHING - DRESSES & ROBES
+/datum/loadout_item/tri_ornate_dress
+	name = "Ornate Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/steward
+	triumph_cost = 3
+
+/datum/loadout_item/tri_princess_dress/nobility_check(client/C)
+	var/datum/preferences/P = C.prefs
+	if(!P)
+		return FALSE
+	// Check if user selected Nobility virtue
+	if(P.virtue && istype(P.virtue, /datum/virtue/utility/noble))
+		return TRUE
+	if(P.virtuetwo && istype(P.virtuetwo, /datum/virtue/utility/noble))
+		return TRUE
+	// Check if user has high priority for any noble, courtier, or yeoman job
+	for(var/job_title in GLOB.noble_positions)
+		if(P.job_preferences[job_title] == JP_HIGH)
+			return TRUE
+	for(var/job_title in GLOB.courtier_positions)
+		if(P.job_preferences[job_title] == JP_HIGH)
+			return TRUE
+	for(var/job_title in GLOB.yeoman_positions)
+		if(P.job_preferences[job_title] == JP_HIGH)
+			return TRUE
+	return FALSE
+
+/datum/loadout_item/tri_ornate_tunic
+	name = "Ornate Tunic"
+	path = /obj/item/clothing/suit/roguetown/shirt/tunic/silktunic
+	triumph_cost = 3
+
+/datum/loadout_item/tri_princess_dress/nobility_check(client/C)
+	var/datum/preferences/P = C.prefs
+	if(!P)
+		return FALSE
+	// Check if user selected Nobility virtue
+	if(P.virtue && istype(P.virtue, /datum/virtue/utility/noble))
+		return TRUE
+	if(P.virtuetwo && istype(P.virtuetwo, /datum/virtue/utility/noble))
+		return TRUE
+	// Check if user has high priority for any noble, courtier, or yeoman job
+	for(var/job_title in GLOB.noble_positions)
+		if(P.job_preferences[job_title] == JP_HIGH)
+			return TRUE
+	for(var/job_title in GLOB.courtier_positions)
+		if(P.job_preferences[job_title] == JP_HIGH)
+			return TRUE
+	for(var/job_title in GLOB.yeoman_positions)
+		if(P.job_preferences[job_title] == JP_HIGH)
+			return TRUE
+	return FALSE
+
 /datum/loadout_item/tri_princess_dress
 	name = "Princess Dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess
@@ -1399,6 +1467,11 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	path = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
 	triumph_cost = 3
 
+/datum/loadout_item/tri_duelist_coat
+	name = "Duelist Coat"
+	path = /obj/item/clothing/armor/leather/jacket/leathercoat/duelcoat
+	triumph_cost = 3
+
 /datum/loadout_item/tri_fencing_gambeson
 	name = "Fencing Gambeson (Otavan)"
 	path = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/otavan
@@ -1408,7 +1481,6 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	name = "Fencing Shirt (Padded)"
 	path = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/freifechter
 	triumph_cost = 3
-
 
 /datum/loadout_item/tri_gambeson
 	name = "Gambeson"
@@ -1534,11 +1606,6 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	name = "Raneshen Gambeson"
 	path = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
 	triumph_cost = 3
-
-/datum/loadout_item/tri_regen_skin
-	name = "Regenerating Skin"
-	path = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/weak
-	triumph_cost = 5
 
 /datum/loadout_item/tri_shamanic_coat
 	name = "Shamanic Coat"
