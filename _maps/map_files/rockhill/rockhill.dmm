@@ -13040,8 +13040,7 @@
 /area/rogue/under/cavewet)
 "dVw" = (
 /obj/structure/mineral_door/wood/deadbolt{
-	dir = 3;
-	lockid = "farm"
+	dir = 3
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/town/basement)
@@ -59739,8 +59738,7 @@
 /area/rogue/indoors/shelter/mountains)
 "slA" = (
 /obj/structure/mineral_door/wood/deadbolt{
-	dir = 3;
-	lockid = "farm"
+	dir = 3
 	},
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/indoors)
@@ -488320,12 +488318,12 @@ xlA
 xlA
 xlA
 xlA
-nCO
-mtJ
-mtJ
-mtJ
-mtJ
-rOQ
+tOy
+pLf
+pLf
+pLf
+pLf
+cDU
 xlA
 xlA
 xlA
@@ -488752,12 +488750,12 @@ xlA
 xlA
 xlA
 xlA
-jEY
-lfV
-lfV
-lfV
-lfV
-vUG
+qjU
+nCO
+mtJ
+mtJ
+rOQ
+fIY
 xlA
 xlA
 xlA
@@ -489184,12 +489182,12 @@ xlA
 xlA
 xlA
 xlA
+qjU
 jEY
 lfV
 lfV
-lfV
-lfV
 vUG
+fIY
 xlA
 xlA
 xlA
@@ -489616,12 +489614,12 @@ xlA
 xlA
 xlA
 xlA
+qjU
 jEY
 lfV
 lfV
-lfV
-lfV
 vUG
+fIY
 xlA
 xlA
 xlA
@@ -490048,12 +490046,12 @@ xlA
 xlA
 xlA
 xlA
-jEY
-lfV
-lfV
-lfV
-lfV
-vUG
+qjU
+piL
+cxG
+cxG
+jIo
+fIY
 xlA
 xlA
 xlA
@@ -490480,12 +490478,12 @@ xlA
 xlA
 xlA
 xlA
-piL
-cxG
-cxG
-cxG
-cxG
-jIo
+rBH
+eSZ
+eSZ
+eSZ
+eSZ
+hJx
 xlA
 xlA
 xlA
