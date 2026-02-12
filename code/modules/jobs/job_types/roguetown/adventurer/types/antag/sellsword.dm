@@ -65,7 +65,7 @@
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				beltl = /obj/item/rogueweapon/mace/steel
 				beltr = /obj/item/quiver/bolts
-				armor = /obj/item/clothing/suit/roguetown/armor/brigandine
+				armor = /obj/item/clothing/suit/roguetown/armor/chainmail
 				head = /obj/item/clothing/head/roguetown/helmet/kettle
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_EXPERT, TRUE)

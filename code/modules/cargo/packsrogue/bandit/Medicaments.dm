@@ -70,3 +70,47 @@
 	name = "Spice"
 	cost = 15
 	contains = list(/obj/item/reagent_containers/powder/spice)
+
+/////////////////
+// PROSTHETICS //
+/////////////////
+
+/datum/supply_pack/rogue/Medicaments/prarml
+	name = "Prosthetic Wood Arm (L)"
+	cost = 40
+	contains = list(/obj/item/bodypart/l_arm/prosthetic/woodleft)
+
+/datum/supply_pack/rogue/Medicaments/prarmr
+	name = "Prosthetic Wood Arm (R)"
+	cost = 40
+	contains = list(/obj/item/bodypart/r_arm/prosthetic/woodright)
+
+/datum/supply_pack/rogue/Medicaments/prlegl
+	name = "Prosthetic Wood Leg (L)"
+	cost = 20
+	contains = list(/obj/item/bodypart/l_leg/prosthetic)
+
+/datum/supply_pack/rogue/Medicaments/prlegr
+	name = "Prosthetic Wood Leg (R)"
+	cost = 20
+	contains = list(/obj/item/bodypart/r_leg/prosthetic)
+
+/datum/supply_pack/rogue/Medicaments/prarmlbrz
+	name = "Prostethic Bronze Arm (L)"
+	cost = 200
+	contains = list(/obj/item/bodypart/l_arm/prosthetic/bronzeleft)
+
+/datum/supply_pack/rogue/Medicaments/prarmrbrz
+	name = "Prostethic Bronze Arm (R)"
+	cost = 200
+	contains = list(/obj/item/bodypart/r_arm/prosthetic/bronzeright)
+
+/datum/supply_pack/rogue/Medicaments/prleglbrz
+	name = "Prostethic Bronze Leg (L)"
+	cost = 100
+	contains = list(/obj/item/bodypart/l_leg/prosthetic/bronzeleft)
+
+/datum/supply_pack/rogue/Medicaments/prlegrbrz
+	name = "Prostethic Bronze Leg (R)"
+	cost = 100
+	contains = list(/obj/item/bodypart/r_leg/prosthetic/bronzeright)

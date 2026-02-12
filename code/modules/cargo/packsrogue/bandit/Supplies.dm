@@ -157,46 +157,6 @@
 	cost = 25	// More expensive if your class doesn't have them.
 	contains = list(/obj/item/lockpickring/mundane)
 
-/datum/supply_pack/rogue/Supplies/prarml
-	name = "Prosthetic Wood Arm (L)"
-	cost = 40
-	contains = list(/obj/item/bodypart/l_arm/prosthetic/woodleft)
-
-/datum/supply_pack/rogue/Supplies/prarmr
-	name = "Prosthetic Wood Arm (R)"
-	cost = 40
-	contains = list(/obj/item/bodypart/r_arm/prosthetic/woodright)
-
-/datum/supply_pack/rogue/Supplies/prlegl
-	name = "Prosthetic Wood Leg (L)"
-	cost = 20
-	contains = list(/obj/item/bodypart/l_leg/prosthetic)
-
-/datum/supply_pack/rogue/Supplies/prlegr
-	name = "Prosthetic Wood Leg (R)"
-	cost = 20
-	contains = list(/obj/item/bodypart/r_leg/prosthetic)
-
-/datum/supply_pack/rogue/Supplies/prarmlbrz
-	name = "Prostethic Bronze Arm (L)"
-	cost = 200
-	contains = list(/obj/item/bodypart/l_arm/prosthetic/bronzeleft)
-
-/datum/supply_pack/rogue/Supplies/prarmrbrz
-	name = "Prostethic Bronze Arm (R)"
-	cost = 200
-	contains = list(/obj/item/bodypart/r_arm/prosthetic/bronzeright)
-
-/datum/supply_pack/rogue/Supplies/prleglbrz
-	name = "Prostethic Bronze Leg (L)"
-	cost = 100
-	contains = list(/obj/item/bodypart/l_leg/prosthetic/bronzeleft)
-
-/datum/supply_pack/rogue/Supplies/prlegrbrz
-	name = "Prostethic Bronze Leg (R)"
-	cost = 100
-	contains = list(/obj/item/bodypart/r_leg/prosthetic/bronzeright)
-
 /datum/supply_pack/rogue/Supplies/grapplinghook
 	name =	"Grappling Hook"
 	cost =	1000	// You're better off stealing this.
