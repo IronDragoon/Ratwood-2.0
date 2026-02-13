@@ -1300,30 +1300,21 @@
 							if(!surname || !length(trim(surname)))
 								surname = thegroom.dna.species.random_surname()
 							priority_announce("[thegroom.real_name] has married [thebride.real_name]!", title = "Holy Union!", sound = 'sound/misc/bell.ogg')
-							var/T
-							var/title = list("Sir", "Ser", "Dame", "Lord", "Lady", "Knight-Captain", "Duke", "Duchess", "Father", "Mother", "Brother", "Sister", "Prelate", "Devotee", "Votary")
-							var/title_found = FALSE
+							var/list/titles = list("Sir", "Ser", "Dame", "Lord", "Lady", "Knight-Captain", "Duke", "Duchess", "Father", "Mother", "Brother", "Sister", "Prelate", "Devotee", "Votary")
 							// Assign surname to groom
 							var/list/groom_name_parts = splittext(thegroom.real_name, " ")
-							for(T in title)
-								if(T == copytext(groom_name_parts[1], 1, 0))
-									thegroom.real_name = "[groom_name_parts[1]] [groom_name_parts[2]] [surname]"
-									title_found = TRUE
-									break
-							if(!title_found)
+							var/title_found = (titles.Find(groom_name_parts[1]) != 0)
+							if(title_found)
+								thegroom.real_name = "[groom_name_parts[1]] [groom_name_parts[2]] [surname]"
+							else
 								thegroom.real_name = "[groom_name_parts[1]] [surname]"
 							// Assign surname to bride
-							title_found = FALSE
 							var/list/bride_name_parts = splittext(thebride.real_name, " ")
-							for(T in title)
-								if(T == copytext(bride_name_parts[1], 1, 0))
-									thebride.real_name = "[bride_name_parts[1]] [bride_name_parts[2]] [surname]"
-									title_found = TRUE
-									break
-							if(!title_found)
+							title_found = (titles.Find(bride_name_parts[1]) != 0)
+							if(title_found)
+								thebride.real_name = "[bride_name_parts[1]] [bride_name_parts[2]] [surname]"
+							else
 								thebride.real_name = "[bride_name_parts[1]] [surname]"
-							var/bride_first_name = bride_name_parts[1]
-							thebride.real_name = "[bride_first_name] [surname]"
 							// Private notification to both
 							if(thegroom) 
 								to_chat(thegroom, span_notice("Your new shared surname is [surname]."))
