@@ -1299,12 +1299,29 @@
 							var/surname = input(user, "Enter a surname for the couple:", "Marriage Ceremony") as text|null
 							if(!surname || !length(trim(surname)))
 								surname = thegroom.dna.species.random_surname()
+							priority_announce("[thegroom.real_name] has married [thebride.real_name]!", title = "Holy Union!", sound = 'sound/misc/bell.ogg')
+							var/T
+							var/title = list("Sir", "Ser", "Dame", "Lord", "Lady", "Knight-Captain", "Duke", "Duchess", "Father", "Mother", "Brother", "Sister", "Prelate", "Devotee", "Votary")
+							var/title_found = FALSE
 							// Assign surname to groom
 							var/list/groom_name_parts = splittext(thegroom.real_name, " ")
-							var/groom_first_name = groom_name_parts[1]
-							thegroom.real_name = "[groom_first_name] [surname]"
+							for(T in title)
+								if(T == copytext(groom_name_parts[1]))
+									thegroom.real_name = "[groom_name_parts[1]] [groom_name_parts[2]] [surname]"
+									title_found = TRUE
+									break
+							if(!title_found)
+								thegroom.real_name = "[groom_name_parts[1]] [surname]"
 							// Assign surname to bride
+							title_found = FALSE
 							var/list/bride_name_parts = splittext(thebride.real_name, " ")
+							for(T in title)
+								if(T == copytext(bride_name_parts[1]))
+									thebride.real_name = "[bride_name_parts[1]] [bride_name_parts[2]] [surname]"
+									title_found = TRUE
+									break
+							if(!title_found)
+								thebride.real_name = "[bride_name_parts[1]] [surname]"
 							var/bride_first_name = bride_name_parts[1]
 							thebride.real_name = "[bride_first_name] [surname]"
 							// Private notification to both
@@ -1319,10 +1336,7 @@
 							thebride.adjust_triumphs(1)
 							// After surname is set, have the priest say the wedding line
 							if(user && surname)
-								if(copytext(surname, 1, 2) == " ")
-									surname = copytext(surname, 2) // Remove leading space if present
 								user.say("I hereby wed you as [surname]s.")
-							priority_announce("[thegroom.real_name] has married [thebride.real_name]!", title = "Holy Union!", sound = 'sound/misc/bell.ogg')
 							qdel(A)
 							marriage = TRUE
 						else
