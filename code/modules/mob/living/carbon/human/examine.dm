@@ -1014,7 +1014,7 @@
 			. += span_warning("[capitalize(m2)] [lowertext(branded_bodypart.name)] has been branded with the symbol \"[branded_bodypart.branded_writing]\".")
 		if(istype(branded_bodypart, /obj/item/bodypart/chest))
 			var/obj/item/bodypart/chest/buttocks = branded_bodypart
-			if(length(buttocks.branded_writing_on_buttocks))
+			if(length(buttocks.branded_writing_on_buttocks) && get_location_accessible(src, BODY_ZONE_PRECISE_GROIN))
 				. += span_warning("[capitalize(m2)] hindquarters has been branded with the symbol \"[buttocks.branded_writing_on_buttocks]\".")
 
 	// Characters with the hunted flaw will freak out if they can't see someone's face.
