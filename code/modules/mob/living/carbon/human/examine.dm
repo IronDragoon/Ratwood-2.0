@@ -1008,7 +1008,7 @@
 			if(femgen)
 				. += span_info(femgen)
 
-	//Print out branding
+	// Print out branding
 	for(var/obj/item/bodypart/branded_bodypart as anything in bodyparts)
 		if(length(branded_bodypart.branded_writing) && get_location_accessible(src, branded_bodypart.body_zone))
 			. += span_warning("[capitalize(m2)] [lowertext(branded_bodypart.name)] has been branded with the symbol \"[branded_bodypart.branded_writing]\".")
