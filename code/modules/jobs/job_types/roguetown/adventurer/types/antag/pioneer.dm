@@ -33,6 +33,7 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,//Yet again.
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
 	)
 
 /datum/outfit/job/roguetown/bandit/pioneer/pre_equip(mob/living/carbon/human/H)

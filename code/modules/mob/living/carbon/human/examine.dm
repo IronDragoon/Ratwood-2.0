@@ -1107,7 +1107,7 @@
 			if(HAS_TRAIT(examiner, TRAIT_COMMIE))
 				villain_text = span_notice("Free man!")
 			if(HAS_TRAIT(src,TRAIT_KNOWNCRIMINAL))
-				villain_text = span_userdanger("BANDIT!")
+				villain_text = span_userdanger("OUTLAW!")
 		if(mind.special_role == "Deadite")
 			villain_text = span_userdanger("DEADITE!")
 		if(mind.special_role == "Vampire Lord")

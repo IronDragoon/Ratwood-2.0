@@ -95,16 +95,6 @@
 
 //Weaponry. They can't get a backup shovel.
 
-/datum/supply_pack/rogue/Pioneer/dagger
-	name = "Iron Dagger"
-	cost = 10
-	contains = list(/obj/item/rogueweapon/huntingknife/idagger)
-
-/datum/supply_pack/rogue/Pioneer/daggerss
-	name = "Steel Dagger"
-	cost = 20
-	contains = list(/obj/item/rogueweapon/huntingknife/idagger/steel)
-
 /datum/supply_pack/rogue/Pioneer/parrydag
 	name = "Parry Dagger"
 	cost = 30
