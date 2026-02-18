@@ -68,7 +68,7 @@
 /proc/bandit_select_bounty(mob/living/carbon/human/H)
 	var/wanted = input(H, "Are you wanted by the kingdom?", "You will be more skilled from your experience") as anything in list("Yes", "No")
 	if(wanted == "No") 
-		to_chat(src, span_warning("I am still relatively new to the gang. My crimes have gone unnoticed so far, but I lack experience."))
+		to_chat(H, span_warning("I am still relatively new to the gang. My crimes have gone unnoticed so far, but I lack experience."))
 		return null
 	var/bounty_poster = input(H, "Who placed a bounty on you?", "Bounty Poster") as anything in list("The Justiciary of Rotwood", "The Grenzelhoftian Holy See")
 	var/bounty_severity = input(H, "How notorious are you?", "Bounty Amount") as anything in list("Small Game", "Highwayman", "Vale Boogeyman")
