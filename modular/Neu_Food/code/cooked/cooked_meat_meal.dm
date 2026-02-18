@@ -226,3 +226,19 @@
 	warming = 3 MINUTES
 	rotprocess = SHELFLIFE_DECENT
 	eat_effect = /datum/status_effect/buff/mealbuff
+
+/*	.................   Frybird Bucket   ................... */
+/obj/item/reagent_containers/food/snacks/rogue/frybirdbucket
+	list_reagents = list(/datum/reagent/consumable/nutriment = MEAL_MEAGRE*3)
+	tastes = list("frybird" = 1)
+	name = "frybird bucket"
+	desc = "Hearty, comforting, and rich - Azurean Frybirds are the best on the entire continent and now even in a convinient bucket!"
+	faretype = FARE_FINE
+	portable = FALSE
+	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_meal.dmi'
+	icon_state = "frybirdbucket"
+	foodtype = VEGETABLES | MEAT
+	warming = 3 MINUTES
+	rotprocess = SHELFLIFE_DECENT
+	eat_effect = /datum/status_effect/buff/mealbuff
+	trash = /obj/item/reagent_containers/glass/bucket
