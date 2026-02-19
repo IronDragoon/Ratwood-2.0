@@ -232,7 +232,7 @@
 	list_reagents = list(/datum/reagent/consumable/nutriment = MEAL_MEAGRE*3)
 	tastes = list("frybird" = 1)
 	name = "frybird bucket"
-	desc = "Hearty, comforting, and rich - Azurean Frybirds are the best on the entire continent and now even in a convinient bucket!"
+	desc = "Hearty, comforting, and rich - Vale frybird is the best on the continent! Now served in a convenient bucket!"
 	faretype = FARE_FINE
 	portable = FALSE
 	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_meal.dmi'
