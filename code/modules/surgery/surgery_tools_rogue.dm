@@ -409,13 +409,12 @@
 	if(cool_timer)
 		deltimer(cool_timer)
 	log_combat(user, target, "Branded successful: \"[setbranding]\"")
-	if(branding_low_quality)
-		if(branding_count > 0)
-			branding_count--
-			if(branding_count == 0)
-				to_chat(user, span_warning("\The [src] snaps in your hands, it's broken!"))
-				playsound(user, 'sound/items/seedextract.ogg', 100, FALSE)
-				qdel(src)
+	if(branding_count > 0)
+		branding_count--
+		if(branding_count == 0)
+			to_chat(user, span_warning("\The [src] snaps in your hands, it's broken!"))
+			playsound(user, 'sound/items/seedextract.ogg', 100, FALSE)
+			qdel(src)
 	return TRUE
 
 /datum/status_effect/mouth_branded
