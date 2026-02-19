@@ -185,10 +185,19 @@
 	icon_state = "brandingiron"
 	possible_item_intents = list(/datum/intent/use)
 	var/setbranding = null
+	var/branding_low_quality = FALSE
+	var/branding_count = 0
 
 /obj/item/rogueweapon/surgery/cautery/branding/slave
 	name = "slaver branding iron"
 	desc = "Used to claim ownership on lost property. Heat it up before use."
+
+/obj/item/rogueweapon/surgery/cautery/branding/crude
+	name = "crude branding stick"
+	desc = "It's made of coal, string and a stick. Looks like I can brand myself with it at least two times before it snaps. Heat it up before use."
+	icon_state = "brandingiron_crude"
+	branding_low_quality = TRUE
+	branding_count = 2
 
 /obj/item/rogueweapon/surgery/cautery/branding/examine(mob/user)
 	. = ..()
@@ -208,7 +217,7 @@
 		var/inputty = stripped_input(user, "What would you like to set the brand?\nExample: a small drawing of a rous head", "Enter branding description", null, 64)
 		if(inputty)
 			setbranding = inputty
-			to_chat(user, span_warning("I swap the iron tip so it will imprint [setbranding]."))
+			to_chat(user, span_warning("I swap the [!branding_low_quality ? "iron" : "coal"] tip so it will imprint [setbranding]."))
 		else
 			setbranding = null
 	..()
@@ -230,6 +239,9 @@
 		return TRUE
 	var/branding_self = user == target
 	if(!branding_self)
+		if(branding_low_quality && (target.stat == CONSCIOUS)) // we can only brand ourselves OR the other character must be unconscious
+			to_chat(user, span_warning("[target.p_they(TRUE)] is moving too much to let me brand [target.p_them()]!"))
+			return TRUE
 		user.visible_message(span_warning("[user] slowly wields \the [src] towards [A]."))
 		to_chat(target, span_userdanger("[user] is trying to brand me with \the [src]!"))
 	else
@@ -237,6 +249,8 @@
 
 	log_combat(user, target, "Branding attempt: \"[setbranding]\"")
 	var/branding_delay = HAS_TRAIT(user, TRAIT_DUNGEONMASTER) ? 5 SECONDS : (HAS_TRAIT(user, TRAIT_KNOWNCRIMINAL) ? 7 SECONDS : 12 SECONDS) // criminals/dungeoneer burn faster, while non-criminals and towners take the longest time
+	if(branding_low_quality) // take longer for low quality branding tool
+		branding_delay += 5 SECONDS
 	if(!do_after(user, branding_delay, target = A))
 		log_combat(user, target, "Branding aborted: \"[setbranding]\"")
 		return TRUE
@@ -390,6 +404,13 @@
 	if(cool_timer)
 		deltimer(cool_timer)
 	log_combat(user, target, "Branded successful: \"[setbranding]\"")
+	if(branding_low_quality)
+		if(branding_count > 0)
+			branding_count--
+			if(branding_count == 0)
+				to_chat(user, span_warning("\The [src] snaps in your hands, it's broken!"))
+				playsound(user, 'sound/items/seedextract.ogg', 100, FALSE)
+				qdel(src)
 	return TRUE
 
 /datum/status_effect/mouth_branded

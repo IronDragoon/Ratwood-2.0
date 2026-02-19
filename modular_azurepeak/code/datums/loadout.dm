@@ -2034,6 +2034,11 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	path = /obj/item/hair_dye_cream
 	triumph_cost = 2
 
+/datum/loadout_item/branding_stick
+	name = "Crude Branding Stick"
+	path = /obj/item/rogueweapon/surgery/cautery/branding/crude
+	triumph_cost = 1
+
 //ADDITIONAL ITEMS
 
 /datum/loadout_item/satchel
