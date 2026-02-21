@@ -675,21 +675,10 @@
 /datum/advclass/cleric/stigmata
 	name = "Stigmata"
 	tutorial = "PSYDON weeps. You are a devout cleric of the Allfather whom takes the suffering of others upon themselves. You have eschewn violence. You will suffer. You will endure."
-	vampcompat = FALSE
 	outfit = /datum/outfit/job/roguetown/adventurer/stigmata
-	class_select_category = CLASS_CAT_CLERIC
-	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	allowed_races = RACES_NO_CONSTRUCT
 	allowed_patrons = list(/datum/patron/old_god)
 
-	subclass_stats = list(
-		STATKEY_CON = 5,
-		STATKEY_END = 3,
-		STATKEY_SPD = 1,
-		STATKEY_STR = -2,
-	)
-
-	// where is nopainstun, you might be asking. did you know that psydon gives a ton of passive stuff for paincrit that absolver normally never gets to see or make use of? ABSOLVER-LITE CAN!!!
 	traits_applied = list(
 		TRAIT_PACIFISM,
 		TRAIT_EMPATH,
@@ -698,7 +687,12 @@
 		TRAIT_DODGEEXPERT,
 		TRAIT_RITUALIST
 	)
-
+	subclass_stats = list(
+		STATKEY_CON = 5,
+		STATKEY_WIL = 3,
+		STATKEY_SPD = 1,
+		STATKEY_STR = -2,
+	)
 	subclass_skills = list(
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
@@ -710,8 +704,12 @@
 		/datum/skill/labor/fishing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN
+		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
 	)
+	subclass_stashed_items = list(
+		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
+	)
+	extra_context = "This is a psydonite only subclass. You will be a pacifist and are able to draw upon a weaker version of the abilities known by a Psydonic Absolver."
 
 /datum/outfit/job/roguetown/adventurer/stigmata/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..()
