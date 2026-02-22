@@ -78,7 +78,7 @@
 		qdel(src)
 		return
 
-/datum/component/enchanted_weapon/proc/apply_enchant(var/obj/item/I, is_fix = FALSE)
+/datum/component/enchanted_weapon/proc/apply_enchant(obj/item/I, is_fix = FALSE)
 	if(enchant_type == FORCE_BLADE_ENCHANT)
 		I.force += FORCE_BLADE_FORCE
 		I.force_wielded += FORCE_BLADE_FORCE

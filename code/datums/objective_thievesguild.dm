@@ -171,7 +171,7 @@
 				return TRUE
 	return FALSE
 
-/proc/get_role_name(var/role)
+/proc/get_role_name(role)
 	if(istype(role, /datum/job))
 		var/datum/job/J = role
 		return J.title

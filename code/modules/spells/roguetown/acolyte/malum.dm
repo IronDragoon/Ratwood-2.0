@@ -303,7 +303,7 @@
 			show_visible_message(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.")
 
 var/global/list/anvil_recipe_prices[][]
-/proc/add_recipe_to_global(var/datum/anvil_recipe/recipe)
+/proc/add_recipe_to_global(datum/anvil_recipe/recipe)
 	var/total_sellprice = 0
 	var/obj/item/ingot/bar = recipe.req_bar
 	var/obj/item/itemtosend = null
