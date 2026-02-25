@@ -439,6 +439,17 @@
 	add_cum_floor(get_turf(user), do_big_puddle = testes?.ball_size > DEFAULT_TESTICLES_SIZE)
 	after_ejaculation()
 
+	var/cur_loc = get_turf(user)
+	if(!cur_loc || !isturf(cur_loc))
+		return
+	var/obj/item/reagent_containers/glass/cum_chalice = locate() in cur_loc
+	if(!cum_chalice?.spillable) // leak contents underneath the first found open container
+		return
+	if(user.getorganslot(ORGAN_SLOT_VAGINA))
+		cum_chalice.reagents.add_reagent(/datum/reagent/erpjuice/femcum,1)
+	else
+		cum_chalice.reagents.add_reagent(/datum/reagent/erpjuice/cum,2)
+
 /datum/sex_controller/proc/ejaculate_container(obj/item/reagent_containers/glass/C)
 	if(C && istype(C))
 		log_combat(user, user, "Ejaculated into a container")
