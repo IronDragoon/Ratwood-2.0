@@ -677,7 +677,6 @@
 	tutorial = "PSYDON weeps. You are a devout cleric of the Allfather whom takes the suffering of others upon themselves. You have eschewn violence. You will suffer. You will endure."
 	outfit = /datum/outfit/job/roguetown/adventurer/stigmata
 	allowed_races = RACES_NO_CONSTRUCT
-	allowed_patrons = list(/datum/patron/old_god)
 
 	traits_applied = list(
 		TRAIT_PACIFISM,
@@ -709,7 +708,10 @@
 	subclass_stashed_items = list(
 		"Tome of Psydon" = /obj/item/book/rogue/bibble/psy
 	)
-	extra_context = "This is a psydonite only subclass. You will be a pacifist and are able to draw upon a weaker version of the abilities known by a Psydonic Absolver."
+	extra_context = "This is a psydonite only subclass, it will force you to be one if it is not set. You will be a pacifist and are able to draw upon a weaker version of the abilities known by a Psydonic Absolver."
+
+/datum/outfit/job/roguetown/adventurer/stigmata
+	allowed_patrons = list(/datum/patron/old_god)
 
 /datum/outfit/job/roguetown/adventurer/stigmata/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..()
