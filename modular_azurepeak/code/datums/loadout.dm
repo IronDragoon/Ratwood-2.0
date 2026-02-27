@@ -1906,6 +1906,9 @@ GLOBAL_LIST_EMPTY(loadout_items)
 	name = "Chain Leash"
 	path = /obj/item/leash/chain
 
+/datum/loadout_item/chastity_cage
+	name = "Chastity Cage (Standard)"
+	path = /obj/item/chastity/cage_standard
 
 /datum/loadout_item/magic_recipes
 	name = "Guide to Arcyne"
