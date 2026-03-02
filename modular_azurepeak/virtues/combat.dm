@@ -189,10 +189,6 @@
 	if(!recipient)
 		return
 
-	var/was_nudist = HAS_TRAIT(recipient, TRAIT_NUDIST)
-	if(was_nudist)
-		REMOVE_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
-
 	// Remove whatever shirt they spawned with
 	var/obj/item/clothing/shirt = recipient.wear_shirt
 	if(shirt)
@@ -204,19 +200,18 @@
 		SLOT_SHIRT,
 		TRUE
 	)
-	if(was_nudist)
-		ADD_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
 	
 	if(alert(recipient, "Would you like to change the name or description of your skin?", "TOUGH HIDE", "MAKE IT SO", "I RESCIND") == "MAKE IT SO") // Query user
-		addtimer(CALLBACK(src, .proc/customize_skin, recipient), 5 SECONDS)
+		addtimer(CALLBACK(src, .proc/customize_skin, recipient), 1 SECONDS)
 
 /datum/virtue/combat/tough_hide/proc/customize_skin(mob/living/carbon/human/recipient)
 	var/obj/item/clothing/hide = recipient.wear_shirt
-	var/inputty = stripped_input(recipient, "What would you like to name your hide?", "TOUGH HIDE", null, 200)
-	if(inputty)
-		hide.name = inputty
-	inputty = stripped_input(recipient, "How would you describe your hide?", "TOUGH HIDE", null, 200)
-	if(inputty)
-		hide.desc = inputty
+	if(hide)
+		var/inputty = stripped_input(recipient, "What would you like to name your hide?", "TOUGH HIDE", null, 200)
+		if(inputty)
+			hide.name = inputty
+		inputty = stripped_input(recipient, "How would you describe your hide?", "TOUGH HIDE", null, 200)
+		if(inputty)
+			hide.desc = inputty
 
 
