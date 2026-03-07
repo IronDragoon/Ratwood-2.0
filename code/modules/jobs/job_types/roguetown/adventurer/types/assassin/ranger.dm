@@ -1,5 +1,5 @@
-/datum/advclass/assassin_ranger
-	name = "Assassin - Ranger"
+/datum/advclass/assassin/ranger
+	name = "Ranger"
 	tutorial = "You spent your life tracking the biggest game of all - mortal men. The direbears you've killed do not even compare to the men you've felled. Track your pray, put down the feral dog, and get your pay.."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
@@ -51,15 +51,16 @@
 	backpack_contents = list(
 					/obj/item/flashlight/flare/torch/lantern/prelit = 1,
 					/obj/item/rogueweapon/scabbard/sheath = 1,
-					/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 					/obj/item/needle/thorn = 1,
 					/obj/item/natural/cloth = 1,
+					/obj/item/rogueweapon/huntingknife/idagger/steel/profane = 1,
 					)
 	mask = /obj/item/clothing/mask/rogue/wildguard
 	neck = /obj/item/clothing/neck/roguetown/coif
 	head = /obj/item/clothing/head/roguetown/helmet/kettle
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
-	beltr = /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick
+	beltl = /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick
+
 	H.adjust_blindness(-3)
 	if(H.mind)
 		var/weapons = list("Yew Longbow","Crossbow")
@@ -74,6 +75,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_MASTER, TRUE)
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				beltl = /obj/item/quiver/bolts
+	assassin_add_bounty(H)
 
 	if(!istype(H.patron, /datum/patron/inhumen/graggar))
 		var/inputty = input(H, "Would you like to change your patron to Graggar?", "The beast roars", "No") as anything in list("Yes", "No")

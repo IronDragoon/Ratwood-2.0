@@ -400,6 +400,7 @@
 	/datum/job/roguetown/mercenary/desert_rider,\
 	/datum/job/roguetown/mercenary/grenzelhoft,\
 	/datum/job/roguetown/bandit,\
+	/datum/job/roguetown/assassin,\
 	/datum/job/roguetown/wretch
 
 #define GARRISON_ROLES \

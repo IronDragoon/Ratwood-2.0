@@ -1,12 +1,12 @@
-/datum/advclass/assassin_hitman
-	name = "Assassin - Professional Hitman"
+/datum/advclass/assassin/hitman
+	name = "Professional Hitman"
 	tutorial = "You are no street-thug or yoeman, you have honed your trade for years if not outright decades. Your craft? Blending in anywhere possible, waiting for your target to be alone, and finishing the hit. After all, dead men tell no tales."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/assassin/hitman
 	category_tags = list(CTAG_ASSASSIN)
 	subclass_social_rank = SOCIAL_RANK_PEASANT
-	traits_applied = list(TRAIT_BLACKBAGGER)	// Agent (15)47 - Lets you use the blackbag and garrote you
+	traits_applied = list(TRAIT_BLACKBAGGER)	// Agent (15)47 - Lets you use the blackbag and garrote
 	// Weighted 14
 	subclass_stats = list(
 		STATKEY_PER = 1,
@@ -18,11 +18,11 @@
 		STATKEY_LCK = 2,	//Bit quirky but should be good for them with maces etc.
 	)
 	subclass_skills = list(
-		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,			// Main weapon is going to be their garrote but maces are a good backup. (Cudgel prob)
-		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER,		// GRAB HEEEE!!!
-		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,		// Viable to punch shit or use brass-knuckles as a backup.
+		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,			
+		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER,		
+		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,		
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
-		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,	// Niche but I guess incase they get a ranged weapon on-hand.
+		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
@@ -51,6 +51,7 @@
 					/obj/item/lockpickring/mundane = 1,
 					/obj/item/clothing/head/inqarticles/blackbag = 1,
 					/obj/item/inqarticles/garrote = 1,
+					/obj/item/rogueweapon/huntingknife/idagger/steel/profane = 1,
 					)
 	mask = /obj/item/clothing/mask/rogue/facemask/steel
 	neck = /obj/item/clothing/neck/roguetown/coif/heavypadding
@@ -58,6 +59,7 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 	backl = /obj/item/rogueweapon/mace/cudgel
 	beltl = /obj/item/rogueweapon/knuckles
+	assassin_add_bounty(H)
 
 	if(!istype(H.patron, /datum/patron/inhumen/graggar))
 		var/inputty = input(H, "Would you like to change your patron to Graggar?", "The beast roars", "No") as anything in list("Yes", "No")

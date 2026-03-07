@@ -98,7 +98,8 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	var/list/wanderer_jobs = list(
 		"Adventurer",
 		"Wretch",
-		"Court Agent"
+		"Court Agent",
+		"Assassin",
 	)
 	dat += "<center><b>Classes:</b></center><hr>"
 	for (var/mob/dead/new_player/player in GLOB.player_list)

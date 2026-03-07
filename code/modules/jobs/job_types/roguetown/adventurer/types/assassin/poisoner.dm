@@ -1,5 +1,5 @@
-/datum/advclass/assassin_poisoner
-	name = "Assassin - Poisoner"
+/datum/advclass/assassin/poisoner
+	name = "Poisoner"
 	tutorial = "You've known you way around poisons, natural or man-made, for most of your life. From brewing antidotes, to creating lethal mixes. You blend in well in even noble courts as a medicine man, hiding your true inentions.."
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_races = RACES_ALL_KINDS
@@ -53,8 +53,8 @@
 	backpack_contents = list(
 					/obj/item/flashlight/flare/torch/lantern/prelit = 1,
 					/obj/item/lockpickring/mundane = 1,
-					/obj/item/rogueweapon/huntingknife/idagger/steel/corroded = 1,		//This is basically their primary weapon so they don't get loadouts.
 					/obj/item/rogueweapon/scabbard/sheath = 1,
+					/obj/item/rogueweapon/huntingknife/idagger/steel/profane = 1,
 					/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 1,
 					/obj/item/reagent_containers/glass/bottle/rogue/stampoison = 1,
 					/obj/item/recipe_book/alchemy = 1,
@@ -63,6 +63,8 @@
 	neck = /obj/item/clothing/neck/roguetown/coif/heavypadding
 	head = /obj/item/clothing/head/roguetown/physician
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
+
+	assassin_add_bounty(H)
 
 	if(!istype(H.patron, /datum/patron/inhumen/graggar))
 		var/inputty = input(H, "Would you like to change your patron to Graggar?", "The beast roars", "No") as anything in list("Yes", "No")
