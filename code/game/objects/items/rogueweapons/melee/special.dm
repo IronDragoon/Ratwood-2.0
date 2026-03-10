@@ -564,6 +564,7 @@
 	embedding = list("embed_chance" = 0) // Embedding the cursed dagger has the potential to cause duping issues. Keep it like this unless you want to do a lot of bug hunting.
 	resistance_flags = INDESTRUCTIBLE
 	stealthy_audio = TRUE
+	var contained_souls = 0
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/profane/examine(mob/user)
 	. = ..()
@@ -679,6 +680,7 @@
 	S.key = target.key
 	S.language_holder = target.language_holder.copy(S)
 	target.visible_message("<span class='danger'>[target]'s soul is pulled from their body and sucked into the profane dagger!</span>", "<span class='danger'>My soul is trapped within the profane dagger. Damnation!</span>")
+	contained_souls += 1
 	playsound(src, 'sound/magic/soulsteal.ogg', 100, extrarange = 5)
 	blade_int = max_blade_int // Stealing a soul successfully sharpens the blade.
 	obj_fix(max_integrity) // And fixes the dagger. No blacksmith required!
@@ -705,6 +707,7 @@
 		A.returntolobby() //Send the trapped soul back to the lobby
 		user.visible_message("<span class='warning'>The [A.name] flows out from the profane dagger, finally free of its grasp.</span>")
 		freed_souls += 1
+		contained_souls -= 1
 	user.visible_message("<span class='warning'>The profane dagger shatters into putrid smoke!</span>")
 	qdel(src) // Delete the dagger. Forevermore.
 	return freed_souls

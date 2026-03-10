@@ -100,8 +100,8 @@
 		var/extra = floor((player_count - 75) / 20)
 		slots += extra
 
-	//1 slot minimum, 5 maximum.
-	slots = min(slots, 5)
+	//1 slot minimum, 4 maximum.
+	slots = min(slots, 4)
 
 	assassin_job.total_positions = slots
 	assassin_job.spawn_positions = slots
