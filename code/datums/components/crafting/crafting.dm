@@ -613,6 +613,13 @@
 	return data
 
 /datum/component/personal_crafting/ui_static_data(mob/user)
+	//Cache recipe data to avoid rebuilding the entire recipe list on every menu open
+	//TTL is 30 seconds; cache is invalidated when new recipes are learned
+	if(user?.mind)
+		var/cache_ttl = 30 SECONDS
+		if(user.mind.cached_recipe_list && (world.time - user.mind.cached_recipe_time < cache_ttl))
+			return user.mind.cached_recipe_list
+
 	var/list/data = list()
 
 	var/list/crafting_recipes = list()
@@ -630,6 +637,12 @@
 		crafting_recipes[R.cached_category] += list(R.cached_display_data)
 
 	data["crafting_recipes"] = crafting_recipes
+
+	//Cache the result for future opens
+	if(user?.mind)
+		user.mind.cached_recipe_list = data
+		user.mind.cached_recipe_time = world.time
+
 	return data
 
 /datum/component/personal_crafting/ui_interact(mob/user, datum/tgui/ui)
@@ -670,11 +683,17 @@
 	if(!learned_recipes)
 		learned_recipes = list()
 	learned_recipes |= R
+	//Invalidate recipe cache since user has learned a new recipe
+	cached_recipe_list = null
+	cached_recipe_time = 0
 
 /datum/mind/proc/forget_crafting_recipe(R)
 	if(!learned_recipes)
 		return
 	learned_recipes -= R
+	//Invalidate recipe cache since user has forgotten a recipe
+	cached_recipe_list = null
+	cached_recipe_time = 0
 
 // new crafting button interaction
 

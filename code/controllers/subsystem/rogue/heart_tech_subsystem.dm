@@ -115,6 +115,8 @@ SUBSYSTEM_DEF(chimeric_tech)
 		R.tech_unlocked = TRUE
 		if(node.recipe_override)
 			R.reqs = node.recipe_override
+	//Invalidate all recipe caches since tech unlock affects all minds globally
+	invalidate_all_recipe_caches()
 
 /datum/controller/subsystem/chimeric_tech/proc/init_unlockable_recipes()
 	tech_recipe_index = list()
@@ -124,6 +126,13 @@ SUBSYSTEM_DEF(chimeric_tech)
 			if(!tech_recipe_index[R.required_tech_node])
 				tech_recipe_index[R.required_tech_node] = list()
 			tech_recipe_index[R.required_tech_node] += R
+
+/datum/controller/subsystem/chimeric_tech/proc/invalidate_all_recipe_caches()
+	//Called when tech nodes are unlocked to clear cached recipe lists for all minds
+	for(var/mob/M in GLOB.player_list)
+		if(M.mind?.cached_recipe_list)
+			M.mind.cached_recipe_list = null
+			M.mind.cached_recipe_time = 0
 
 /datum/controller/subsystem/chimeric_tech/proc/get_healing_multiplier()
 	var/multiplier = 0.75
