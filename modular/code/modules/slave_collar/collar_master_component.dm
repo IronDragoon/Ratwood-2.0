@@ -591,7 +591,8 @@ GLOBAL_LIST_EMPTY(collar_masters)
 
 // Per-tick arousal loop body: applies effects and reschedules while active.
 /datum/component/collar_master/proc/arousal_tick(mob/living/carbon/human/pet, amount_per_tick, loop_id)
-	if(!pet)
+	// Guard null AND QDELETED — a GC'd mob would pass !pet but crash on .active_timers access.
+	if(!pet || QDELETED(pet))
 		return
 
 	// If toggle was turned off, stop rescheduling.
@@ -758,7 +759,8 @@ GLOBAL_LIST_EMPTY(collar_masters)
 		return FALSE
 
 	var/pet_key_prefix = "[REF(pet)]:"
-	for(var/key in high_pop_feedback_until)
+	// Iterate a copy — removing keys from the live list mid-loop skips entries in BYOND.
+	for(var/key in high_pop_feedback_until.Copy())
 		if(findtext(key, pet_key_prefix) == 1)
 			high_pop_feedback_until -= key
 

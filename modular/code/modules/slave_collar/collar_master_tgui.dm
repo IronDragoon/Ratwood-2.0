@@ -310,9 +310,12 @@
 			var/will_text = params["will_text"]
 			if(!length("[will_text]"))
 				return TRUE
+			// html_encode prevents the master from injecting arbitrary HTML/formatting
+			// into another player's chat (fake system messages, span exploits, etc.).
+			var/safe_will = html_encode("[will_text]")
 			var/sent = 0
 			for(var/mob/living/carbon/human/pet in targets)
-				to_chat(pet, will_text)
+				to_chat(pet, span_userdanger("<i>Your collar resonates with your master's will:</i> [safe_will]"))
 				playsound(pet, 'sound/misc/vampirespell.ogg', 50, TRUE)
 				sent++
 			report_count(user, sent, "Imposed will on", "No pets received imposed will.")
@@ -375,7 +378,7 @@
 	return TRUE
 
 /datum/collar_control_menu/proc/get_component_for_user(mob/user)
-	if(!user?.mind || !master_component)
+	if(!user?.mind || !master_component || QDELETED(master_component))
 		return null
 	var/datum/component/collar_master/CM = user.mind.GetComponent(/datum/component/collar_master)
 	if(CM != master_component)
