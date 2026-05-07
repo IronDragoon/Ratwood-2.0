@@ -227,7 +227,9 @@ GLOBAL_LIST_EMPTY(collar_masters)
 		return
 	var/item_name = get_control_item_name(control_item)
 	to_chat(pet, span_notice("The [item_name] tightens as it recognizes its master!"))
-	to_chat(parent, span_notice("You feel the [item_name] bind to [pet]'s will."))
+	// parent is the /datum/mind, not a mob — to_chat must target the master's current body.
+	if(mindparent?.current)
+		to_chat(mindparent.current, span_notice("You feel the [item_name] bind to [pet]'s will."))
 
 // Validates final control binding and re-emits gain signal to ensure listeners are synchronized.
 /datum/component/collar_master/proc/verify_control_binding(mob/living/carbon/human/pet, obj/item/control_item)

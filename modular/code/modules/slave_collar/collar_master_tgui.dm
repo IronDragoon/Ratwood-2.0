@@ -298,9 +298,11 @@
 			var/message = trim(params["message"])
 			if(!message)
 				return TRUE
+			// html_encode prevents injecting arbitrary HTML into another player's chat.
+			var/safe_message = html_encode("[message]")
 			var/sent = 0
 			for(var/mob/living/carbon/human/pet in targets)
-				to_chat(pet, span_userdanger("<i>Your collar resonates with your master's voice:</i> [message]"))
+				to_chat(pet, span_userdanger("<i>Your collar resonates with your master's voice:</i> [safe_message]"))
 				playsound(pet, 'sound/misc/vampirespell.ogg', 50, TRUE)
 				if(!pet.is_shifted)
 					pet.do_jitter_animation(15)
