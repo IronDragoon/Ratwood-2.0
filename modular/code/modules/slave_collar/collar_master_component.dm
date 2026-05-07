@@ -83,6 +83,9 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	var/list/registered_pets = list()
 	var/list/speech_altered_pets = list()
 	var/list/denied_orgasm_pets = list()
+	/// Reference to this master's currently-open collar control menu, if any.
+	/// Used by co-owner UI sync so that after a state change, the other owner's UI can be pushed a refresh.
+	var/datum/collar_control_menu/active_menu = null
 	var/mob/living/carbon/human/original_pet_body
 	var/mob/living/carbon/human/original_master_body
 	var/mob/living/carbon/human/listening_pet
@@ -569,7 +572,7 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	// Check if arousal is already being forced
 	if(pet.active_timers[loop_id])
 		var/timer_id = pet.active_timers[loop_id]
-		if(timer_id)
+		if(isnum(timer_id) && timer_id)
 			deltimer(timer_id)
 		pet.active_timers[loop_id] = null
 		pet.clear_fullscreen("love")

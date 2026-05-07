@@ -42,7 +42,10 @@
 	if(!CM)
 		return
 
-	var/datum/collar_control_menu/menu = new(CM)
+	// Reuse existing menu datum so active_menu stays stable across multiple verb activations.
+	var/datum/collar_control_menu/menu = CM.active_menu
+	if(!menu || QDELETED(menu))
+		menu = new(CM)
 	menu.ui_interact(src)
 
 /datum/collar_control_menu
@@ -54,9 +57,12 @@
 		qdel(src)
 		return
 	master_component = CM
+	CM.active_menu = src
 	..()
 
 /datum/collar_control_menu/Destroy()
+	if(master_component?.active_menu == src)
+		master_component.active_menu = null
 	master_component = null
 	selected_pet_refs = null
 	return ..()
@@ -393,6 +399,7 @@
 				affected = 1
 			report_count(user, affected, "Updated cage style for", "No cursed chastity cage styles changed.")
 
+	notify_coowner_uis(CM)
 	return TRUE
 
 /datum/collar_control_menu/proc/get_component_for_user(mob/user)
@@ -434,6 +441,26 @@
 		return FALSE
 	CM.last_command_time = world.time
 	return TRUE
+
+/datum/collar_control_menu/proc/notify_coowner_uis(datum/component/collar_master/CM)
+	if(!CM)
+		return
+	// Build a de-duped set of co-owner minds across all controlled pets.
+	var/list/notified = list()
+	for(var/mob/living/carbon/human/pet in CM.my_pets)
+		if(!pet)
+			continue
+		for(var/datum/mind/co_mind in CM.get_all_pet_owners(pet))
+			if(!co_mind || QDELETED(co_mind))
+				continue
+			if(co_mind == CM.mindparent)
+				continue
+			if(co_mind in notified)
+				continue
+			var/datum/component/collar_master/co_cm = co_mind.GetComponent(/datum/component/collar_master)
+			if(co_cm?.active_menu && !QDELETED(co_cm.active_menu))
+				SStgui.update_uis(co_cm.active_menu)
+			notified += co_mind
 
 /datum/collar_control_menu/proc/report_count(mob/user, count, label, fail_text)
 	if(count > 0)

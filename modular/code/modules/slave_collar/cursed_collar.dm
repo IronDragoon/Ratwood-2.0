@@ -219,6 +219,12 @@
 		var/list/old_owners = get_owner_minds()
 		ensure_owner_component(user.mind)
 		set_sole_owner(user.mind)
+		// Notify all displaced owners regardless of whether the collar is worn.
+		for(var/datum/mind/old_owner in old_owners)
+			if(old_owner == user.mind)
+				continue
+			if(old_owner?.current)
+				to_chat(old_owner.current, span_warning("[user.real_name] has seized ownership of the collar from you."))
 		if(ishuman(loc))
 			var/mob/living/carbon/human/wearer = loc
 			for(var/datum/mind/old_owner in old_owners)
@@ -234,6 +240,9 @@
 			to_chat(user, span_warning("This collar already has the maximum number of owners."))
 			return
 		ensure_owner_component(user.mind)
+		var/new_owner_name = user.real_name || "Unknown"
+		if(current_master?.current)
+			to_chat(current_master.current, span_notice("[new_owner_name] has bound their will to share ownership of the collar with you."))
 		if(ishuman(loc))
 			var/mob/living/carbon/human/wearer = loc
 			grant_owner_control_for_wearer(wearer)
