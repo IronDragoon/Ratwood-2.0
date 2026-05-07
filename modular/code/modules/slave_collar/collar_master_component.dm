@@ -39,7 +39,7 @@
  *     are applied via high_pop_feedback_until to throttle arousal sounds, jitter, and messages.
  *   - high_pop_feedback_allowed() is the central gate; keys are "[REF(pet)]:[channel]".
  *
- * Cursed chastity command wrappers (lines ~928–1026):
+ * Cursed chastity command wrappers:
  *   - toggle_* procs cycle state; set_* procs write directly (used by TGUI direct-state actions).
  *   - get_commandable_cursed_chastity() is the shared guard: validates pet, fires the COLLAR_COMMAND
  *     signal so listeners can block the action, then returns the device for the caller to act on.
@@ -68,12 +68,7 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	// - high_pop_feedback_until is a per-pet/per-channel suppression map used only for feedback throttling.
 	var/datum/mind/mindparent
 	var/list/my_pets = list()
-	var/list/temp_selected_pets = list()
 	var/listening = FALSE
-	var/deny_orgasm = FALSE
-	var/dominating = FALSE
-	var/silenced = FALSE
-	var/scrying = FALSE
 	var/last_command_time = 0
 	var/command_cooldown = 2 SECONDS
 	/// Flavor text path for collar string banks. Kept as a file-local define to avoid global pollution.
@@ -86,8 +81,6 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	/// Reference to this master's currently-open collar control menu, if any.
 	/// Used by co-owner UI sync so that after a state change, the other owner's UI can be pushed a refresh.
 	var/datum/collar_control_menu/active_menu = null
-	var/mob/living/carbon/human/original_pet_body
-	var/mob/living/carbon/human/original_master_body
 	var/mob/living/carbon/human/listening_pet
 	var/high_pop_suppression_cap = 120
 	var/high_pop_feedback_cooldown = 5 SECONDS
@@ -280,12 +273,6 @@ GLOBAL_LIST_EMPTY(collar_masters)
 		emote_text = replacetext(emote_text, "*", "") // Remove asterisk
 		pet.visible_message(span_emote("<b>[pet]</b> [emote_text]"))
 		return COMPONENT_CANCEL_SAY
-
-// Utility emote helper for simple pet noise output.
-/datum/component/collar_master/proc/do_pet_emote(mob/living/carbon/human/pet)
-	if(!pet || !(pet in my_pets))
-		return
-	pet.emote("me", EMOTE_VISIBLE, pick(pet_sounds))
 
 // --- Release and cleanup ---
 
@@ -486,38 +473,6 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	playsound(pet, 'sound/misc/vampirespell.ogg', 50, TRUE)
 	return TRUE
 
-// Forces a visible emote action on pet.
-/datum/component/collar_master/proc/force_emote(mob/living/carbon/human/pet, emote_text)
-	if(!pet || !(pet in my_pets))
-		return FALSE
-
-	pet.emote("me", EMOTE_VISIBLE, emote_text)
-	return TRUE
-
-// Transfers a portion of master's damage/blood deficit to pet.
-/datum/component/collar_master/proc/share_damage(mob/living/carbon/human/pet, mob/living/carbon/human/master)
-	if(!pet || !(pet in my_pets) || !master)
-		return FALSE
-
-	var/total_damage = master.getBruteLoss() + master.getFireLoss() + master.getOxyLoss()
-	if(total_damage <= 0)
-		return FALSE
-
-	var/damage_share = total_damage * 0.5
-	pet.adjustBruteLoss(damage_share)
-	master.adjustBruteLoss(-damage_share)
-
-	// Share blood if applicable
-	if(master.blood_volume && pet.blood_volume)
-		var/blood_diff = BLOOD_VOLUME_NORMAL - master.blood_volume
-		if(blood_diff > 0)
-			var/blood_share = min(blood_diff * 0.5, pet.blood_volume - BLOOD_VOLUME_SAFE)
-			if(blood_share > 0)
-				pet.blood_volume -= blood_share
-				master.blood_volume += blood_share
-
-	return TRUE
-
 // Applies surrender control package (stun/status/visuals) to a pet.
 /datum/component/collar_master/proc/force_surrender(mob/living/carbon/human/pet)
 	if(!pet || !(pet in my_pets))
@@ -672,73 +627,6 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	playsound(pet, 'sound/misc/vampirespell.ogg', 50, TRUE)
 	log_collar_command(pet, COLLAR_LOG_CLOTHING, "permitted=[permitted]")
 	return TRUE
-
-// Builds status text summary for a selected pet.
-/datum/component/collar_master/proc/check_pet_status(mob/living/carbon/human/pet)
-	if(!pet || !(pet in my_pets))
-		return FALSE
-
-	var/status_text = "<span class='notice'><b>[pet.real_name] Status:</b>\n"
-	status_text += "Condition: [pet.get_damage_condition_summary()]\n"
-	status_text += "Location: [get_area(pet)]\n"
-	status_text += "Mental State: [pet.stat >= UNCONSCIOUS ? "Unconscious" : "Conscious"]\n"
-	status_text += "Active Traits: "
-
-	var/list/active_traits = list()
-	if(pet in speech_altered_pets)
-		active_traits += "Speech Altered"
-	if(pet in denied_orgasm_pets)
-		active_traits += "Orgasm Denial"
-	if(pet == listening_pet)
-		active_traits += "Listening Link"
-
-	status_text += active_traits.len ? english_list(active_traits) : "None"
-	status_text += "</span>"
-
-	return status_text
-
-// Batch-dispatch helper used by mass commands targeting multiple pets.
-/datum/component/collar_master/proc/mass_command(command_type, list/targets, ...)
-	if(!length(targets))
-		return FALSE
-
-	var/success_count = 0
-	for(var/mob/living/carbon/human/pet in targets)
-		if(!pet || !(pet in my_pets))
-			continue
-
-		switch(command_type)
-			if("shock")
-				var/intensity = args[1]
-				if(shock_pet(pet, intensity))
-					success_count++
-			if("surrender")
-				if(force_surrender(pet))
-					success_count++
-			if("strip")
-				if(force_strip(pet))
-					success_count++
-			if("arousal")
-				if(toggle_arousal(pet))
-					success_count++
-			if("love")
-				if(force_love(pet))
-					success_count++
-			if("hallucinate")
-				if(toggle_hallucinations(pet))
-					success_count++
-
-	return success_count
-
-// Adds context-specific examine output depending on observer identity.
-/datum/component/collar_master/proc/on_pet_examine(mob/living/carbon/human/pet, mob/user)
-	if(!pet || !(pet in my_pets))
-		return
-
-	if(user == mindparent?.current)
-		to_chat(user, span_notice("\nThe collar recognizes you as [pet.real_name]'s master. Use Collar Control for live status."))
-	else if(user != pet)
-		to_chat(user, span_warning("\nThey wear a strange collar around their neck."))
 
 // Releases all pet-facing signal hooks used during cleanup.
 /datum/component/collar_master/proc/cleanup_pet_signals(mob/living/carbon/human/pet)
@@ -926,43 +814,6 @@ GLOBAL_LIST_EMPTY(collar_masters)
 			/mob/proc/collar_master_releaseall
 		)
 	. = ..()
-
-// Transfers a broad portion of master's suffering state to pet as punishment/support mechanic.
-/datum/component/collar_master/proc/pass_wounds(mob/living/carbon/human/pet)
-	if(!pet || !(pet in my_pets))
-		return FALSE
-
-	var/mob/living/carbon/human/master = mindparent?.current
-	if(!master)
-		return FALSE
-
-	// Pass all damage types
-	pet.adjustBruteLoss(master.getBruteLoss() * 0.5)
-	pet.adjustFireLoss(master.getFireLoss() * 0.5)
-	pet.adjustOxyLoss(master.getOxyLoss() * 0.5)
-
-	// Pass blood level if it exists
-	if(pet.blood_volume && master.blood_volume)
-		pet.blood_volume = max(BLOOD_VOLUME_SAFE, pet.blood_volume - (BLOOD_VOLUME_NORMAL - master.blood_volume) * 0.5)
-
-	// Pass organ damage
-	for(var/obj/item/organ/organ in master.internal_organs)
-		var/obj/item/organ/matching_organ = pet.getorganslot(organ.slot)
-		if(matching_organ && organ.damage > 0)
-			matching_organ.applyOrganDamage(organ.damage * 0.5)
-
-	pet.updatehealth()
-	playsound(pet, 'sound/misc/vampirespell.ogg', 50, TRUE)
-	to_chat(pet, span_userdanger("Your collar burns as your master's suffering flows into you!"))
-	pet.visible_message(span_warning("[pet] shudders as [master]'s wounds manifest on their body!"))
-	pet.do_jitter_animation(20)
-
-	// Heal the master slightly
-	master.adjustBruteLoss(-10)
-	master.adjustFireLoss(-10)
-	master.adjustOxyLoss(-10)
-
-	return TRUE
 
 // --- Pet state / punishment toggles ---
 
