@@ -3,12 +3,12 @@
 		return null
 
 	var/obj/item/clothing/neck/roguetown/cursed_collar/collar = pet.get_item_by_slot(SLOT_NECK)
-	if(istype(collar) && collar.collar_master)
-		return collar.collar_master
+	if(istype(collar) && collar.get_primary_master())
+		return collar.get_primary_master()
 
 	var/obj/item/chastity/device = pet.chastity_device
-	if(istype(device) && device.chastity_cursed && device.chastity_master)
-		return device.chastity_master
+	if(istype(device) && device.chastity_cursed && device.get_primary_chastity_master())
+		return device.get_primary_chastity_master()
 
 	return null
 

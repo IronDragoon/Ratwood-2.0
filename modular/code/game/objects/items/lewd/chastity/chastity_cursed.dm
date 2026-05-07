@@ -2,22 +2,57 @@
 /obj/item/chastity/cursed/attack_self(mob/user)
 	if(!user?.mind)
 		return
-	if(tgui_alert(user, "Become the master of this device?", "[src]", list("Yes", "No")) != "Yes")
+	var/datum/mind/current_master = get_primary_chastity_master()
+	if(!current_master)
+		if(tgui_alert(user, "Become the master of this device?", "[src]", list("Yes", "No")) != "Yes")
+			return
+		ensure_chastity_owner_component(user.mind)
+		set_sole_chastity_owner(user.mind)
+		to_chat(user, span_userdanger(pick_chastity_string("chastity_cursed_messages.json", "chastity_imprint")))
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			log_chastity_command(H, user.mind, CHASTITY_LOG_IMPRINT, "device=[src]")
 		return
-	var/datum/component/collar_master/CM = user.mind.GetComponent(/datum/component/collar_master)
-	if(!CM)
-		user.mind.AddComponent(/datum/component/collar_master)
-	chastity_master = user.mind
-	to_chat(user, span_userdanger(pick_chastity_string("chastity_cursed_messages.json", "chastity_imprint")))
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-		log_chastity_command(H, user.mind, CHASTITY_LOG_IMPRINT, "device=[src]")
+
+	if(has_chastity_owner(user.mind))
+		to_chat(user, span_notice("The device already recognizes your ownership."))
+		return
+
+	var/current_owner_name = current_master?.current?.real_name || "Unknown"
+	var/choice = tgui_alert(user, "This device is already owned by [current_owner_name].", "[src]", list("Take Over Ownership", "Join Shared Ownership", "Cancel"))
+	if(choice == "Cancel" || !choice)
+		return
+
+	if(choice == "Take Over Ownership")
+		var/list/old_owners = get_chastity_owner_minds()
+		ensure_chastity_owner_component(user.mind)
+		set_sole_chastity_owner(user.mind)
+		if(chastity_victim && chastity_victim.chastity_device == src)
+			for(var/datum/mind/old_owner in old_owners)
+				if(old_owner == user.mind)
+					continue
+				revoke_chastity_owner_control_for_wearer_silent(old_owner, chastity_victim)
+			grant_chastity_owner_control_for_wearer(chastity_victim)
+		to_chat(user, span_userdanger("You seize full ownership of the device."))
+		return
+
+	if(choice == "Join Shared Ownership")
+		if(!add_shared_chastity_owner(user.mind))
+			to_chat(user, span_warning("This device already has the maximum number of owners."))
+			return
+		ensure_chastity_owner_component(user.mind)
+		if(chastity_victim && chastity_victim.chastity_device == src)
+			grant_chastity_owner_control_for_wearer(chastity_victim)
+			to_chat(user, span_notice("You bind your will to share ownership with [current_owner_name]."))
+		else
+			to_chat(user, span_notice("You bind your will to share ownership with [current_owner_name]. Your control will activate once the device is worn."))
 
 // Returns the controlling collar-master component for cursed chastity bindings, if available.
 /obj/item/chastity/proc/get_cursed_master_component()
-	if(!chastity_cursed || !chastity_master)
+	var/datum/mind/master_mind = get_primary_chastity_master()
+	if(!chastity_cursed || !master_mind)
 		return null
-	return chastity_master.GetComponent(/datum/component/collar_master)
+	return master_mind.GetComponent(/datum/component/collar_master)
 
 /obj/item/chastity/proc/record_nonself_ejaculation(mob/living/carbon/human/source, mob/living/carbon/human/wearer)
 	if(!chastity_cursed)
@@ -53,8 +88,10 @@
 
 	SEND_SIGNAL(H, COMSIG_CARBON_LOSE_CHASTITY, src)
 
-	var/datum/component/collar_master/CM = get_cursed_master_component()
-	if(CM)
+	for(var/datum/mind/owner_mind in get_chastity_owner_minds())
+		var/datum/component/collar_master/CM = owner_mind.GetComponent(/datum/component/collar_master)
+		if(!CM)
+			continue
 		if(H in CM.registered_pets)
 			CM.remove_pet(H)
 		else if(H in CM.my_pets)
@@ -167,7 +204,13 @@
 /obj/item/chastity/proc/log_cursed_chastity_command(mob/living/carbon/human/H, log_type, details = "")
 	if(!H)
 		return
-	log_chastity_command(H, chastity_master, log_type, details, chastity_master && chastity_master != H.mind)
+	var/datum/mind/controller = get_primary_chastity_master()
+	var/is_remote = FALSE
+	for(var/datum/mind/owner_mind in get_chastity_owner_minds())
+		if(owner_mind != H.mind)
+			is_remote = TRUE
+			break
+	log_chastity_command(H, controller, log_type, details, is_remote)
 
 // Plays the most appropriate front-state transition sound for cursed devices.
 /obj/item/chastity/proc/play_cursed_front_mode_change_sound(mob/living/carbon/human/H, old_mode, new_mode)

@@ -81,6 +81,30 @@
 	data["high_pop_mode"] = CM.is_high_pop_suppressed()
 	data["selected_count"] = length(resolve_selected_pets(CM))
 
+	// Co-owner: find the other owner in the first owned pet's collar/chastity, if any.
+	var/co_owner_name = null
+	for(var/mob/living/carbon/human/pet in CM.my_pets)
+		if(!pet)
+			continue
+		var/obj/item/clothing/neck/roguetown/cursed_collar/collar = pet.get_item_by_slot(SLOT_NECK)
+		var/obj/item/chastity/device = pet.chastity_device
+		var/list/owners
+		if(istype(collar))
+			owners = collar.get_owner_minds()
+		else if(istype(device) && device.chastity_cursed)
+			owners = device.get_chastity_owner_minds()
+		if(owners && length(owners) > 1)
+			for(var/datum/mind/owner_mind in owners)
+				if(!owner_mind || QDELETED(owner_mind))
+					continue
+				if(owner_mind == CM.mindparent)
+					continue
+				co_owner_name = owner_mind?.current?.real_name || "Unknown"
+				break
+		if(co_owner_name)
+			break
+	data["co_owner_name"] = co_owner_name
+
 	var/list/pets_data = list()
 	for(var/mob/living/carbon/human/pet in CM.my_pets)
 		if(!pet)

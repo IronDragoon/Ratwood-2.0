@@ -43,6 +43,7 @@ type PetEntry = {
 type Data = {
   invalid?: boolean;
   master_name: string;
+  co_owner_name: string | null;
   cooldown_remaining: number;
   high_pop_mode: boolean;
   selected_count: number;
@@ -63,7 +64,7 @@ export const CollarControl = () => {
   }
 
   return (
-    <Window width={1180} height={700}>
+    <Window width={1180} height={700} resizable>
       <Window.Content>
         <Stack fill>
           <Stack.Item basis="28%" shrink>
@@ -321,6 +322,9 @@ const ControlPanel = () => {
           <LabeledList>
             <LabeledList.Item label="Master">
               {data.master_name}
+            </LabeledList.Item>
+            <LabeledList.Item label="Co-Owner">
+              {data.co_owner_name ?? 'Not Shared'}
             </LabeledList.Item>
             <LabeledList.Item label="Cooldown">{cooldownText}</LabeledList.Item>
             <LabeledList.Item label="High Pop Mode">

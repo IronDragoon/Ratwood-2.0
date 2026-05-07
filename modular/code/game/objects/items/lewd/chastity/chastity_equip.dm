@@ -63,7 +63,7 @@
 		if(H == user)
 			to_chat(user, span_warning("I cannot fasten a cursed chastity device on myself."))
 			return
-		if(!chastity_master)
+		if(!get_primary_chastity_master())
 			to_chat(user, span_warning("The cursed device rejects binding without an imprinted master."))
 			return
 		var/obj/item/clothing/neck/roguetown/cursed_collar/existing_collar = H.get_item_by_slot(SLOT_NECK)
@@ -90,11 +90,7 @@
 		playsound(loc, 'sound/foley/equip/equip_armor_plate.ogg', 30, TRUE, -2)
 		finalize_chastity_equip(H)
 		// Handle cursed binding
-		if(chastity_master)
-			var/datum/component/collar_master/CM = chastity_master.GetComponent(/datum/component/collar_master)
-			if(!CM)
-				CM = chastity_master.AddComponent(/datum/component/collar_master)
-			CM.add_pet(H)
+		grant_chastity_owner_control_for_wearer(H)
 		locked = TRUE
 		if(cursed_front_mode < 0 || cursed_front_mode > 3)
 			cursed_front_mode = 0

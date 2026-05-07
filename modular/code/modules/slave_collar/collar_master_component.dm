@@ -120,7 +120,8 @@ GLOBAL_LIST_EMPTY(collar_masters)
 // Cleanup hook: release all registered pets and remove master from global tracking.
 /datum/component/collar_master/Destroy(force, silent)
 	. = ..()
-	for(var/pet in my_pets)
+	// Iterate a copy — cleanup_pet calls cleanup_pet_tracking which removes from my_pets.
+	for(var/pet in my_pets.Copy())
 		cleanup_pet(pet)
 	GLOB.collar_masters -= mindparent
 
@@ -137,13 +138,15 @@ GLOBAL_LIST_EMPTY(collar_masters)
 
 	if(istype(collar))
 		control_item = collar
-		collar.collar_master = mindparent
-		if(!collar.collar_master)
+		if(!collar.add_shared_owner(mindparent))
+			return null
+		if(!collar.get_primary_master())
 			return null
 	else if(istype(chastity) && chastity.chastity_cursed)
 		control_item = chastity
-		chastity.chastity_master = mindparent
-		if(!chastity.chastity_master)
+		if(!chastity.add_shared_chastity_owner(mindparent))
+			return null
+		if(!chastity.get_primary_chastity_master())
 			return null
 
 	return control_item
@@ -156,10 +159,10 @@ GLOBAL_LIST_EMPTY(collar_masters)
 /datum/component/collar_master/proc/get_control_item_master(obj/item/control_item)
 	if(istype(control_item, /obj/item/clothing/neck/roguetown/cursed_collar))
 		var/obj/item/clothing/neck/roguetown/cursed_collar/collar = control_item
-		return collar.collar_master
+		return collar.get_primary_master()
 	if(istype(control_item, /obj/item/chastity))
 		var/obj/item/chastity/chastity = control_item
-		return chastity.chastity_master
+		return chastity.get_primary_chastity_master()
 	return null
 
 // Sends the correct control gain signal for the pet's active control item.
@@ -811,16 +814,44 @@ GLOBAL_LIST_EMPTY(collar_masters)
 
 	var/obj/item/clothing/neck/roguetown/cursed_collar/collar = pet.get_item_by_slot(SLOT_NECK)
 	if(istype(collar))
-		SEND_SIGNAL(pet, COMSIG_CARBON_LOSE_COLLAR)
-		pet.dropItemToGround(collar, force = TRUE)
-		REMOVE_TRAIT(collar, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+		if(collar.has_owner(mindparent))
+			var/other_active_owner = FALSE
+			for(var/datum/mind/owner_mind in collar.get_owner_minds())
+				if(owner_mind == mindparent)
+					continue
+				var/datum/component/collar_master/other_cm = owner_mind.GetComponent(/datum/component/collar_master)
+				if(other_cm && (pet in other_cm.my_pets))
+					other_active_owner = TRUE
+					break
+			if(other_active_owner)
+				// Remove this owner from the collar's list so the stale mind reference doesn't persist.
+				// Without this, a disconnected/destroyed master's mind would linger in collar_owners,
+				// causing runtime errors and potential ghost re-binding if grant_owner_control_for_wearer fires later.
+				collar.collar_owners -= mindparent
+				collar.collar_master = length(collar.collar_owners) ? collar.collar_owners[1] : null
+				return TRUE
+			SEND_SIGNAL(pet, COMSIG_CARBON_LOSE_COLLAR)
+			pet.dropItemToGround(collar, force = TRUE)
+			REMOVE_TRAIT(collar, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 	var/obj/item/chastity/device = pet.chastity_device
-	if(istype(device) && device.chastity_cursed && device.chastity_master == mindparent)
-		device.remove_chastity(pet)
-		if(!QDELETED(device))
-			device.forceMove(get_turf(pet))
-
+	if(istype(device) && device.chastity_cursed && device.has_chastity_owner(mindparent))
+		var/chastity_other_active_owner = FALSE
+		for(var/datum/mind/owner_mind in device.get_chastity_owner_minds())
+			if(owner_mind == mindparent)
+				continue
+			var/datum/component/collar_master/other_cm = owner_mind.GetComponent(/datum/component/collar_master)
+			if(other_cm && (pet in other_cm.my_pets))
+				chastity_other_active_owner = TRUE
+				break
+		if(!chastity_other_active_owner)
+			device.remove_chastity(pet)
+			if(!QDELETED(device))
+				device.forceMove(get_turf(pet))
+		else
+			// Same stale-reference fix for chastity.
+			device.chastity_owners -= mindparent
+			device.chastity_master = length(device.chastity_owners) ? device.chastity_owners[1] : null
 	return TRUE
 
 // Sends the standardized release feedback after all teardown work is complete.
@@ -831,6 +862,27 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	to_chat(pet, span_notice("Your mind clears as the collar's control fades!"))
 	if(mindparent.current)
 		to_chat(mindparent.current, span_warning("[pet] is no longer under your control!"))
+	return TRUE
+
+// Removes this master's control hooks and tracking for a pet without dropping the binding item.
+// Used during ownership takeover — the collar stays on, a new owner is about to be assigned.
+/datum/component/collar_master/proc/remove_pet_without_releasing(mob/living/carbon/human/pet, silent_pet = FALSE)
+	if(!pet || !(pet in my_pets))
+		return FALSE
+
+	cleanup_pet_signals(pet)
+	cleanup_pet_tracking(pet)
+	cleanup_pet_traits(pet)
+	cleanup_pet_listening_state(pet)
+	cleanup_pet_timers(pet)
+	if(silent_pet)
+		// Takeover path: only notify the old master; the collar is still on, just changing hands.
+		SEND_SIGNAL(pet, COMSIG_CARBON_COLLAR_RELEASED, src)
+		if(mindparent.current)
+			to_chat(mindparent.current, span_warning("[pet] is no longer under your control!"))
+	else
+		send_pet_release_feedback(pet)
+
 	return TRUE
 
 // Centralized pet cleanup: traits, timers, listening links, and control-item release.

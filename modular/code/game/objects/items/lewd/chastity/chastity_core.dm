@@ -51,6 +51,7 @@ GLOBAL_LIST_INIT(chastity_standard_traits, list(
 	var/chastity_cursed = FALSE // if the device works like a cursed collar
 	var/mob/living/carbon/human/chastity_victim = null // variable for anyone currently caged
 	var/datum/mind/chastity_master = null // varient of the collar master variable but for specifically cages
+	var/list/chastity_owners = list()
 	/// Round-persistent counter for non-self ejaculation events received by the current cursed wearer.
 	var/received_cum_count = 0
 	var/obj/item/dildo/attached_toy = null // dildo mounted directly onto this chastity device
@@ -63,6 +64,95 @@ GLOBAL_LIST_INIT(chastity_standard_traits, list(
 	lefthand_file = 'modular/icons/mob/inhands/lewd/items_lefthand.dmi'
 	righthand_file = 'modular/icons/mob/inhands/lewd/items_righthand.dmi'
 	nudist_approved = TRUE
+
+/obj/item/chastity/proc/normalize_chastity_owner_data()
+	if(!islist(chastity_owners))
+		chastity_owners = list()
+
+	// Purge null/deleted minds. Iterate a copy to avoid skip-on-removal bugs.
+	for(var/datum/mind/M in chastity_owners.Copy())
+		if(!M || QDELETED(M))
+			chastity_owners -= M
+
+	// Re-sync chastity_master only if it is still alive and not already present.
+	if(chastity_master && !QDELETED(chastity_master) && !(chastity_master in chastity_owners))
+		chastity_owners += chastity_master
+
+	if(length(chastity_owners) > 2)
+		chastity_owners.Cut(3)
+
+	chastity_master = length(chastity_owners) ? chastity_owners[1] : null
+
+/obj/item/chastity/proc/get_chastity_owner_minds()
+	normalize_chastity_owner_data()
+	return chastity_owners.Copy()
+
+/obj/item/chastity/proc/get_primary_chastity_master()
+	normalize_chastity_owner_data()
+	return chastity_master
+
+/obj/item/chastity/proc/has_chastity_owner(datum/mind/owner_mind)
+	if(!owner_mind)
+		return FALSE
+	normalize_chastity_owner_data()
+	return (owner_mind in chastity_owners)
+
+/obj/item/chastity/proc/set_sole_chastity_owner(datum/mind/owner_mind)
+	normalize_chastity_owner_data()
+	chastity_owners.Cut()
+	if(owner_mind)
+		chastity_owners += owner_mind
+	chastity_master = owner_mind
+
+/obj/item/chastity/proc/add_shared_chastity_owner(datum/mind/owner_mind)
+	if(!owner_mind)
+		return FALSE
+	normalize_chastity_owner_data()
+	if(owner_mind in chastity_owners)
+		return TRUE
+	if(length(chastity_owners) >= 2)
+		return FALSE
+	chastity_owners += owner_mind
+	chastity_master = length(chastity_owners) ? chastity_owners[1] : null
+	return TRUE
+
+/obj/item/chastity/proc/ensure_chastity_owner_component(datum/mind/owner_mind)
+	if(!owner_mind)
+		return null
+	var/datum/component/collar_master/CM = owner_mind.GetComponent(/datum/component/collar_master)
+	if(!CM)
+		CM = owner_mind.AddComponent(/datum/component/collar_master)
+	return CM
+
+/obj/item/chastity/proc/grant_chastity_owner_control_for_wearer(mob/living/carbon/human/wearer)
+	if(!wearer)
+		return FALSE
+	var/added = FALSE
+	for(var/datum/mind/owner_mind in get_chastity_owner_minds())
+		var/datum/component/collar_master/CM = ensure_chastity_owner_component(owner_mind)
+		if(CM && CM.add_pet(wearer))
+			added = TRUE
+	return added
+
+/obj/item/chastity/proc/revoke_chastity_owner_control_for_wearer(datum/mind/owner_mind, mob/living/carbon/human/wearer)
+	if(!owner_mind || !wearer)
+		return FALSE
+	var/datum/component/collar_master/CM = owner_mind.GetComponent(/datum/component/collar_master)
+	if(!CM)
+		return FALSE
+	if(wearer in CM.my_pets)
+		return CM.remove_pet_without_releasing(wearer)
+	return FALSE
+
+/obj/item/chastity/proc/revoke_chastity_owner_control_for_wearer_silent(datum/mind/owner_mind, mob/living/carbon/human/wearer)
+	if(!owner_mind || !wearer)
+		return FALSE
+	var/datum/component/collar_master/CM = owner_mind.GetComponent(/datum/component/collar_master)
+	if(!CM)
+		return FALSE
+	if(wearer in CM.my_pets)
+		return CM.remove_pet_without_releasing(wearer, silent_pet = TRUE)
+	return FALSE
 
 // Ensure each chastity item has a unique lockhash used by matching keys.
 /obj/item/chastity/Initialize()
