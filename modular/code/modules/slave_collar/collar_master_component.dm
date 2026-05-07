@@ -218,11 +218,14 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	return TRUE
 
 // Sends post-bind flavor feedback to both pet and master.
+// The pet-facing message is gated to the primary owner to avoid duplicates when two owners
+// both call add_pet() on the same wearer (e.g. collar equipped with two pre-set owners).
 /datum/component/collar_master/proc/give_control_feedback(mob/living/carbon/human/pet, obj/item/control_item)
 	if(!pet || !(pet in my_pets))
 		return
 	var/item_name = get_control_item_name(control_item)
-	to_chat(pet, span_notice("The [item_name] tightens as it recognizes its master!"))
+	if(mindparent == get_control_item_master(control_item))
+		to_chat(pet, span_notice("The [item_name] tightens as it recognizes its master!"))
 	// parent is the /datum/mind, not a mob — to_chat must target the master's current body.
 	if(mindparent?.current)
 		to_chat(mindparent.current, span_notice("You feel the [item_name] bind to [pet]'s will."))
@@ -245,7 +248,9 @@ GLOBAL_LIST_EMPTY(collar_masters)
 		return FALSE
 
 	var/item_name = get_control_item_name(control_item)
-	to_chat(pet, span_notice("Your [item_name] pulses, reinforcing your master's control..."))
+	// Only send the pet-facing pulse message from the primary owner to avoid duplicates.
+	if(mindparent == master)
+		to_chat(pet, span_notice("Your [item_name] pulses, reinforcing your master's control..."))
 	send_pet_gain_signal(pet, control_item)
 	addtimer(CALLBACK(src, PROC_REF(final_verify_binding), pet, control_item), 0.2 SECONDS)
 
@@ -355,24 +360,6 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	log_collar_command(pet, COLLAR_LOG_SHOCK, "intensity=[intensity] damage=[damage]")
 
 	return TRUE
-
-// UI helper to choose one or multiple valid online pets for a command.
-/datum/component/collar_master/proc/select_pets(mob/user, action_name = "", allow_multiple = FALSE)
-	var/list/valid_pets = list()
-	for(var/mob/living/carbon/human/pet in my_pets)
-		if(!pet || !pet.mind || !pet.client)
-			continue
-		valid_pets += pet
-
-	if(!length(valid_pets))
-		return list()
-
-	if(allow_multiple)
-		var/list/selected = input(user, "Choose pets to [action_name]:", "Pet Selection") as null|anything in valid_pets
-		return selected ? selected : list()
-	else
-		var/mob/living/carbon/human/selected = input(user, "Choose a pet to [action_name]:", "Pet Selection") as null|anything in valid_pets
-		return selected ? list(selected) : list()
 
 // Toggles master listening relay through a specific pet's sensory channel.
 /datum/component/collar_master/proc/toggle_listening(mob/living/carbon/human/pet)
@@ -755,7 +742,7 @@ GLOBAL_LIST_EMPTY(collar_masters)
 		return FALSE
 	SEND_SIGNAL(pet, COMSIG_CARBON_COLLAR_RELEASED, src)
 	to_chat(pet, span_notice("Your mind clears as the collar's control fades!"))
-	if(mindparent.current)
+	if(mindparent?.current)
 		to_chat(mindparent.current, span_warning("[pet] is no longer under your control!"))
 	return TRUE
 
