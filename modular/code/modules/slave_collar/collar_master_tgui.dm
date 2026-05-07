@@ -124,8 +124,24 @@
 		else
 			pet_entry["mental_state"] = "Conscious"
 		pet_entry["selected"] = (REF(pet) in selected_pet_refs)
-		pet_entry["speech_altered"] = (pet in CM.speech_altered_pets)
-		pet_entry["orgasm_denied"] = (pet in CM.denied_orgasm_pets)
+		// Aggregate speech/denial state across all owner components so both UIs show consistent state.
+		var/any_speech_altered = (pet in CM.speech_altered_pets)
+		var/any_orgasm_denied = (pet in CM.denied_orgasm_pets)
+		if(!any_speech_altered || !any_orgasm_denied)
+			for(var/datum/mind/owner_mind in CM.get_all_pet_owners(pet))
+				if(owner_mind == CM.mindparent || QDELETED(owner_mind))
+					continue
+				var/datum/component/collar_master/co_cm = owner_mind.GetComponent(/datum/component/collar_master)
+				if(!co_cm)
+					continue
+				if(!any_speech_altered && (pet in co_cm.speech_altered_pets))
+					any_speech_altered = TRUE
+				if(!any_orgasm_denied && (pet in co_cm.denied_orgasm_pets))
+					any_orgasm_denied = TRUE
+				if(any_speech_altered && any_orgasm_denied)
+					break
+		pet_entry["speech_altered"] = any_speech_altered
+		pet_entry["orgasm_denied"] = any_orgasm_denied
 		pet_entry["arousal_forced"] = !!pet.active_timers?["force_arousal_[REF(pet)]"]
 		pet_entry["clothing_forbidden"] = HAS_TRAIT_FROM(pet, TRAIT_NUDIST, COLLAR_TRAIT)
 		pet_entry["forced_love"] = pet.has_status_effect(/datum/status_effect/in_love)

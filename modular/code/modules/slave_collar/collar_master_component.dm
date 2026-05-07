@@ -970,8 +970,25 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	if(SEND_SIGNAL(pet, COMSIG_CARBON_COLLAR_COMMAND, src, COLLAR_COMMAND_TOGGLE_SPEECH, null) & COMPONENT_COLLAR_COMMAND_BLOCK)
 		return FALSE
 
-	if(pet in speech_altered_pets)
-		speech_altered_pets -= pet
+	// Aggregate state across all owners: if any owner has speech alteration active, toggling acts as OFF.
+	// This prevents the second owner seeing stale UI state and prevents double-applying the effect.
+	var/currently_altered = FALSE
+	for(var/datum/mind/owner_mind in get_all_pet_owners(pet))
+		if(QDELETED(owner_mind))
+			continue
+		var/datum/component/collar_master/other_cm = owner_mind.GetComponent(/datum/component/collar_master)
+		if(other_cm && (pet in other_cm.speech_altered_pets))
+			currently_altered = TRUE
+			break
+
+	if(currently_altered)
+		// Turn OFF: clear from ALL owner components so no signal handler intercepts speech.
+		for(var/datum/mind/owner_mind in get_all_pet_owners(pet))
+			if(QDELETED(owner_mind))
+				continue
+			var/datum/component/collar_master/other_cm = owner_mind.GetComponent(/datum/component/collar_master)
+			if(other_cm)
+				other_cm.speech_altered_pets -= pet
 		to_chat(mindparent.current, span_notice("You return [pet]'s speech to normal."))
 		to_chat(pet, span_notice("Your collar relaxes - you can speak normally again."))
 	else
@@ -980,7 +997,7 @@ GLOBAL_LIST_EMPTY(collar_masters)
 		to_chat(pet, span_warning("Your collar tingles - you find yourself only able to make animal noises!"))
 
 	playsound(pet, 'sound/misc/vampirespell.ogg', 50, TRUE)
-	log_collar_command(pet, COLLAR_LOG_SPEECH, "altered=[pet in speech_altered_pets]")
+	log_collar_command(pet, COLLAR_LOG_SPEECH, "altered=[!currently_altered]")
 	return TRUE
 
 // Toggles orgasm denial loop for a pet.
@@ -997,12 +1014,21 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	if(!(loop_id in pet.active_timers))
 		pet.active_timers[loop_id] = null
 
-	if(pet in denied_orgasm_pets)
-		denied_orgasm_pets -= pet
+	// Use the timer key as ground-truth: it is pet-scoped, so it is consistent across both owner
+	// components and prevents a co-owner from accidentally starting a duplicate denial timer.
+	var/denial_active = !isnull(pet.active_timers[loop_id])
+	if(denial_active)
+		// Turn OFF: cancel the timer and clear the flag from ALL owner components.
 		var/timer_id = pet.active_timers[loop_id]
 		if(timer_id)
 			deltimer(timer_id)
 		pet.active_timers[loop_id] = null
+		for(var/datum/mind/owner_mind in get_all_pet_owners(pet))
+			if(QDELETED(owner_mind))
+				continue
+			var/datum/component/collar_master/other_cm = owner_mind.GetComponent(/datum/component/collar_master)
+			if(other_cm)
+				other_cm.denied_orgasm_pets -= pet
 		to_chat(pet, span_notice("Your collar loosens - you feel like you can finish again!"))
 		log_collar_command(pet, COLLAR_LOG_DENIAL, "enabled=FALSE")
 	else
@@ -1033,6 +1059,19 @@ GLOBAL_LIST_EMPTY(collar_masters)
 	if(!istype(device) || !device.chastity_cursed)
 		return null
 	return device
+
+// Returns the list of all owner minds for the control item currently binding this pet.
+// Used by toggle procs and ui_data to aggregate state across both owners in a shared-collar scenario.
+/datum/component/collar_master/proc/get_all_pet_owners(mob/living/carbon/human/pet)
+	if(!pet)
+		return list()
+	var/obj/item/clothing/neck/roguetown/cursed_collar/collar = pet.get_item_by_slot(SLOT_NECK)
+	if(istype(collar))
+		return collar.get_owner_minds()
+	var/obj/item/chastity/device = pet.chastity_device
+	if(istype(device) && device.chastity_cursed)
+		return device.get_chastity_owner_minds()
+	return list()
 
 // Shared direct-command guard for cursed chastity state setters.
 /datum/component/collar_master/proc/get_commandable_cursed_chastity(mob/living/carbon/human/pet, command_id, command_arg)
