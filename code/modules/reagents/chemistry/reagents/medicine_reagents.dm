@@ -82,3 +82,18 @@
 		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -1 * REM)
 		M.adjustCloneLoss(-1 * REM, 0)
 	..()
+
+/datum/reagent/medicine/spoiled_essence
+	name = "Spoiled Essence"
+	description = "Ruined vital essence that curdled after exposure. It only turns the stomach."
+	reagent_state = LIQUID
+	color = "#4f2b2b"
+	taste_description = "rotted blood"
+	overdose_threshold = 0
+	metabolization_rate = REAGENTS_METABOLISM
+	alpha = 173
+
+/datum/reagent/medicine/spoiled_essence/on_mob_life(mob/living/carbon/M)
+	if(prob(35))
+		M.vomit(8, prob(10), prob(35), rand(0,2), TRUE, FALSE)
+	..()

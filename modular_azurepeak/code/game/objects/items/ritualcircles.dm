@@ -2148,15 +2148,24 @@
 	name = "Sanguineous Phial"
 	desc = "A ritual phial prepared to capture stolen vitality."
 	color = "#ffffff"
-	var/is_sealed = TRUE
+	reagent_flags = DRAINABLE | TRANSPARENT
+	possible_item_intents = list(INTENT_FILL)
+	var/is_sealed = FALSE
 	var/is_spoiled = FALSE
 	var/spoil_timer_started = FALSE
+	var/phial_mode = "fill"
+	var/allowed_reagent = /datum/reagent/medicine/vital_essence
+	var/spoiled_reagent = /datum/reagent/medicine/spoiled_essence
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/Initialize()
 	. = ..()
+	update_phial_intents()
 	update_phial_state()
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/attack_self(mob/user)
+	if(phial_mode == "fill")
+		to_chat(user, span_warning("This phial must first be filled from a bleeding wound."))
+		return
 	if(!is_sealed)
 		to_chat(user, span_warning("This phial has already been unsealed; it cannot be sealed again."))
 		return
@@ -2169,17 +2178,27 @@
 	to_chat(user, span_warning("I break the seal. The essence within will not keep for long."))
 	update_phial_state()
 
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/on_reagent_change(changetype)
+	. = ..()
+	lock_to_vital_essence()
+
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/attack(mob/living/M, mob/living/user, def_zone)
+	if(phial_mode == "feed")
+		if(is_sealed)
+			to_chat(user, span_warning("I must unseal the phial before feeding from it."))
+			return
+		if(reagents.total_volume <= 0)
+			to_chat(user, span_warning("The phial is empty."))
+			return
+		return ..()
+
+	if(user.used_intent.type != INTENT_FILL)
+		to_chat(user, span_warning("This phial is empty. I should use fill intent to harvest from a wound."))
+		return
 	if(!isliving(M) || !iscarbon(M))
 		return ..()
 	if(!HAS_TRAIT(user, TRAIT_HEMOPHAGE))
 		to_chat(user, span_warning("Only hemophages can harvest vital essence with this phial."))
-		return
-	if(!is_sealed)
-		to_chat(user, span_warning("The phial must be sealed to collect fresh essence."))
-		return
-	if(is_spoiled)
-		to_chat(user, span_warning("The essence has spoiled; this phial is useless for harvesting."))
 		return
 	if(reagents.total_volume >= volume)
 		to_chat(user, span_warning("The phial is already full."))
@@ -2188,33 +2207,63 @@
 	var/mob/living/carbon/target = M
 	var/target_zone = check_zone(def_zone)
 	var/obj/item/bodypart/target_part = target.get_bodypart(target_zone)
-	if(!target_part || target_part.get_bleed_rate() <= 0)
-		to_chat(user, span_warning("That limb is not bleeding enough to harvest from."))
+	if(!target_part)
+		to_chat(user, span_warning("I can't find a limb there to harvest from."))
+		return
+	var/has_wounding_bleed = FALSE
+	if(target_part?.wounds?.len)
+		for(var/datum/wound/wound as anything in target_part.wounds)
+			if(wound?.bleed_rate > 0)
+				has_wounding_bleed = TRUE
+				break
+	if(target_part.get_bleed_rate() <= 0 && !has_wounding_bleed)
+		if(target_part.wounds?.len)
+			to_chat(user, span_warning("That limb's wounds are clotted or not actively bleeding."))
+		else
+			to_chat(user, span_warning("That limb has no open wound to harvest from."))
 		return
 
 	if(!do_after(user, 25, target = target))
 		return
 
-	var/fill_amount = min(10, volume - reagents.total_volume)
+	var/fill_amount = min(volume - reagents.total_volume, target.blood_volume)
 	if(fill_amount <= 0)
+		to_chat(user, span_warning("There is not enough blood left to distill from this wound."))
 		return
 
 	target.blood_volume = max(target.blood_volume - fill_amount, 0)
-	reagents.add_reagent(/datum/reagent/medicine/vital_essence, fill_amount)
-	to_chat(user, span_notice("I siphon vital essence from [target]'s [parse_zone(target_zone)] into [src]."))
+	reagents.add_reagent(allowed_reagent, fill_amount)
+	phial_mode = "feed"
+	is_sealed = TRUE
+	update_phial_intents()
+	to_chat(user, span_notice("I siphon vital essence from [target]'s [parse_zone(target_zone)] into [src], then seal it."))
 	target.visible_message(span_warning("[user] harvests from [target]'s bleeding [parse_zone(target_zone)] with [src]."), span_userdanger("[user] harvests from my bleeding [parse_zone(target_zone)]!"))
 	update_icon()
 	update_phial_state()
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/attack_obj(obj/target, mob/living/user)
+	if(user.used_intent.type == INTENT_POUR || user.used_intent.type == INTENT_FILL || user.used_intent.type == INTENT_SPLASH)
+		to_chat(user, span_warning("This ritual phial cannot be used to pour, fill, or splash into other vessels."))
+		return
+	return ..()
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/spoil_contents()
 	if(QDELETED(src) || is_sealed || is_spoiled)
 		return
 	if(reagents.total_volume <= 0)
 		return
+	var/vital_amount = reagents.get_reagent_amount(allowed_reagent)
+	if(vital_amount > 0)
+		reagents.remove_reagent(allowed_reagent, vital_amount)
+		reagents.add_reagent(spoiled_reagent, vital_amount)
 	is_spoiled = TRUE
 	update_phial_state()
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/update_phial_state()
+	if(phial_mode == "fill")
+		name = "empty Sanguineous Phial"
+		desc = "A ritual phial made to be filled from a bleeding wound."
+		return
 	if(is_spoiled)
 		name = "spoiled Sanguineous Phial"
 		desc = "An unsealed phial whose stolen essence has spoiled."
@@ -2225,6 +2274,19 @@
 		return
 	name = "unsealed Sanguineous Phial"
 	desc = "A ritual phial left open to the air. The essence inside is beginning to turn."
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/update_phial_intents()
+	if(phial_mode == "fill")
+		possible_item_intents = list(INTENT_FILL)
+		return
+	possible_item_intents = list(INTENT_POUR)
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/lock_to_vital_essence()
+	if(!reagents)
+		return
+	for(var/datum/reagent/R as anything in reagents.reagent_list)
+		if(R.type != allowed_reagent && R.type != spoiled_reagent)
+			reagents.remove_reagent(R.type, R.volume)
 
 //TIME FOR THE ONE. Exclusive to ABSOLVERS. Allowing conversion, deconversion and removal of rite armour.
 //'Lesser' expenditure allows us to have a stopgap to this, while not entirely making poultice farming useless.
