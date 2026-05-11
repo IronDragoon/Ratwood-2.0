@@ -2096,6 +2096,136 @@
 		target.apply_damage(100, BRUTE, BODY_ZONE_CHEST)
 		loc.visible_message(span_cult("[target] is violently thrashing atop the rune, writhing, as they dare to defy Baotha."))
 
+/obj/structure/ritualcircle/sanguineous
+	name = "Rune of Sanguine"
+	desc = "A rune drawn in stark chalk and hunger."
+	icon_state = "caine_chalky"
+	var/list/sanguine_rites = list("Distill Sanguineous Phial")
+
+/obj/structure/ritualcircle/sanguineous/attack_hand(mob/living/user)
+	if(!..())
+		return
+	if(!HAS_TRAIT(user, TRAIT_HEMOPHAGE))
+		to_chat(user, span_smallred("My blood does not answer this rite."))
+		return
+	if(!Adjacent(user))
+		to_chat(user, span_warning("I must stand close to the rune."))
+		return
+	var/riteselection = input(user, "Sanguine Rites", src) as null|anything in sanguine_rites
+	if(riteselection != "Distill Sanguineous Phial")
+		return
+	var/obj/item/reagent_containers/glass/bottle/alchemical/vial = locate(/obj/item/reagent_containers/glass/bottle/alchemical) in loc
+	var/obj/item/ash/ash = locate(/obj/item/ash) in loc
+	var/obj/item/candle/lit_candle
+	for(var/obj/item/candle/candle in loc)
+		if(candle.lit)
+			lit_candle = candle
+			break
+
+	if(!vial || !ash || !lit_candle)
+		to_chat(user, span_smallred("I need an alchemical vial, ash, and a lit candle on the rune."))
+		return
+
+	if(!do_after(user, 60, src))
+		return
+
+	if(QDELETED(vial) || QDELETED(ash) || QDELETED(lit_candle))
+		to_chat(user, span_smallred("The rite is broken; the components were disturbed."))
+		return
+
+	qdel(vial)
+	qdel(ash)
+	qdel(lit_candle)
+	new /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous(loc)
+	icon_state = "baotha_active"
+	addtimer(CALLBACK(src, PROC_REF(reset_icon_state)), 120)
+	user.visible_message(span_warning("[user] completes a sanguine rite over [src]."))
+
+/obj/structure/ritualcircle/sanguineous/proc/reset_icon_state()
+	icon_state = initial(icon_state)
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous
+	name = "Sanguineous Phial"
+	desc = "A ritual phial prepared to capture stolen vitality."
+	color = "#ffffff"
+	var/is_sealed = TRUE
+	var/is_spoiled = FALSE
+	var/spoil_timer_started = FALSE
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/Initialize()
+	. = ..()
+	update_phial_state()
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/attack_self(mob/user)
+	if(!is_sealed)
+		to_chat(user, span_warning("This phial has already been unsealed; it cannot be sealed again."))
+		return
+	if(alert(user, "Unseal this phial? Once opened, it can never be resealed.", "Sanguineous Phial", "Unseal", "Keep Sealed") != "Unseal")
+		return
+	is_sealed = FALSE
+	if(!spoil_timer_started)
+		spoil_timer_started = TRUE
+		addtimer(CALLBACK(src, PROC_REF(spoil_contents)), 5 MINUTES)
+	to_chat(user, span_warning("I break the seal. The essence within will not keep for long."))
+	update_phial_state()
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/attack(mob/living/M, mob/living/user, def_zone)
+	if(!isliving(M) || !iscarbon(M))
+		return ..()
+	if(!HAS_TRAIT(user, TRAIT_HEMOPHAGE))
+		to_chat(user, span_warning("Only hemophages can harvest vital essence with this phial."))
+		return
+	if(!is_sealed)
+		to_chat(user, span_warning("The phial must be sealed to collect fresh essence."))
+		return
+	if(is_spoiled)
+		to_chat(user, span_warning("The essence has spoiled; this phial is useless for harvesting."))
+		return
+	if(reagents.total_volume >= volume)
+		to_chat(user, span_warning("The phial is already full."))
+		return
+
+	var/mob/living/carbon/target = M
+	var/target_zone = check_zone(def_zone)
+	var/obj/item/bodypart/target_part = target.get_bodypart(target_zone)
+	if(!target_part || target_part.get_bleed_rate() <= 0)
+		to_chat(user, span_warning("That limb is not bleeding enough to harvest from."))
+		return
+
+	if(!do_after(user, 25, target = target))
+		return
+
+	var/fill_amount = min(10, volume - reagents.total_volume)
+	if(fill_amount <= 0)
+		return
+
+	target.blood_volume = max(target.blood_volume - fill_amount, 0)
+	reagents.add_reagent(/datum/reagent/medicine/vital_essence, fill_amount)
+	to_chat(user, span_notice("I siphon vital essence from [target]'s [parse_zone(target_zone)] into [src]."))
+	target.visible_message(span_warning("[user] harvests from [target]'s bleeding [parse_zone(target_zone)] with [src]."), span_userdanger("[user] harvests from my bleeding [parse_zone(target_zone)]!"))
+	update_icon()
+	update_phial_state()
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/spoil_contents()
+	if(QDELETED(src) || is_sealed || is_spoiled)
+		return
+	if(reagents.total_volume <= 0)
+		return
+	is_spoiled = TRUE
+	update_phial_state()
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/update_phial_state()
+	if(is_spoiled)
+		name = "spoiled Sanguineous Phial"
+		desc = "An unsealed phial whose stolen essence has spoiled."
+		return
+	if(is_sealed)
+		name = "sealed Sanguineous Phial"
+		desc = "A ritual phial, wax-sealed tight against spoilage."
+		return
+	name = "unsealed Sanguineous Phial"
+	desc = "A ritual phial left open to the air. The essence inside is beginning to turn."
+
 //TIME FOR THE ONE. Exclusive to ABSOLVERS. Allowing conversion, deconversion and removal of rite armour.
 //'Lesser' expenditure allows us to have a stopgap to this, while not entirely making poultice farming useless.
 

@@ -121,8 +121,13 @@
 
 
 /obj/item/chalk/attack_self(mob/living/carbon/human/user)
+	if(HAS_TRAIT(user, TRAIT_HEMOPHAGE))
+		var/obj/item/ritechalk/ritual_proxy = new /obj/item/ritechalk(user)
+		ritual_proxy.attack_self(user)
+		qdel(ritual_proxy)
+		return
 	if(!isarcyne(user))//We'll set up other items for other types of rune rituals
-		to_chat(user, span_cult("Nothing comes in mind to draw with the chalk."))
+		to_chat(user, span_cult("Nothing comes to mind. I need arcyne attunement to use this chalk."))
 		return
 	var/obj/effect/decal/cleanable/roguerune/pickrune
 	var/runenameinput = input(user, "Runes", "Tier 1 and 2 Runes") as null|anything in GLOB.t2rune_types

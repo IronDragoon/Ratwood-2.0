@@ -839,7 +839,16 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/hemophage/on_mob_creation(mob/living/carbon/human/vamp_wannabe)
 	ADD_TRAIT(vamp_wannabe, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
 	ADD_TRAIT(vamp_wannabe, TRAIT_VAMPBITE, TRAIT_GENERIC)
+	grant_hemophage_chalk_stash(vamp_wannabe)
+	if(!vamp_wannabe?.mind)
+		addtimer(CALLBACK(src, PROC_REF(grant_hemophage_chalk_stash), vamp_wannabe), 5 SECONDS)
 	vamp_wannabe.adjust_triumphs(1)
+
+/datum/charflaw/hemophage/proc/grant_hemophage_chalk_stash(mob/living/carbon/human/vamp_wannabe)
+	if(!vamp_wannabe || QDELETED(vamp_wannabe) || !vamp_wannabe.mind)
+		return
+	if(!vamp_wannabe.mind.special_items["Stick of Chalk"])
+		vamp_wannabe.mind.special_items["Stick of Chalk"] = /obj/item/chalk
 
 /datum/charflaw/silverweakness/on_removal(mob/user)
 	..()

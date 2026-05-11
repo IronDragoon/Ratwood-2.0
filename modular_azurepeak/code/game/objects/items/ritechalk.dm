@@ -7,48 +7,60 @@
 	experimental_inhand = FALSE
 
 /obj/item/ritechalk/attack_self(mob/living/user)
-	if(!HAS_TRAIT(user, TRAIT_RITUALIST))
+	var/is_ritualist = HAS_TRAIT(user, TRAIT_RITUALIST)
+	var/is_hemophage = HAS_TRAIT(user, TRAIT_HEMOPHAGE)
+	if(!is_ritualist && !is_hemophage)
 		to_chat(user, span_smallred("I don't know what I'm doing with this..."))
 		return
 
-	var/ritechoices = list()
-	switch (user.patron?.type)
-		if(/datum/patron/inhumen/graggar)
-			ritechoices+="Rune of Violence"
-		if(/datum/patron/inhumen/zizo)
-			ritechoices+="Rune of ZIZO"
-		if(/datum/patron/inhumen/matthios)
-			ritechoices+="Rune of Transaction"
-		if(/datum/patron/inhumen/baotha)
-			ritechoices+="Rune of Hedonism"
-		if(/datum/patron/divine/astrata)
-			ritechoices+="Rune of Sun"
-		if(/datum/patron/divine/noc)
-			ritechoices+="Rune of Moon"
-		if(/datum/patron/divine/dendor)
-			ritechoices+="Rune of Beasts"
-		if(/datum/patron/divine/malum)
-			ritechoices+="Rune of Forge"
-		if(/datum/patron/divine/xylix)
-			ritechoices+="Rune of Trickery"
-		if(/datum/patron/divine/necra)
-			ritechoices+="Rune of Death"
-		if(/datum/patron/divine/pestra)
-			ritechoices+="Rune of Plague"
-		if(/datum/patron/divine/eora)
-			ritechoices+="Rune of Love"
-		if(/datum/patron/divine/ravox)
-			ritechoices+="Rune of Justice"
-		if(/datum/patron/divine/abyssor)
-			ritechoices+="Rune of Storm"
-			ritechoices+="Rune of Stirring"
-		if(/datum/patron/old_god)
-			ritechoices+="Rune of Enduring"
+	var/list/ritechoices = list()
+	if(is_ritualist)
+		switch (user.patron?.type)
+			if(/datum/patron/inhumen/graggar)
+				ritechoices+="Rune of Violence"
+			if(/datum/patron/inhumen/zizo)
+				ritechoices+="Rune of ZIZO"
+			if(/datum/patron/inhumen/matthios)
+				ritechoices+="Rune of Transaction"
+			if(/datum/patron/inhumen/baotha)
+				ritechoices+="Rune of Hedonism"
+			if(/datum/patron/divine/astrata)
+				ritechoices+="Rune of Sun"
+			if(/datum/patron/divine/noc)
+				ritechoices+="Rune of Moon"
+			if(/datum/patron/divine/dendor)
+				ritechoices+="Rune of Beasts"
+			if(/datum/patron/divine/malum)
+				ritechoices+="Rune of Forge"
+			if(/datum/patron/divine/xylix)
+				ritechoices+="Rune of Trickery"
+			if(/datum/patron/divine/necra)
+				ritechoices+="Rune of Death"
+			if(/datum/patron/divine/pestra)
+				ritechoices+="Rune of Plague"
+			if(/datum/patron/divine/eora)
+				ritechoices+="Rune of Love"
+			if(/datum/patron/divine/ravox)
+				ritechoices+="Rune of Justice"
+			if(/datum/patron/divine/abyssor)
+				ritechoices+="Rune of Storm"
+				ritechoices+="Rune of Stirring"
+			if(/datum/patron/old_god)
+				ritechoices+="Rune of Enduring"
 
-	if(HAS_TRAIT(user, TRAIT_DREAMWALKER) && !("Rune of Stirring" in ritechoices))
+	if(is_ritualist && HAS_TRAIT(user, TRAIT_DREAMWALKER) && !("Rune of Stirring" in ritechoices))
 		ritechoices+="Rune of Stirring"
 
+	if(is_hemophage)
+		ritechoices += "Rune of Sanguineous"
+
+	if(!length(ritechoices))
+		to_chat(user, span_smallred("No rites answer my call."))
+		return
+
 	var/runeselection = input(user, "Which rune shall I inscribe?", src) as null|anything in ritechoices
+	if(runeselection == null)
+		return
 	var/turf/step_turf = get_step(get_turf(user), user.dir)
 	switch(runeselection)
 		if("Rune of Sun")
@@ -131,3 +143,8 @@
 			if(do_after(user, 30, src))
 				playsound(src, 'sound/foley/scribble.ogg', 40, TRUE)
 				new /obj/structure/ritualcircle/psydon(step_turf)
+		if("Rune of Sanguineous")
+			to_chat(user,span_cultsmall("I begin inscribing a sanguine sigil..."))
+			if(do_after(user, 30, src))
+				playsound(src, 'sound/foley/scribble.ogg', 40, TRUE)
+				new /obj/structure/ritualcircle/sanguineous(step_turf)
