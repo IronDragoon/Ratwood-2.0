@@ -2097,7 +2097,7 @@
 		loc.visible_message(span_cult("[target] is violently thrashing atop the rune, writhing, as they dare to defy Baotha."))
 
 /obj/structure/ritualcircle/sanguineous
-	name = "Rune of Sanguine"
+	name = "Rune of the Sanguine"
 	desc = "A rune drawn in stark chalk and hunger."
 	icon_state = "caine_chalky"
 	var/list/sanguine_rites = list("Distill Sanguineous Phial")
