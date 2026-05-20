@@ -16,20 +16,22 @@
 	if(closed)
 		add_overlay("sanguineous_phial_cork")
 	
-	if(!fill_icon_thresholds || dont_fill)
+	if(dont_fill)
 		return
 
 	underlays.Cut()
 
 	if(reagents.total_volume)
 		var/mutable_appearance/filling = mutable_appearance(icon)
-
 		var/percent = round((reagents.total_volume / volume) * 100)
-		for(var/i in 1 to fill_icon_thresholds.len)
-			var/threshold = fill_icon_thresholds[i]
-			var/threshold_end = (i == fill_icon_thresholds.len) ? INFINITY : fill_icon_thresholds[i + 1]
-			if(threshold <= percent && percent < threshold_end)
-				filling.icon_state = "vial_fluid_[fill_icon_thresholds[i]]"
+		
+		if(percent <= 33)
+			filling.icon_state = "sanguineous_phial_fill1"
+		else if(percent <= 66)
+			filling.icon_state = "sanguineous_phial_fill2"
+		else
+			filling.icon_state = "sanguineous_phial_fill3"
+		
 		filling.alpha = mix_alpha_from_reagents(reagents.reagent_list)
 		filling.color = mix_color_from_reagents(reagents.reagent_list)
 		underlays += filling
