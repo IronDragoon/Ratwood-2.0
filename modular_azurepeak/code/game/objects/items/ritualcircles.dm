@@ -2106,7 +2106,7 @@
 	name = "Ensanguined Rune"
 	desc = "A rune drawn in stark chalk and hunger."
 	icon_state = "caine_chalky"
-	var/list/sanguine_rites = list("Distill Sanguineous Phial")
+	var/list/sanguine_rites = list("Prepare Sanguineous Phial")
 
 /obj/structure/ritualcircle/sanguineous/attack_hand(mob/living/user)
 	if(!..())
@@ -2118,7 +2118,7 @@
 		to_chat(user, span_warning("I must stand close to the rune."))
 		return
 	var/riteselection = input(user, "Sanguine Rites", src) as null|anything in sanguine_rites
-	if(riteselection != "Distill Sanguineous Phial")
+	if(riteselection != "Prepare Sanguineous Phial")
 		return
 	var/obj/item/reagent_containers/glass/bottle/alchemical/vial = locate(/obj/item/reagent_containers/glass/bottle/alchemical) in loc
 	var/obj/item/ash/ash = locate(/obj/item/ash) in loc
@@ -2153,14 +2153,38 @@
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous
 	name = "Sanguineous Phial"
 	desc = "A ritual phial prepared to capture stolen vitality."
+	icon_state = "sanguineous_phial"
 	color = "#ffffff"
 	reagent_flags = DRAINABLE | TRANSPARENT
 	possible_item_intents = list(INTENT_FILL)
+	var/open_icon_state = "sanguineous_phial"
+	var/closed_icon_state = "sanguineous_phial_cork"
 	var/is_spoiled = FALSE
 	var/spoil_timer_generation = 0
 	var/phial_mode = "fill"
 	var/allowed_reagent = /datum/reagent/medicine/vital_essence
 	var/spoiled_reagent = /datum/reagent/medicine/spoiled_essence
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/update_icon(dont_fill = FALSE)
+	icon_state = closed ? closed_icon_state : open_icon_state
+	if(!fill_icon_thresholds || dont_fill)
+		return
+
+	cut_overlays()
+	underlays.Cut()
+
+	if(reagents.total_volume)
+		var/mutable_appearance/filling = mutable_appearance(icon)
+
+		var/percent = round((reagents.total_volume / volume) * 100)
+		for(var/i in 1 to fill_icon_thresholds.len)
+			var/threshold = fill_icon_thresholds[i]
+			var/threshold_end = (i == fill_icon_thresholds.len) ? INFINITY : fill_icon_thresholds[i + 1]
+			if(threshold <= percent && percent < threshold_end)
+				filling.icon_state = "vial_fluid_[fill_icon_thresholds[i]]"
+		filling.alpha = mix_alpha_from_reagents(reagents.reagent_list)
+		filling.color = mix_color_from_reagents(reagents.reagent_list)
+		underlays += filling
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/Initialize()
 	. = ..()
@@ -2237,7 +2261,7 @@
 
 	var/fill_amount = min(volume - reagents.total_volume, target.blood_volume)
 	if(fill_amount <= 0)
-		to_chat(user, span_warning("There is not enough blood left to distill from this wound."))
+		to_chat(user, span_warning("There is not enough blood left in this wound to prepare the phial."))
 		return
 
 	target.blood_volume = max(target.blood_volume - fill_amount, 0)
