@@ -27,6 +27,8 @@
 			lines += span_warning("A profane, feral scent clings to them.")
 		else
 			lines += span_warning("They have a strange scent about them...")
+	if(HAS_TRAIT(src, TRAIT_HEMOPHAGE) && ishuman(user) && HAS_TRAIT(user, TRAIT_HEMOPHAGE))
+		lines += span_bloody("They bare the curse...a fellow thin-blood.")
 	var/perception_level = 15
 	if(isliving(user))
 		var/mob/living/L = user
