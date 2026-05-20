@@ -2122,26 +2122,28 @@
 		return
 	var/obj/item/reagent_containers/glass/bottle/alchemical/vial = locate(/obj/item/reagent_containers/glass/bottle/alchemical) in loc
 	var/obj/item/ash/ash = locate(/obj/item/ash) in loc
+	var/obj/item/natural/clay/clay = locate(/obj/item/natural/clay) in loc
 	var/obj/item/candle/lit_candle
 	for(var/obj/item/candle/candle in loc)
 		if(candle.lit)
 			lit_candle = candle
 			break
 
-	if(!vial || !ash || !lit_candle)
-		to_chat(user, span_smallred("I need an alchemical vial, ash, and a lit candle on the rune."))
+	if(!vial || !ash || !clay || !lit_candle)
+		to_chat(user, span_smallred("I need an alchemical vial, ash, clay, and a lit candle on the rune."))
 		return
 
 	if(!do_after(user, 60, src))
 		return
 
-	if(QDELETED(vial) || QDELETED(ash) || QDELETED(lit_candle))
+	if(QDELETED(vial) || QDELETED(ash) || QDELETED(clay) || QDELETED(lit_candle))
 		to_chat(user, span_smallred("The rite is broken; the components were disturbed."))
 		return
 
+	loc.visible_message(span_warning("[user] calls upon unholy power to strengthen a vessel..."))
 	qdel(vial)
 	qdel(ash)
-	qdel(lit_candle)
+	qdel(clay)
 	new /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous(loc)
 	icon_state = "caine_active"
 	addtimer(CALLBACK(src, PROC_REF(reset_icon_state)), 120)
