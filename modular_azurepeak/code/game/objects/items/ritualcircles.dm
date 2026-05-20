@@ -2228,7 +2228,7 @@
 	if(user.used_intent.type != INTENT_FILL)
 		to_chat(user, span_warning("This phial is empty. I should use fill intent to harvest from a wound."))
 		return
-	if(!isliving(M) || !iscarbon(M))
+	if(!isliving(M))
 		return ..()
 	if(!HAS_TRAIT(user, TRAIT_HEMOPHAGE))
 		to_chat(user, span_warning("Only hemophages can harvest vital essence with this phial."))
@@ -2236,40 +2236,63 @@
 	if(reagents.total_volume >= volume)
 		to_chat(user, span_warning("The phial is already full."))
 		return
+	if(HAS_TRAIT(M, TRAIT_HEMOPHAGE))
+		to_chat(user, span_warning("A halfbloods's essence will not answer this rite."))
+		return
+	if(M.mind?.has_antag_datum(/datum/antagonist/vampire))
+		to_chat(user, span_warning("A kindred's blood is too profane for this phial."))
+		return
+	if(M.blood_volume <= 0)
+		to_chat(user, span_warning("There is no vital essence left to harvest from [M]."))
+		return
 
-	var/mob/living/carbon/target = M
 	var/target_zone = check_zone(def_zone)
-	var/obj/item/bodypart/target_part = target.get_bodypart(target_zone)
-	if(!target_part)
-		to_chat(user, span_warning("I can't find a limb there to harvest from."))
-		return
-	var/has_wounding_bleed = FALSE
-	if(target_part?.wounds?.len)
-		for(var/datum/wound/wound as anything in target_part.wounds)
-			if(wound?.bleed_rate > 0)
-				has_wounding_bleed = TRUE
-				break
-	if(target_part.get_bleed_rate() <= 0 && !has_wounding_bleed)
-		if(target_part.wounds?.len)
-			to_chat(user, span_warning("That limb's wounds are clotted or not actively bleeding."))
-		else
-			to_chat(user, span_warning("That limb has no open wound to harvest from."))
+	var/harvest_site
+	if(iscarbon(M))
+		var/mob/living/carbon/target = M
+		var/obj/item/bodypart/target_part = target.get_bodypart(target_zone)
+		if(!target_part)
+			to_chat(user, span_warning("I can't find a limb there to harvest from."))
+			return
+		var/has_wounding_bleed = FALSE
+		if(target_part?.wounds?.len)
+			for(var/datum/wound/wound as anything in target_part.wounds)
+				if(wound?.bleed_rate > 0)
+					has_wounding_bleed = TRUE
+					break
+		if(target_part.get_bleed_rate() <= 0 && !has_wounding_bleed)
+			if(target_part.wounds?.len)
+				to_chat(user, span_warning("That limb's wounds are clotted or not actively bleeding."))
+			else
+				to_chat(user, span_warning("That limb has no open wound to harvest from."))
+			return
+		harvest_site = parse_zone(target_zone)
+	else if(issimple(M))
+		var/mob/living/simple_animal/simple_target = M
+		if(simple_target.health >= simple_target.maxHealth)
+			to_chat(user, span_warning("[simple_target] has no open wound to harvest from."))
+			return
+		harvest_site = simple_target.simple_limb_hit(target_zone)
+		if(!harvest_site)
+			harvest_site = "wound"
+	else
+		to_chat(user, span_warning("This creature's vitality cannot be harvested with [src]."))
 		return
 
-	if(!do_after(user, 25, target = target))
+	if(!do_after(user, 25, target = M))
 		return
 
-	var/fill_amount = min(volume - reagents.total_volume, target.blood_volume)
+	var/fill_amount = min(volume - reagents.total_volume, M.blood_volume)
 	if(fill_amount <= 0)
 		to_chat(user, span_warning("There is not enough blood left in this wound to prepare the phial."))
 		return
 
-	target.blood_volume = max(target.blood_volume - fill_amount, 0)
+	M.blood_volume = max(M.blood_volume - fill_amount, 0)
 	reagents.add_reagent(allowed_reagent, fill_amount)
 	phial_mode = "feed"
 	update_phial_intents()
-	to_chat(user, span_notice("I siphon vital essence from [target]'s [parse_zone(target_zone)] into [src]. I should cork it or drink now."))
-	target.visible_message(span_warning("[user] harvests from [target]'s bleeding [parse_zone(target_zone)] with [src]."), span_userdanger("[user] harvests from my bleeding [parse_zone(target_zone)]!"))
+	to_chat(user, span_notice("I siphon vital essence from [M]'s [harvest_site] into [src]. I should cork it or drink now."))
+	M.visible_message(span_warning("[user] harvests from [M]'s bleeding [harvest_site] with [src]."), span_userdanger("[user] harvests from my bleeding [harvest_site]!"))
 	update_icon()
 	update_phial_state()
 

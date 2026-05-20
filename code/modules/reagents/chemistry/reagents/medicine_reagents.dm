@@ -89,13 +89,16 @@
 	metabolization_rate = REAGENTS_METABOLISM
 	alpha = 173
 
+/datum/reagent/medicine/vital_essence/reaction_mob(mob/living/L, method=TOUCH, reac_volume)
+	if(method == INGEST && iscarbon(L) && HAS_TRAIT(L, TRAIT_HEMOPHAGE))
+		var/mob/living/carbon/C = L
+		C.adjust_nutrition(4 * reac_volume)
+		C.adjust_hydration(4 * reac_volume)
+	return ..()
+
 /datum/reagent/medicine/vital_essence/on_mob_life(mob/living/carbon/M)
 	if(M.blood_volume < BLOOD_VOLUME_NORMAL)
 		M.blood_volume = min(M.blood_volume + 5, BLOOD_VOLUME_NORMAL)
-	if(HAS_TRAIT(M, TRAIT_HEMOPHAGE))
-		// 30u phial metabolizes over 30 cycles, totaling +120 nutrition/hydration.
-		M.adjust_nutrition(4)
-		M.adjust_hydration(4)
 	if(!HAS_TRAIT(M, TRAIT_INFINITE_STAMINA))
 		M.energy_add(10)
 	var/list/wCount = M.get_wounds()
