@@ -2103,7 +2103,7 @@
 		loc.visible_message(span_cult("[target] is violently thrashing atop the rune, writhing, as they dare to defy Baotha."))
 
 /obj/structure/ritualcircle/sanguineous
-	name = "Rune of the Sanguine"
+	name = "Ensanguined Rune"
 	desc = "A rune drawn in stark chalk and hunger."
 	icon_state = "caine_chalky"
 	var/list/sanguine_rites = list("Distill Sanguineous Phial")
@@ -2143,7 +2143,7 @@
 	qdel(ash)
 	qdel(lit_candle)
 	new /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous(loc)
-	icon_state = "baotha_active"
+	icon_state = "caine_active"
 	addtimer(CALLBACK(src, PROC_REF(reset_icon_state)), 120)
 	user.visible_message(span_warning("[user] completes a sanguine rite over [src]."))
 
@@ -2156,9 +2156,8 @@
 	color = "#ffffff"
 	reagent_flags = DRAINABLE | TRANSPARENT
 	possible_item_intents = list(INTENT_FILL)
-	var/is_sealed = FALSE
 	var/is_spoiled = FALSE
-	var/spoil_timer_started = FALSE
+	var/spoil_timer_generation = 0
 	var/phial_mode = "fill"
 	var/allowed_reagent = /datum/reagent/medicine/vital_essence
 	var/spoiled_reagent = /datum/reagent/medicine/spoiled_essence
@@ -2169,19 +2168,20 @@
 	update_phial_state()
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/attack_self(mob/user)
-	if(phial_mode == "fill")
-		to_chat(user, span_warning("This phial must first be filled from a bleeding wound."))
-		return
-	if(!is_sealed)
-		to_chat(user, span_warning("This phial has already been unsealed; it cannot be sealed again."))
-		return
-	if(alert(user, "Unseal this phial? Once opened, it can never be resealed.", "Sanguineous Phial", "Unseal", "Keep Sealed") != "Unseal")
-		return
-	is_sealed = FALSE
-	if(!spoil_timer_started)
-		spoil_timer_started = TRUE
-		addtimer(CALLBACK(src, PROC_REF(spoil_contents)), 5 MINUTES)
-	to_chat(user, span_warning("I break the seal. The essence within will not keep for long."))
+	. = ..()
+	update_phial_state()
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/do_open(mob/user, no_msg = FALSE, no_snd = FALSE)
+	. = ..()
+	if(phial_mode == "feed" && !is_spoiled && reagents?.total_volume)
+		spoil_timer_generation++
+		addtimer(CALLBACK(src, PROC_REF(spoil_contents), spoil_timer_generation), 5 MINUTES)
+		if(user)
+			to_chat(user, span_warning("I uncork [src]. The essence within will not keep for long."))
+	update_phial_state()
+
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/do_close(mob/user, no_msg = FALSE, no_snd = FALSE)
+	. = ..()
 	update_phial_state()
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/on_reagent_change(changetype)
@@ -2190,14 +2190,17 @@
 
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/attack(mob/living/M, mob/living/user, def_zone)
 	if(phial_mode == "feed")
-		if(is_sealed)
-			to_chat(user, span_warning("I must unseal the phial before feeding from it."))
+		if(closed)
+			to_chat(user, span_warning("I must uncork the phial before feeding from it."))
 			return
 		if(reagents.total_volume <= 0)
 			to_chat(user, span_warning("The phial is empty."))
 			return
 		return ..()
 
+	if(closed)
+		to_chat(user, span_warning("I must uncork the phial before harvesting into it."))
+		return
 	if(user.used_intent.type != INTENT_FILL)
 		to_chat(user, span_warning("This phial is empty. I should use fill intent to harvest from a wound."))
 		return
@@ -2240,9 +2243,8 @@
 	target.blood_volume = max(target.blood_volume - fill_amount, 0)
 	reagents.add_reagent(allowed_reagent, fill_amount)
 	phial_mode = "feed"
-	is_sealed = TRUE
 	update_phial_intents()
-	to_chat(user, span_notice("I siphon vital essence from [target]'s [parse_zone(target_zone)] into [src], then seal it."))
+	to_chat(user, span_notice("I siphon vital essence from [target]'s [parse_zone(target_zone)] into [src]. I should cork it or drink now."))
 	target.visible_message(span_warning("[user] harvests from [target]'s bleeding [parse_zone(target_zone)] with [src]."), span_userdanger("[user] harvests from my bleeding [parse_zone(target_zone)]!"))
 	update_icon()
 	update_phial_state()
@@ -2253,8 +2255,12 @@
 		return
 	return ..()
 
-/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/spoil_contents()
-	if(QDELETED(src) || is_sealed || is_spoiled)
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/spoil_contents(timer_generation)
+	if(QDELETED(src) || is_spoiled)
+		return
+	if(timer_generation != spoil_timer_generation)
+		return
+	if(closed)
 		return
 	if(reagents.total_volume <= 0)
 		return
@@ -2265,18 +2271,27 @@
 	is_spoiled = TRUE
 	update_phial_state()
 
+/obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/on_enter_storage(datum/component/storage/concrete/S, mob/M)
+	. = ..()
+	if(S?.does_not_spill || closed || !reagents?.total_volume)
+		return
+	if(M)
+		to_chat(M, span_warning("I stash [src] uncorked, and it spills inside the container."))
+	reagents.clear_reagents()
+	update_phial_state()
+
 /obj/item/reagent_containers/glass/bottle/alchemical/sanguineous/proc/update_phial_state()
 	if(phial_mode == "fill")
 		name = "empty Sanguineous Phial"
-		desc = "A ritual phial made to be filled from a bleeding wound."
+		desc = closed ? "A ritual phial made to be filled from a bleeding wound. It is corked." : "A ritual phial made to be filled from a bleeding wound. It is uncorked."
 		return
 	if(is_spoiled)
 		name = "spoiled Sanguineous Phial"
-		desc = "An unsealed phial whose stolen essence has spoiled."
+		desc = closed ? "A corked phial whose stolen essence has already spoiled." : "An uncorked phial whose stolen essence has spoiled."
 		return
-	if(is_sealed)
+	if(closed)
 		name = "sealed Sanguineous Phial"
-		desc = "A ritual phial, wax-sealed tight against spoilage."
+		desc = "A ritual phial corked against spoilage."
 		return
 	name = "unsealed Sanguineous Phial"
 	desc = "A ritual phial left open to the air. The essence inside is beginning to turn."

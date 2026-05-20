@@ -52,7 +52,7 @@
 		ritechoices+="Rune of Stirring"
 
 	if(is_hemophage)
-		ritechoices += "Rune of Sanguineous"
+		ritechoices += "Ensanguined Rune"
 
 	if(!length(ritechoices))
 		to_chat(user, span_smallred("No rites answer my call."))
@@ -143,8 +143,8 @@
 			if(do_after(user, 30, src))
 				playsound(src, 'sound/foley/scribble.ogg', 40, TRUE)
 				new /obj/structure/ritualcircle/psydon(step_turf)
-		if("Rune of Sanguineous")
-			to_chat(user,span_cultsmall("I begin inscribing a sanguine sigil..."))
+		if("Ensanguined Rune")
+			to_chat(user,span_cultsmall("I begin inscribing the Ensanguined Rune..."))
 			if(do_after(user, 30, src))
 				playsound(src, 'sound/foley/scribble.ogg', 40, TRUE)
 				new /obj/structure/ritualcircle/sanguineous(step_turf)
