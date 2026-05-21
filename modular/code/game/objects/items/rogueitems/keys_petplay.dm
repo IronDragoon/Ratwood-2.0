@@ -36,19 +36,38 @@
 	qdel(src)
 
 /obj/item/roguekey/petplay/attack(mob/M, mob/user, def_zone)
-	if(!ishuman(M) || def_zone != BODY_ZONE_PRECISE_MOUTH)
+	if(!ishuman(M))
 		return ..()
 
 	var/mob/living/carbon/human/H = M
+	var/mob/living/carbon/human/user_human = null
+	if(ishuman(user))
+		user_human = user
+
+	if(!modular_petplay_content_enabled_for_pair(user_human, H))
+		to_chat(user, span_warning("Pet-play content is disabled for one of the participants."))
+		return TRUE
+
 	var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/device = H.wear_mask
 	if(!istype(device))
 		to_chat(user, span_warning("[H] isn't wearing a lockable muzzle."))
 		return TRUE
 
 	if(device.lockhash != src.lockhash)
-		to_chat(user, span_warning("This key doesn't fit [H]'s muzzle."))
-		playsound(src, 'sound/foley/doors/lockrattle.ogg', 100)
-		return TRUE
+		var/found_key = FALSE
+		for(var/obj/item/storage/keyring/K in user.held_items)
+			if(!K.contents.Find(/obj/item/roguekey/petplay))
+				continue
+			for(var/obj/item/roguekey/petplay/KE in K.contents)
+				if(KE.lockhash == device.lockhash)
+					found_key = TRUE
+					break
+			if(found_key)
+				break
+		if(!found_key)
+			to_chat(user, span_warning("This key doesn't fit [H]'s muzzle."))
+			playsound(src, 'sound/foley/doors/lockrattle.ogg', 100)
+			return TRUE
 
 	if(device.locked && device.is_hardmode_active() && !device.is_generated_unlock_key(src))
 		to_chat(user, span_warning(device.get_lock_denial_string()))

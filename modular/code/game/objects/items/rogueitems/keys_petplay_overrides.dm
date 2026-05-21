@@ -1,8 +1,16 @@
 /obj/item/roguekey/lord/proc/modular_petplay_attack(mob/M, mob/user, def_zone)
-	if(!ishuman(M) || def_zone != BODY_ZONE_PRECISE_MOUTH)
+	if(!ishuman(M))
 		return null
 
 	var/mob/living/carbon/human/H = M
+	var/mob/living/carbon/human/user_human = null
+	if(ishuman(user))
+		user_human = user
+
+	if(!modular_petplay_content_enabled_for_pair(user_human, H))
+		to_chat(user, span_warning("Pet-play content is disabled for one of the participants."))
+		return TRUE
+
 	var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/device = H.wear_mask
 	if(!istype(device))
 		to_chat(user, span_warning("[H] isn't wearing a lockable muzzle."))
@@ -25,13 +33,19 @@
 	return TRUE
 
 /obj/item/lockpick/proc/modular_petplay_attack(mob/M, mob/user, def_zone)
-	if(!ishuman(M) || def_zone != BODY_ZONE_PRECISE_MOUTH)
+	if(!ishuman(M))
 		return null
 	if(!ishuman(user))
 		to_chat(user, span_warning("I can't get enough control to pick this lock."))
 		return TRUE
 
 	var/mob/living/carbon/human/H = M
+	var/mob/living/carbon/human/U = user
+
+	if(!modular_petplay_content_enabled_for_pair(U, H))
+		to_chat(user, span_warning("Pet-play content is disabled for one of the participants."))
+		return TRUE
+
 	var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/device = H.wear_mask
 	if(!istype(device))
 		to_chat(user, span_warning("[H] isn't wearing a lockable muzzle."))
@@ -44,7 +58,6 @@
 		to_chat(user, span_warning(device.get_lock_denial_string()))
 		return TRUE
 
-	var/mob/living/carbon/human/U = user
 	var/pickskill = U.get_skill_level(/datum/skill/misc/lockpicking)
 	var/perbonus = U.STAPER / 5
 	var/picktime = clamp(60 - (pickskill * 8), 15, 60)
@@ -84,13 +97,19 @@
 	return TRUE
 
 /obj/item/melee/touch_attack/lesserknock/proc/modular_petplay_attack(mob/M, mob/user, def_zone)
-	if(!ishuman(M) || def_zone != BODY_ZONE_PRECISE_MOUTH)
+	if(!ishuman(M))
 		return null
 	if(!ishuman(user))
 		to_chat(user, span_warning("I can't get enough control to pick this lock."))
 		return TRUE
 
 	var/mob/living/carbon/human/H = M
+	var/mob/living/carbon/human/U = user
+
+	if(!modular_petplay_content_enabled_for_pair(U, H))
+		to_chat(user, span_warning("Pet-play content is disabled for one of the participants."))
+		return TRUE
+
 	var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/device = H.wear_mask
 	if(!istype(device))
 		to_chat(user, span_warning("[H] isn't wearing a lockable muzzle."))
@@ -103,7 +122,6 @@
 		to_chat(user, span_warning(device.get_lock_denial_string()))
 		return TRUE
 
-	var/mob/living/carbon/human/U = user
 	var/pickskill = U.get_skill_level(/datum/skill/misc/lockpicking)
 	var/perbonus = U.STAPER / 5
 	var/picktime = clamp(60 - (pickskill * 8), 15, 60)

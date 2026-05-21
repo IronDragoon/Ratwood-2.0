@@ -115,3 +115,15 @@
 		device.remove_chastity(human_mob)
 		device.forceMove(get_turf(human_mob))
 		human_mob.visible_message(span_notice("the divine hand of Eora slipped [device] free from [human_mob]'s loins!"))
+
+/client/proc/modular_handle_petplay_toggle_disable()
+	if(!ishuman(mob))
+		return
+	var/mob/living/carbon/human/human_mob = mob
+	var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/muzzle = human_mob.wear_mask
+	if(!istype(muzzle))
+		return
+	if(muzzle.locked)
+		muzzle.set_petplay_locked_state(human_mob, FALSE, human_mob, null, "content_toggle")
+	human_mob.dropItemToGround(muzzle, force = TRUE)
+	human_mob.visible_message(span_notice("the divine hand of Eora slipped [muzzle] free from [human_mob]'s face!"))
