@@ -8,6 +8,20 @@
 	var/obj/item/roguekey/petplay/generated_key = null
 	var/mob/living/carbon/human/petplay_victim = null
 
+/// Prevents equipping the muzzle when the wearer has not opted into pet-play content.
+/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	if(!..())
+		return FALSE
+	if(slot != SLOT_WEAR_MASK || !ishuman(M))
+		return TRUE
+	var/mob/living/carbon/human/H = M
+	if(!modular_petplay_content_enabled_for(H))
+		if(!disable_warning)
+			var/mob/living/warn_target = equipper ? equipper : M
+			to_chat(warn_target, span_warning("[H] has not opted into pet-play content. Enable it in Options → Toggle Pet-play Content first."))
+		return FALSE
+	return TRUE
+
 /obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/Initialize(mapload)
 	. = ..()
 	if(!lockhash)
@@ -95,6 +109,9 @@
 		new_key.lockhash = src.lockhash
 		generated_key = new_key
 	sync_generated_key_metadata(H, user)
+	playsound(get_turf(user), 'sound/foley/doors/lock.ogg', 75, TRUE)
+	user.visible_message(span_notice("A small key clatters to the ground as [src] settles against [H == user ? "[user.p_their()]" : "[H]'s"] face."), \
+		span_notice("A small key drops to the ground as the muzzle settles into place. Don't lose it."))
 
 /obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/proc/set_petplay_locked_state(mob/living/carbon/human/H, should_lock, mob/user = null, obj/item/interaction_item = null, interaction_source = "manual")
 	if(!H)
