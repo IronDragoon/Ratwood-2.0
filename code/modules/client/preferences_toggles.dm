@@ -117,6 +117,65 @@
 				call(src, "modular_handle_chastity_toggle_disable")()
 			to_chat(src, "Chastity content disabled.")
 
+/client/verb/toggle_Petplay() // Alters whether the user can see or interact with pet-play restraint content, including muzzles, lock messages, and actions that depend on those items.
+	set category = "Options"
+	set name = "Toggle Pet-play Content"
+	if(prefs)
+		prefs.petplay_enable = !prefs.petplay_enable
+		prefs.save_preferences()
+		if(prefs.petplay_enable)
+			to_chat(src, "Pet-play content enabled.")
+		else
+			if(hascall(src, "modular_handle_petplay_toggle_disable"))
+				call(src, "modular_handle_petplay_toggle_disable")()
+			to_chat(src, "Pet-play content disabled.")
+
+/client/verb/toggle_Petplay_Hardmode()
+	set category = "Options"
+	set name = "Toggle Permanent Pet-play Binding"
+
+	if(!prefs)
+		return
+
+	if(prefs.petplay_hardmode == PETPLAY_HARDMODE_DISABLED)
+		var/confirm = alert(src,
+			"PERMANENT PET-PLAY BINDING:\n\n\
+			• Only the muzzle's unique key can unlock it\n\
+			• Keys can be lost, stolen, or destroyed forever\n\
+			• Master keys and lockpicks will fail\n\
+			• Hammer-and-chisel removal will fail\n\
+			• You will remain bound until the original key is used\n\n\
+			Do you accept these terms of permanent binding?",
+			"Permanent Pet-play Binding",
+			"I accept the binding",
+			"I refuse")
+
+		if(confirm != "I accept the binding")
+			to_chat(src, span_notice("You decline the permanent binding."))
+			return
+
+		prefs.petplay_hardmode = PETPLAY_HARDMODE_ENABLED
+		prefs.save_preferences()
+		if(ishuman(mob))
+			var/mob/living/carbon/human/H = mob
+			var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/muzzle = H.wear_mask
+			if(istype(muzzle))
+				muzzle.sync_generated_key_metadata(H, mob)
+		to_chat(src, span_boldwarning("You have accepted the terms of PERMANENT PET-PLAY BINDING. Only the original key shall grant freedom."))
+		log_game("[key_name(src)] enabled permanent pet-play binding.")
+		message_admins("[key_name_admin(src)] enabled permanent pet-play binding.")
+	else
+		prefs.petplay_hardmode = PETPLAY_HARDMODE_DISABLED
+		prefs.save_preferences()
+		if(ishuman(mob))
+			var/mob/living/carbon/human/H = mob
+			var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/muzzle = H.wear_mask
+			if(istype(muzzle))
+				muzzle.sync_generated_key_metadata(H)
+		to_chat(src, span_notice("You have revoked the permanent pet-play binding. Mortal means may test the lock once more."))
+		log_game("[key_name(src)] disabled permanent pet-play binding.")
+		message_admins("[key_name_admin(src)] disabled permanent pet-play binding.")
+
 /client/verb/toggle_Chastity_Hardmode()
 	set category = "Options"
 	set name = "Toggle Permanent Binding"

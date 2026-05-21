@@ -1,0 +1,22 @@
+{
+	"petplay_lock_click": [
+		"A quiet click seals the muzzle shut against my jaw.",
+		"The latch catches with a neat little click, and the muzzle settles into place.",
+		"Metal meets metal with a soft snick. The muzzle is locked now."
+	],
+	"petplay_unlock_click": [
+		"The latch loosens with a soft click, and the muzzle gives a little at my face.",
+		"A quick turn, a quiet click, and the lock finally yields.",
+		"The mechanism releases with a light snick, leaving the muzzle unfastened."
+	],
+	"petplay_lock_denial": [
+		"The lock gives nothing back. It sits there, stubborn and certain.",
+		"I test the mechanism again, and it refuses me just as calmly as before.",
+		"The latch will not move. The muzzle stays shut."
+	],
+	"petplay_hardmode_denial": [
+		"The lock does not even pretend to yield. This binding only answers to its true key.",
+		"The mechanism stays firm and silent. Mortal tricks have no say in this binding.",
+		"Nothing in the lock gives way. Only the original key can command it now."
+	]
+}

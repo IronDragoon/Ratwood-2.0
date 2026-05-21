@@ -113,6 +113,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/sexable = FALSE
 	var/chastenable = FALSE
 	var/chastity_hardmode = CHASTITY_HARDMODE_DISABLED
+	var/petplay_enable = FALSE
+	var/petplay_hardmode = PETPLAY_HARDMODE_DISABLED
 	var/extreme_erp = FALSE
 	var/edging = FALSE
 	var/compliance_notifs = TRUE

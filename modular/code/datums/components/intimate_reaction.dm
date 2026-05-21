@@ -243,6 +243,27 @@
 		return COMPONENT_SEX_ACTION_BLOCK
 	return FALSE
 
+/datum/component/intimate_action_guard/petplay
+
+/datum/component/intimate_action_guard/petplay/Initialize()
+	. = ..()
+	if(. == COMPONENT_INCOMPATIBLE)
+		return .
+	if(!istype(parent, /obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle))
+		return COMPONENT_INCOMPATIBLE
+
+/datum/component/intimate_action_guard/petplay/try_validate_wearer_sex_action(mob/living/carbon/human/source, datum/sex_action/action, mob/living/carbon/human/other, checked_part, is_user_role, menu_check)
+	var/obj/item/clothing/mask/rogue/facemask/steel/petplay_muzzle/device = parent
+	if(!source || QDELETED(source) || source != wearer)
+		return FALSE
+	if(source.wear_mask != device)
+		return FALSE
+
+	checked_part = checked_part & SEX_PART_JAWS
+	if(!checked_part)
+		return FALSE
+	return COMPONENT_SEX_ACTION_BLOCK
+
 /// Chastity-specific cooldown state for receive-flavor and arousal reaction channels.
 /// last_movement_message_time and movement_message_cooldown are inherited from the base class.
 /datum/component/intimate_reaction/chastity_receive_flavor
