@@ -1718,3 +1718,10 @@
 	icon_state = "zaelorian_crynsaris"
 	icon = 'icons/roguetown/misc/statues/statue_zizo.dmi'
 	pixel_x = -16
+
+/obj/structure/fluff/statue/psydongrand
+	name = "grand statue of psydon"
+	desc = "A statue of the Blessed Allfather. For him we ENDVRE."
+	icon_state = "psydon_grand"
+	icon = 'icons/roguetown/misc/statues/statue_psydongrand.dmi'
+	pixel_x = -16
