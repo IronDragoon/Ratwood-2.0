@@ -219,6 +219,9 @@
 #define GUILDSMAN  	(1<<2)
 #define TAILOR		(1<<3)
 
+#define BASILICA	(1<<12)
+#define SANANT	(1<<1)
+
 #define JCOLOR_NOBLE "#aa83b9"
 #define JCOLOR_COURTIER "#81adc8"
 #define JCOLOR_CHURCH "#c0ba8d"
@@ -229,6 +232,7 @@
 #define JCOLOR_WANDERER  "#c86e3a"
 #define JCOLOR_INQUISITION "#FF0000"
 #define JCOLOR_TRIBAL "#0bac2e"
+#define JCOLOR_BASILICA "#e5e6e0"
 
 /// Key value for taking the department's string and getting a color back
 #define JCOLOR_BY_DEPARTMENT list(\
@@ -243,6 +247,7 @@
 	"Sidefolk" = "grey",\
 	"Wanderers" = JCOLOR_WANDERER,\
 	"Tribe" = JCOLOR_TRIBAL,\
+	"Basilica" = JCOLOR_BASILICA,\
 )
 
 // job display orders //
@@ -289,6 +294,8 @@
 #define JDO_CHURCHLING 14
 #define JDO_KEEPER 14.1
 #define JDO_GRAVEMAN 15
+
+#define JDO_SANANT 16
 
 #define JDO_MERCHANT 17
 #define JDO_SHOPHAND 17.1
