@@ -1122,7 +1122,7 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 			chosen_langtype = langtype.type
 			highest_priority = pri
 
-	H.selected_default_language = .
+	H.selected_default_language = chosen_langtype
 	. = chosen_langtype
 
 /* End language procs */
