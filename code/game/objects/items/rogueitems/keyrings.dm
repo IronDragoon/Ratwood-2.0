@@ -406,7 +406,7 @@
 /obj/item/storage/keyring/baronretainer
 	name = "baron-retainer keyring"
 	desc = "A keyring issued to the baronial household with warden and slaver access."
-	keys = list(/obj/item/roguekey/warden, /obj/item/roguekey/walls, /obj/item/roguekey/slaverdungeon, /obj/item/roguekey/slaverpillory, /obj/item/roguekey/slaverhouse)
+	keys = list(/obj/item/roguekey/baron, /obj/item/roguekey/baronguest, /obj/item/roguekey/warden, /obj/item/roguekey/walls, /obj/item/roguekey/slaverdungeon, /obj/item/roguekey/slaverpillory, /obj/item/roguekey/slaverhouse)
 
 /obj/item/storage/keyring/tribalchief
 	keys = list(/obj/item/roguekey/tribal, /obj/item/roguekey/tribalchief)
