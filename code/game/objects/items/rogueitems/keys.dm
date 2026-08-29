@@ -190,17 +190,48 @@
 	icon_state = "spikekey"
 	lockid = "garrison"
 
+//generic 'garrison' key reworked to grant proper distinct lines of command and access. Left for DT as I will need to do that seperate and am lazy
+/obj/item/roguekey/maa
+	name = "maa key"
+	desc = "A key given to the men-at-arms of the retinue."
+	icon_state = "spikekey"
+	lockid = "maa"
+
 /obj/item/roguekey/sergeant
 	name = "sergeant key"
 	desc = "This key belongs to the sergeant of the Men-at-Arms."
 	icon_state = "spikekey"
 	lockid = "sergeant"
 
+/obj/item/roguekey/citywatch
+	name = "city watch key"
+	desc = "A key given to the men and women of the City Watch."
+	icon_state = "spikekey"
+	lockid = "citywatch"
+
+/obj/item/roguekey/citywatchcaptain
+	name = "city watch captain key"
+	desc = "This key belongs to the Captain of the City Watch."
+	icon_state = "spikekey"
+	lockid = "citywatchcaptain"
+
 /obj/item/roguekey/warden
-	name = "watchtower key"
-	desc = "This key belongs to the wardens."
+	name = "warden key"
+	desc = "A key given to the Wardens of Lowtown."
 	icon_state = "spikekey"
 	lockid = "warden"
+
+/obj/item/roguekey/vanguard
+	name = "vanguard key"
+	desc = "A key given to the Vanguard of Lowtown."
+	icon_state = "spikekey"
+	lockid = "vanguard"
+
+/obj/item/roguekey/wardenmaster
+	name = "warden key"
+	desc = "This key belongs to the Master of the Wardens."
+	icon_state = "spikekey"
+	lockid = "wardenmaster"
 
 /obj/item/roguekey/dungeon
 	name = "dungeon key"

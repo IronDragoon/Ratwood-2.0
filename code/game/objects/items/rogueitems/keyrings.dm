@@ -230,20 +230,35 @@
 /obj/item/storage/keyring/councillor
 	keys = list(/obj/item/roguekey/sheriff, /obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/seal/councillor)
 
-/obj/item/storage/keyring/squire
-	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory) //don't need to be poor
 
-/obj/item/storage/keyring/guard
-	keys = list(/obj/item/roguekey/warden, /obj/item/roguekey/walls)
 
-/obj/item/storage/keyring/guardcastle
-	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory)
+//generic 'garrison' key reworked to grant proper distinct lines of command and access, matching rework of keyrings
+/obj/item/storage/keyring/maa
+	keys = list(/obj/item/roguekey/maa, /obj/item/roguekey/dungeon, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory)
 
 /obj/item/storage/keyring/guardsergeant
-	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/warden, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory, /obj/item/roguekey/sergeant)
+	keys = list(/obj/item/roguekey/sergeant, /obj/item/roguekey/maa, /obj/item/roguekey/dungeon, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory)
 
+/obj/item/storage/keyring/squire
+	keys = list(/obj/item/roguekey/maa, /obj/item/roguekey/dungeon, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory) 
+	
 /obj/item/storage/keyring/guardknight
-	keys = list(/obj/item/roguekey/dungeon, /obj/item/roguekey/garrison, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory, /obj/item/roguekey/knight)
+	keys = list(/obj/item/roguekey/knight, /obj/item/roguekey/maa, /obj/item/roguekey/dungeon, /obj/item/roguekey/walls, /obj/item/roguekey/manor, /obj/item/roguekey/armory)
+
+/obj/item/storage/keyring/citywatch
+	keys = list(/obj/item/roguekey/citywatch, /obj/item/roguekey/walls)
+
+/obj/item/storage/keyring/citywatchcaptain
+	keys = list(/obj/item/roguekey/citywatchcaptain, /obj/item/roguekey/citywatch, /obj/item/roguekey/walls)
+
+/obj/item/storage/keyring/warden
+	keys = list(/obj/item/roguekey/warden, /obj/item/roguekey/vanguard, /obj/item/roguekey/walls)
+
+/obj/item/storage/keyring/vanguard
+	keys = list(/obj/item/roguekey/vanguard, /obj/item/roguekey/walls)
+
+/obj/item/storage/keyring/wardenmaster
+	keys = list(/obj/item/roguekey/wardenmaster, /obj/item/roguekey/warden, /obj/item/roguekey/vanguard, /obj/item/roguekey/manor, /obj/item/roguekey/armory, /obj/item/roguekey/dungeon, /obj/item/roguekey/walls)
 
 /obj/item/storage/keyring/vtavern
 	keys = list(/obj/item/roguekey/tavern/village, /obj/item/roguekey/roomvi/village, /obj/item/roguekey/roomv/village, /obj/item/roguekey/roomiv/village, /obj/item/roguekey/roomiii/village, /obj/item/roguekey/roomii/village, /obj/item/roguekey/roomi/village)
