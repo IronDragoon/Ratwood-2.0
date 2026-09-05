@@ -417,6 +417,21 @@
 	I.appearance_flags = RESET_ALPHA
 	animate(I, pixel_y = pixel_y + 32, alpha = 0, time = duration)
 
+/obj/effect/temp_visual/pleasant_scent
+	name = "pleasant scent"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "mech_toxin"
+	duration = 15
+	plane = GAME_PLANE_UPPER
+	layer = ABOVE_ALL_MOB_LAYER
+	color = list(0,0,0,0, 1.0, 0.4, 0.7, 0, 0,0,0,0, 0,0,0,1, 0,0,0,0)
+
+/obj/effect/temp_visual/pleasant_scent/Initialize(mapload)
+	. = ..()
+	pixel_x = rand(-10, 10)
+	pixel_y = rand(-10, 10)
+	animate(src, pixel_y = pixel_y + 32, alpha = 0, time = duration)
+
 /obj/effect/temp_visual/bleed
 	name = "bleed"
 	icon = 'icons/effects/bleed.dmi'

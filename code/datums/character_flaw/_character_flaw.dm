@@ -246,7 +246,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	return
 
 /datum/charflaw/malodorous/proc/apply_pleasant_visual_effect(mob/living/carbon/human/H)
-	return
+	new /obj/effect/temp_visual/pleasant_scent(get_turf(H))
 
 /datum/charflaw/malodorous/on_bath(mob/living/user)
 	if(!ishuman(user))
