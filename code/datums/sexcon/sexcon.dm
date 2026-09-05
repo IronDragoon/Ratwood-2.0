@@ -121,6 +121,8 @@
 	. = ..()
 
 /datum/sex_controller/proc/do_visual_effects(atom/movable/effect_target)
+	if(do_subtle_action)
+		return
 	var/list/seers = list()
 	if(user?.client?.prefs && user.client.prefs.erp_visuals)
 		seers += user
@@ -129,7 +131,15 @@
 		seers += H
 	if(!length(seers))
 		return
-	new /obj/effect/temp_visual/love_heart/invisible(get_turf(effect_target || user), seers)
+	var/icon_path = 'icons/effects/effects.dmi'
+	var/icon_state_name = "heart"
+	if(user?.cmode || (istype(H) && H.cmode))
+		icon_path = 'icons/mob/overhead_effects.dmi'
+		icon_state_name = "stress"
+	var/atom/movable/spawn_target = effect_target || user
+	new /obj/effect/temp_visual/love_heart/invisible(get_turf(spawn_target), seers, icon_path, icon_state_name)
+	for(var/mob/seer in seers)
+		spawn_target.balloon_alert(seer, "Plap!", rand(-15, 15), rand(0, 25))
 
 /datum/sex_controller/proc/do_thrust_animate(atom/movable/target, pixels = 4, time = 2.7)
 	var/oldx = user.pixel_x

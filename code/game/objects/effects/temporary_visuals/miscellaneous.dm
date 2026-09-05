@@ -407,12 +407,12 @@
 /obj/effect/temp_visual/love_heart/invisible
 	icon_state = null
 
-/obj/effect/temp_visual/love_heart/invisible/Initialize(mapload, mob/seer)
+/obj/effect/temp_visual/love_heart/invisible/Initialize(mapload, mob/seers, custom_icon = 'icons/effects/effects.dmi', custom_state = "heart")
 	. = ..()
 	pixel_x = rand(-10,10)
 	pixel_y = rand(-10,10)
-	var/image/I = image(icon = 'icons/effects/effects.dmi', icon_state = "heart", layer = ABOVE_MOB_LAYER, loc = src)
-	add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/People, "heart", I, seer)
+	var/image/I = image(icon = custom_icon, icon_state = custom_state, layer = ABOVE_MOB_LAYER, loc = src)
+	add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/People, "heart", I, seers)
 	I.alpha = 255
 	I.appearance_flags = RESET_ALPHA
 	animate(I, pixel_y = pixel_y + 32, alpha = 0, time = duration)
