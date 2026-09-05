@@ -303,7 +303,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 					nearby.add_stress(/datum/stressevent/prominent_scent)
 			if("Pleasant")
 				if(!nearby.has_stress_event(/datum/stressevent/pleasant_scent))
-					to_chat(nearby, span_notice("A pleasant floral scent drifts through the air."))
+					to_chat(nearby, span_notice("A pleasant scent drifts through the air."))
 					nearby.add_stress(/datum/stressevent/pleasant_scent)
 
 /datum/charflaw/paranoid
