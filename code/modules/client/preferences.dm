@@ -155,6 +155,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 /datum/preferences/proc/get_base_points()
 	return 10
 
+/datum/preferences/proc/get_default_malodorous_scent(scent_type)
+	switch(scent_type)
+		if("Gross")
+			return "rotting meat and sour sweat"
+		if("Pleasant")
+			return "wildflowers and clean rain"
+	return "earth and sweat"
+
 // Points gained from selected vices (+1 per selected vice)
 /datum/preferences/proc/get_vice_points()
 	var/points = 0
@@ -254,6 +262,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/charflaw/vice3
 	var/datum/charflaw/vice4
 	var/datum/charflaw/vice5
+	var/malodorous_type = "Neutral"
+	var/malodorous_scent = ""
 
 	var/setspouse = ""
 	var/gender_choice = ANY_GENDER
@@ -3282,6 +3292,10 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		var/datum/charflaw/vice = vars["vice[i]"]
 		if(vice)
 			var/datum/charflaw/new_vice = new vice.type()
+			if(istype(new_vice, /datum/charflaw/malodorous))
+				var/datum/charflaw/malodorous/malodorous_vice = new_vice
+				malodorous_vice.scent_type = malodorous_type
+				malodorous_vice.scent = malodorous_scent
 			character.vices += new_vice
 			new_vice.on_mob_creation(character)
 			// Set first vice as the legacy charflaw for compatibility

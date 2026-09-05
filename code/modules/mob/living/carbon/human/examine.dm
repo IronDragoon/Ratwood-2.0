@@ -432,7 +432,10 @@
 				var/mob/living/living_user = user
 				can_see_stink = living_user.can_smell() && !HAS_TRAIT(living_user, TRAIT_NOSTINK)
 			if(can_see_stink)
-				. += span_greentext("They reek.")
+				if(malodorous_flaw)
+					. += malodorous_flaw.get_examine_text()
+				else
+					. += span_greentext("They reek.")
 
 	var/obscured = check_obscured_slots()
 	var/skipface = (wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE))

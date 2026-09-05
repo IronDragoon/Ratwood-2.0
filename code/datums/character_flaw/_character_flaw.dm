@@ -59,6 +59,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw
 	var/name
 	var/desc
+	var/major = FALSE
 	var/ephemeral = FALSE // This flaw is currently disabled and will not process
 
 /datum/charflaw/proc/on_mob_creation(mob/user)
@@ -160,6 +161,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/badsight
 	name = "Bad Eyesight"
 	desc = "I need spectacles to see normally from my years spent reading books."
+	major = TRUE
 
 /datum/charflaw/badsight/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -200,12 +202,51 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/malodorous
 	name = "Malodorous"
 	desc = "My body odor is unbearable without regular baths, and others can tell."
+	var/scent_type = "Neutral"
+	var/scent = ""
 	var/last_aura_tick = 0
 	var/aura_tick_delay = 5 SECONDS
 	var/suppressed_until = 0
 
+/datum/charflaw/malodorous/on_mob_creation(mob/living/carbon/human/user)
+	switch(scent_type)
+		if("Gross")
+			user.adjust_triumphs(1)
+		if("Pleasant")
+			user.adjust_triumphs(-1)
+
 /datum/charflaw/malodorous/proc/is_reeking()
 	return world.time >= suppressed_until
+
+/datum/charflaw/malodorous/proc/get_aura_tick_delay()
+	return scent_type == "Neutral" ? 10 SECONDS : 5 SECONDS
+
+/datum/charflaw/malodorous/proc/get_examine_text()
+	var/scent_text = html_encode(scent || "an unusual scent")
+	switch(scent_type)
+		if("Gross")
+			return span_greentext("They reek of [scent_text].")
+		if("Pleasant")
+			return "<span style='color:#FFB6C1'>They smell of [scent_text].</span>"
+	return "<span style='color:#FFFFFF'>They smell of [scent_text].</span>"
+
+/datum/charflaw/malodorous/proc/apply_visual_effect(mob/living/carbon/human/H)
+	switch(scent_type)
+		if("Gross")
+			apply_gross_visual_effect(H)
+		if("Neutral")
+			apply_neutral_visual_effect(H)
+		if("Pleasant")
+			apply_pleasant_visual_effect(H)
+
+/datum/charflaw/malodorous/proc/apply_gross_visual_effect(mob/living/carbon/human/H)
+	return
+
+/datum/charflaw/malodorous/proc/apply_neutral_visual_effect(mob/living/carbon/human/H)
+	return
+
+/datum/charflaw/malodorous/proc/apply_pleasant_visual_effect(mob/living/carbon/human/H)
+	return
 
 /datum/charflaw/malodorous/on_bath(mob/living/user)
 	if(!ishuman(user))
@@ -233,10 +274,12 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 	if(!should_reek)
 		return
-	if(world.time < last_aura_tick + aura_tick_delay)
+	if(world.time < last_aura_tick + get_aura_tick_delay())
 		return
 	last_aura_tick = world.time
-	apply_stink_aura(H)
+	apply_visual_effect(H)
+	if(scent_type != "Pleasant")
+		apply_stink_aura(H)
 
 /datum/charflaw/malodorous/proc/apply_stink_aura(mob/living/carbon/human/H)
 	for(var/mob/living/nearby in view(2, H))
@@ -343,6 +386,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/noeyer
 	name = "Cyclops (R)"
 	desc = "I lost my right eye long ago."
+	major = TRUE
 
 /datum/charflaw/noeyer/on_mob_creation(mob/user)
 	..()
@@ -359,6 +403,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/noeyel
 	name = "Cyclops (L)"
 	desc = "I lost my left eye long ago."
+	major = TRUE
 
 /datum/charflaw/noeyel/on_mob_creation(mob/user)
 	..()
@@ -375,6 +420,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/noeyeall
 	name = "Blindness"
 	desc = "I lost both of my eyes long ago."
+	major = TRUE
 
 /datum/charflaw/noeyeall/on_mob_creation(mob/user)
 	..()
@@ -392,6 +438,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/colorblind
 	name = "Colorblind"
 	desc = "I was cursed with flawed eyesight from birth, and can't discern things others can. Incompatible with Night-eyed virtue."
+	major = TRUE
 
 /datum/charflaw/colorblind/on_mob_creation(mob/user)
 	..()
@@ -606,6 +653,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/unintelligible
 	name = "Unintelligible"
 	desc = "I cannot speak the common tongue!"
+	major = TRUE
 
 /datum/charflaw/unintelligible/on_mob_creation(mob/user)
 	var/mob/living/carbon/human/recipient = user
@@ -706,6 +754,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/narcoleptic
 	name = "Narcoleptic"
 	desc = "I get drowsy during the day and tend to fall asleep suddenly, but I can sleep easier if I want to, and moon dust can help me stay awake."
+	major = TRUE
 	var/last_unconsciousness = 0
 	var/next_sleep = 0
 	var/concious_timer = (10 MINUTES)
@@ -777,6 +826,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/sleepless
 	name = "Insomnia"
 	desc = "I do not sleep. I cannot sleep. I've tried everything."
+	major = TRUE
 
 /datum/charflaw/sleepless/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_NOSLEEP, TRAIT_GENERIC)
@@ -791,6 +841,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/mute
 	name = "Mute"
 	desc = "I was born without the ability to speak."
+	major = TRUE
 
 /datum/charflaw/mute/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_PERMAMUTE, TRAIT_GENERIC)
@@ -805,6 +856,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/critweakness
 	name = "Critical Weakness"
 	desc = "My body is as fragile as an eggshell. A critical strike is like to end me then and there."
+	major = TRUE
 
 /datum/charflaw/critweakness/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_CRITICAL_WEAKNESS, TRAIT_GENERIC)
@@ -830,6 +882,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/leprosy
 	name = "Leper"
 	desc = "I am cursed with leprosy! Too poor to afford treatment, my skin now lays violated by lesions, my extremities are numb, and my presence disturbs even the most stalwart men."
+	major = TRUE
 
 /datum/charflaw/leprosy/apply_post_equipment(mob/user)
 	var/mob/living/carbon/human/H = user
@@ -847,6 +900,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/mind_broken
 	name = "Asundered Mind"
 	desc = "My mind is asundered, whether it was by my own means or an unfortunate accident. Nothing seems real to me..."
+	major = TRUE
 
 /datum/charflaw/mind_broken/apply_post_equipment(mob/living/carbon/human/insane_fool)
 	insane_fool.hallucination = INFINITY
@@ -890,6 +944,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	name = "Hemophage"
 	desc = "Whether by curse or my people, blood is the only thing to keep me alive. Normal sources of nutrition and hydration will make me ill. <br>\
 	<small>Any element of a virtue that modifies eating will be canceled out by Hemophage.</small>"
+	major = TRUE
 
 /datum/charflaw/hemophage/on_mob_creation(mob/living/carbon/human/vamp_wannabe)
 	ADD_TRAIT(vamp_wannabe, TRAIT_HEMOPHAGE, TRAIT_GENERIC)

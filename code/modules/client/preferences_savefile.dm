@@ -544,7 +544,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["vice4"] >> vice4_type
 	S["vice5"] >> vice5_type
 
-	// Vice1 is required - use charflaw as fallback for old characters, only randomize if both are missing
+	// Vice1 is required and must be major.
 	if(vice1_type && ispath(vice1_type))
 		vice1 = new vice1_type()
 	else if(charflaw_type && ispath(charflaw_type))
@@ -552,15 +552,31 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		vice1 = new charflaw_type()
 	else
 		// Truly new/corrupted save - pick random
-		var/random_vice = pick(GLOB.character_flaws)
-		var/random_vice_path = GLOB.character_flaws[random_vice]
-		vice1 = new random_vice_path()
+		vice1 = get_random_major_vice()
+
+	if(!vice1.major)
+		vice1 = get_random_major_vice()
 
 	// Other vices are optional
 	vice2 = (vice2_type && ispath(vice2_type)) ? new vice2_type() : null
 	vice3 = (vice3_type && ispath(vice3_type)) ? new vice3_type() : null
 	vice4 = (vice4_type && ispath(vice4_type)) ? new vice4_type() : null
 	vice5 = (vice5_type && ispath(vice5_type)) ? new vice5_type() : null
+	S["malodorous_type"] >> malodorous_type
+	S["malodorous_scent"] >> malodorous_scent
+	if(malodorous_type == "Positive")
+		malodorous_type = "Pleasant"
+	if(!(malodorous_type in list("Gross", "Neutral", "Pleasant")))
+		malodorous_type = "Neutral"
+
+/datum/preferences/proc/get_random_major_vice()
+	var/list/major_vices = list()
+	for(var/vice_name in GLOB.character_flaws)
+		var/datum/charflaw/vice = GLOB.character_flaws[vice_name]
+		if(vice.major)
+			major_vices += vice
+	var/datum/charflaw/selected_vice = pick(major_vices)
+	return new selected_vice.type
 
 /datum/preferences/proc/_load_culinary_preferences(S)
 	var/list/loaded_culinary_preferences
@@ -1147,6 +1163,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["vice3"], preferences_typepath_or_null(vice3))
 	WRITE_FILE(S["vice4"], preferences_typepath_or_null(vice4))
 	WRITE_FILE(S["vice5"], preferences_typepath_or_null(vice5))
+	WRITE_FILE(S["malodorous_type"], malodorous_type)
+	WRITE_FILE(S["malodorous_scent"], malodorous_scent)
 	WRITE_FILE(S["feature_mcolor"]		, features["mcolor"])
 	WRITE_FILE(S["feature_mcolor2"]		, features["mcolor2"])
 	WRITE_FILE(S["feature_mcolor3"]		, features["mcolor3"])

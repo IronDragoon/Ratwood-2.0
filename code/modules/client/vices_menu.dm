@@ -265,6 +265,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		"vice3" = vice3,
 		"vice4" = vice4,
 		"vice5" = vice5,
+		"malodorous_type" = malodorous_type,
+		"malodorous_scent" = malodorous_scent,
 		"loadout" = loadout,
 		"loadout2" = loadout2,
 		"loadout3" = loadout3,
@@ -333,6 +335,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 	vice3 = snapshot["vice3"]
 	vice4 = snapshot["vice4"]
 	vice5 = snapshot["vice5"]
+	malodorous_type = snapshot["malodorous_type"]
+	malodorous_scent = snapshot["malodorous_scent"]
 	loadout = snapshot["loadout"]
 	loadout2 = snapshot["loadout2"]
 	loadout3 = snapshot["loadout3"]
@@ -395,6 +399,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		"vice3" = vice3?.type,
 		"vice4" = vice4?.type,
 		"vice5" = vice5?.type,
+		"malodorous_type" = malodorous_type,
+		"malodorous_scent" = malodorous_scent,
 		"loadout" = loadout?.type,
 		"loadout2" = loadout2?.type,
 		"loadout3" = loadout3?.type,
@@ -503,6 +509,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		vice5 = new vice5_type()
 	else
 		vice5 = null
+	malodorous_type = preset["malodorous_type"] || "Neutral"
+	malodorous_scent = preset["malodorous_scent"] || ""
 	
 	// Load loadout types and instantiate them if valid
 	var/loadout_type = string_to_typepath(preset["loadout"])
@@ -1127,11 +1135,16 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			html += "<div class='vice-info'>"
 			html += "<div class='vice-name'>[current_vice.name]</div>"
 			html += "<div class='vice-desc'>[current_vice.desc]</div>"
+			if(istype(current_vice, /datum/charflaw/malodorous))
+				var/scent_display = malodorous_scent || get_default_malodorous_scent(malodorous_type)
+				html += "<div class='vice-desc'><b>[malodorous_type]</b>: [scent_display]</div>"
 			html += "</div>"
 			html += "</div>"
 			
 			html += "<div class='actions'>"
 			html += "<a class='btn btn-select' href='byond://?src=\ref[src];vice_action=change;slot=[i]'>Change Vice</a>"
+			if(istype(current_vice, /datum/charflaw/malodorous))
+				html += "<a class='btn btn-select' href='byond://?src=\ref[src];malodorous_action=configure'>Configure Scent</a>"
 			if(!is_required)
 				html += "<a class='btn btn-clear' href='byond://?src=\ref[src];vice_action=clear;slot=[i]'>Clear</a>"
 			html += "</div>"
@@ -1605,6 +1618,47 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				open_vices_menu(usr)
 			return
 	
+	if(href_list["malodorous_action"])
+		if(href_list["malodorous_action"] != "configure")
+			return
+		var/has_malodorous = FALSE
+		for(var/i = 1 to 5)
+			if(istype(vars["vice[i]"], /datum/charflaw/malodorous))
+				has_malodorous = TRUE
+				break
+		if(!has_malodorous)
+			return
+
+		var/list/scent_types = list(
+			"Gross (+1 Triumph)" = "Gross",
+			"Neutral (No Triumph change)" = "Neutral",
+			"Pleasant (-1 Triumph)" = "Pleasant"
+		)
+		var/type_choice = tgui_input_list(usr, "Choose how others perceive your scent:", "Malodorous", scent_types)
+		if(!type_choice)
+			return
+		var/new_scent_type = scent_types[type_choice]
+		var/list/scent_actions = list("Describe scent", "Use default")
+		var/scent_action = tgui_input_list(usr, "Describe the scent:", "Malodorous", scent_actions)
+		if(!scent_action)
+			return
+		var/new_scent
+		if(scent_action == "Use default")
+			new_scent = get_default_malodorous_scent(new_scent_type)
+		else
+			new_scent = tgui_input_text(usr, "Describe the scent:", "Malodorous", malodorous_scent, max_length = 250, multiline = TRUE)
+			if(isnull(new_scent))
+				return
+			if(!length(trim(new_scent)))
+				new_scent = get_default_malodorous_scent(new_scent_type)
+
+		save_to_history()
+		malodorous_type = new_scent_type
+		malodorous_scent = new_scent
+		to_chat(usr, span_notice("Set my Malodorous scent to [malodorous_type]."))
+		open_vices_menu(usr)
+		return
+
 	if(href_list["vice_action"])
 		var/action = href_list["vice_action"]
 		var/slot = text2num(href_list["slot"])
@@ -1631,6 +1685,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				
 				for(var/vice_name in GLOB.character_flaws)
 					var/datum/charflaw/vice_type = GLOB.character_flaws[vice_name]
+					if(slot == 1 && !vice_type.major)
+						continue
 					
 					// Skip if already selected in another slot
 					var/datum/charflaw/current_vice = vars[slot_var]
@@ -1645,10 +1701,12 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					if(check_vice_vice_conflict(vice_type, selected_vices, TRUE, usr))
 						continue
 					
-					vices_available[vice_name] = vice_type
+					var/vice_category = vice_type.major ? "Major" : "Minor"
+					vices_available["[vice_name] ([vice_category])"] = vice_type
 				
 				vices_available = sort_list(vices_available)
-				var/choice = tgui_input_list(usr, "Select a vice for slot [slot]:", "Vice Selection", vices_available)
+				var/vice_prompt = slot == 1 ? "Select a major vice for slot 1:" : "Select a vice for slot [slot]:"
+				var/choice = tgui_input_list(usr, vice_prompt, "Vice Selection", vices_available)
 			
 				if(choice)
 					var/datum/charflaw/selected = vices_available[choice]
