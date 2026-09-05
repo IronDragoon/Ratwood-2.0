@@ -116,6 +116,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/shake = TRUE
 	var/no_redflash = FALSE
 	var/sexable = FALSE
+	var/erp_visuals = TRUE
 	var/chastenable = FALSE
 	var/chastity_hardmode = CHASTITY_HARDMODE_DISABLED
 	var/extreme_erp = FALSE

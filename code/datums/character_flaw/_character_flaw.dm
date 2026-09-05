@@ -240,7 +240,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			apply_pleasant_visual_effect(H)
 
 /datum/charflaw/malodorous/proc/apply_gross_visual_effect(mob/living/carbon/human/H)
-	return
+	new /obj/effect/temp_visual/flies(get_turf(H))
 
 /datum/charflaw/malodorous/proc/apply_neutral_visual_effect(mob/living/carbon/human/H)
 	return

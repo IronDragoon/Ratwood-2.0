@@ -120,6 +120,17 @@
 	//receiving = list()
 	. = ..()
 
+/datum/sex_controller/proc/do_visual_effects(atom/movable/effect_target)
+	var/list/seers = list()
+	if(user?.client?.prefs && user.client.prefs.erp_visuals)
+		seers += user
+	var/mob/living/carbon/human/H = effect_target
+	if(istype(H) && H.client?.prefs && H.client.prefs.erp_visuals && H != user)
+		seers += H
+	if(!length(seers))
+		return
+	new /obj/effect/temp_visual/love_heart/invisible(get_turf(effect_target || user), seers)
+
 /datum/sex_controller/proc/do_thrust_animate(atom/movable/target, pixels = 4, time = 2.7)
 	var/oldx = user.pixel_x
 	var/oldy = user.pixel_y
@@ -340,6 +351,9 @@
 	manual_arousal = clamp(manual_arousal + amt, SEX_MANUAL_AROUSAL_MIN, SEX_MANUAL_AROUSAL_MAX)
 
 /datum/sex_controller/proc/update_pink_screen()
+	if(!user?.client?.prefs?.erp_visuals)
+		user?.clear_fullscreen("horny")
+		return
 	var/severity = 0
 	switch(arousal)
 		if(1 to 10)
@@ -1420,6 +1434,7 @@
 		suppress_action_messages = !show_action_message
 		find_ringing_collar()
 		action.on_perform(user, target)
+		do_visual_effects(target)
 		suppress_action_messages = FALSE
 		// It could want to finish afterwards the performed action
 		if(action.is_finished(user, target))
