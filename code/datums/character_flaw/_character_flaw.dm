@@ -267,7 +267,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 				should_reek = FALSE
 				break
 
-	if(should_reek)
+	if(should_reek && scent_type != "Pleasant")
 		H.apply_status_effect(/datum/status_effect/debuff/malodorous_stink)
 	else
 		H.remove_status_effect(/datum/status_effect/debuff/malodorous_stink)
@@ -295,15 +295,15 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		switch(scent_type)
 			if("Gross")
 				if(!nearby.has_stress_event(/datum/stressevent/stinky_aura))
-					to_chat(nearby, span_warning("Something nearby reeks."))
+					to_chat(nearby, "<span class='warning' style='color:#48c75a'>Something nearby reeks.</span>")
 					nearby.add_stress(/datum/stressevent/stinky_aura)
 			if("Neutral")
 				if(!nearby.has_stress_event(/datum/stressevent/prominent_scent))
-					to_chat(nearby, span_notice("There's a prominent scent in the air."))
+					to_chat(nearby, "<span class='warning' style='color:#ffffff'>There's a prominent scent in the air.</span>")
 					nearby.add_stress(/datum/stressevent/prominent_scent)
 			if("Pleasant")
 				if(!nearby.has_stress_event(/datum/stressevent/pleasant_scent))
-					to_chat(nearby, span_notice("A pleasant scent drifts through the air."))
+					to_chat(nearby, "<span class='warning' style='color:#ffb6c1'>A pleasant scent drifts through the air.</span>")
 					nearby.add_stress(/datum/stressevent/pleasant_scent)
 
 /datum/charflaw/paranoid
