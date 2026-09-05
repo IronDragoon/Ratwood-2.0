@@ -113,6 +113,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/randflaw
 	name = "Random or None"
 	desc = "A 50% chance to be given a random flaw, or a 50% chance to have NO flaw."
+	major = TRUE
 
 /datum/charflaw/randflaw/apply_post_equipment(mob/user)
 	var/mob/living/carbon/human/H = user
@@ -140,6 +141,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/noflaw
 	name = "No Flaw (-3 TRI)"
 	desc = "I'm a normal person, how rare! (Consumes 3 triumphs or gives a random flaw.)"
+	major = TRUE
 
 /datum/charflaw/noflaw/apply_post_equipment(mob/user)
 	var/mob/living/carbon/human/H = user
@@ -481,6 +483,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	name = "Marked for Death"
 	desc = "Something in my past has made me a target. I'm always looking over my shoulder.<br>\
 	YOU MAY BE PERMANENTLY REMOVED FROM THE ROUND WITHOUT ESCALATION BY YOUR ASSASSIN!"
+	major = TRUE
 	var/logged = FALSE
 
 /datum/charflaw/hunted
@@ -508,6 +511,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/nudist
 	name = "Nudist"
 	desc = "I refuse to wear clothes. They are a hindrance to my freedom. I can tolerate certain accessories."
+	major = TRUE
 
 /datum/charflaw/nudist/on_mob_creation(mob/user)
 	..()
@@ -572,6 +576,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/pacifism
 	name = "Pacifist"
 	desc = "I cannot harm another living being."
+	major = TRUE
 
 /datum/charflaw/pacifism/on_mob_creation(mob/user)
 	..()
@@ -880,6 +885,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/silverweakness
 	name = "Silver Weakness"
 	desc = "I'm sensitive to silver — it burns and injures me more than it should."
+	major = TRUE
 
 /datum/charflaw/silverweakness/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_SILVER_WEAK, TRAIT_GENERIC)

@@ -106,6 +106,7 @@
 /datum/charflaw/addiction/alcoholic
 	name = "Alcoholic"
 	desc = "Drinking alcohol is my favorite thing."
+	major = TRUE
 	time = 90 MINUTES
 	needsate_text = "Time for a drink."
 	stress_event = /datum/stressevent/vice/alcoholic
