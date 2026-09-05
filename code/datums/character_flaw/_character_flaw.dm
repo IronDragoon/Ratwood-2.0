@@ -278,8 +278,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		return
 	last_aura_tick = world.time
 	apply_visual_effect(H)
-	if(scent_type != "Pleasant")
-		apply_stink_aura(H)
+	apply_stink_aura(H)
 
 /datum/charflaw/malodorous/proc/apply_stink_aura(mob/living/carbon/human/H)
 	for(var/mob/living/nearby in view(2, H))
@@ -293,9 +292,19 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			continue
 		if(HAS_TRAIT(nearby, TRAIT_NOBREATH))
 			continue
-		if(!nearby.has_stress_event(/datum/stressevent/stinky_aura))
-			to_chat(nearby, span_warning("Something nearby reeks."))
-		nearby.add_stress(/datum/stressevent/stinky_aura)
+		switch(scent_type)
+			if("Gross")
+				if(!nearby.has_stress_event(/datum/stressevent/stinky_aura))
+					to_chat(nearby, span_warning("Something nearby reeks."))
+					nearby.add_stress(/datum/stressevent/stinky_aura)
+			if("Neutral")
+				if(!nearby.has_stress_event(/datum/stressevent/prominent_scent))
+					to_chat(nearby, span_notice("There's a prominent scent in the air."))
+					nearby.add_stress(/datum/stressevent/prominent_scent)
+			if("Pleasant")
+				if(!nearby.has_stress_event(/datum/stressevent/pleasant_scent))
+					to_chat(nearby, span_notice("A pleasant floral scent drifts through the air."))
+					nearby.add_stress(/datum/stressevent/pleasant_scent)
 
 /datum/charflaw/paranoid
 	name = "Paranoid"
