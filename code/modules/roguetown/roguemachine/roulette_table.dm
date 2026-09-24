@@ -128,19 +128,61 @@
 	var/list/player_wagers = list()
 	var/removing_pair = FALSE
 	var/is_extension = FALSE
+	var/extension_dir = EAST
 
 /obj/structure/table/vtable/roulette/Initialize(mapload)
 	. = ..()
 	if(is_extension)
 		return
-	var/turf/extension_turf = get_step(src, EAST)
-	if(!extension_turf)
+	if(mapload)
+		return INITIALIZE_HINT_LATELOAD
+	if(!ensure_extension())
 		return INITIALIZE_HINT_QDEL
+
+/obj/structure/table/vtable/roulette/LateInitialize()
+	if(!ensure_extension())
+		qdel(src)
+
+/obj/structure/table/vtable/roulette/proc/ensure_extension()
+	var/turf/extension_turf = get_step(src, EAST)
+	if(extension_dir != EAST)
+		extension_turf = get_step(src, extension_dir)
+	if(!extension_turf || extension_turf.density)
+		return FALSE
+	var/obj/structure/table/vtable/roulette/extension/other_half = locate() in extension_turf
+	if(other_half)
+		var/obj/structure/table/vtable/roulette/existing_controller = other_half.controller_ref?.resolve()
+		if(existing_controller && existing_controller != src)
+			return FALSE
+		other_half.controller_ref = WEAKREF(src)
+		other_half.dir = dir
+		extension_ref = WEAKREF(other_half)
+		return TRUE
 	for(var/atom/movable/obstacle in extension_turf)
 		if(obstacle.density)
-			return INITIALIZE_HINT_QDEL
-	var/obj/structure/table/vtable/roulette/extension/other_half = new(extension_turf, src)
+			return FALSE
+	other_half = new(extension_turf, src)
+	other_half.dir = dir
 	extension_ref = WEAKREF(other_half)
+	return TRUE
+
+/obj/structure/table/vtable/roulette/roundstart
+
+/obj/structure/table/vtable/roulette/roundstart/north
+	dir = NORTH
+	extension_dir = NORTH
+
+/obj/structure/table/vtable/roulette/roundstart/south
+	dir = SOUTH
+	extension_dir = SOUTH
+
+/obj/structure/table/vtable/roulette/roundstart/east
+	dir = EAST
+	extension_dir = EAST
+
+/obj/structure/table/vtable/roulette/roundstart/west
+	dir = WEST
+	extension_dir = WEST
 
 /obj/structure/table/vtable/roulette/Destroy()
 	if(!removing_pair && has_active_wagers())
@@ -403,7 +445,8 @@
 
 /obj/structure/table/vtable/roulette/extension/Initialize(mapload, obj/structure/table/vtable/roulette/controller)
 	. = ..()
-	controller_ref = WEAKREF(controller)
+	if(controller)
+		controller_ref = WEAKREF(controller)
 
 /obj/structure/table/vtable/roulette/extension/attack_hand(mob/living/user)
 	var/obj/structure/table/vtable/roulette/controller = controller_ref?.resolve()

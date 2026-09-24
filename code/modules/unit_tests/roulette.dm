@@ -50,7 +50,13 @@
 
 /datum/unit_test/roulette_table_liability/Run()
 	var/obj/structure/table/vtable/roulette/table = new(run_loc_floor_bottom_left)
-	TEST_ASSERT_NOTNULL(table.extension_ref?.resolve(), "A roulette controller should create its second table half.")
+	var/obj/structure/table/vtable/roulette/extension/extension = table.extension_ref?.resolve()
+	TEST_ASSERT_NOTNULL(extension, "A roulette controller should create its second table half.")
+	table.extension_ref = null
+	extension.controller_ref = null
+	TEST_ASSERT(table.ensure_extension(), "A roulette controller should adopt a pre-placed extension.")
+	TEST_ASSERT_EQUAL(table.extension_ref?.resolve(), extension, "Adoption should reuse the mapped extension rather than create another half.")
+	TEST_ASSERT_EQUAL(extension.controller_ref?.resolve(), table, "The adopted extension should point back to its controller.")
 	var/datum/casino_ledger/ledger = new()
 	ledger.reserve_mammons = 100
 	ledger.outstanding_units = 100
