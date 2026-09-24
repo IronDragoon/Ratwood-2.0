@@ -96,7 +96,7 @@
 	name = "chip exchange"
 	desc = "A cashier's machine for exchanging mammons and gaming chips."
 	icon = 'icons/roguetown/misc/machines.dmi'
-	icon_state = "lottery"
+	icon_state = "goldvendor"
 	density = TRUE
 	anchored = TRUE
 	var/datum/casino_ledger/ledger
