@@ -57,6 +57,7 @@
 	TEST_ASSERT(table.ensure_extension(), "A roulette controller should adopt a pre-placed extension.")
 	TEST_ASSERT_EQUAL(table.extension_ref?.resolve(), extension, "Adoption should reuse the mapped extension rather than create another half.")
 	TEST_ASSERT_EQUAL(extension.controller_ref?.resolve(), table, "The adopted extension should point back to its controller.")
+	TEST_ASSERT_EQUAL(extension.get_controller(), table, "Both table halves should resolve to the same controller.")
 	var/datum/casino_ledger/ledger = new()
 	ledger.reserve_mammons = 100
 	ledger.outstanding_units = 100
@@ -65,5 +66,13 @@
 	TEST_ASSERT(!table.can_cover_bet(red_bet), "A table should reject a wager whose winning return exceeds backing.")
 	ledger.reserve_mammons += 10
 	TEST_ASSERT(table.can_cover_bet(red_bet), "Additional house reserve should make the same wager solvent.")
+	table.exid = 7
+	var/obj/structure/roguemachine/chip_exchange/exchange = new(run_loc_floor_bottom_left)
+	exchange.exid = 7
+	exchange.link_mapped_tables()
+	TEST_ASSERT_EQUAL(table.ledger, exchange.ledger, "Matching exchange IDs should link at roundstart.")
+	TEST_ASSERT(exchange.ledger.linked_tables[table], "The linked ledger should record the table controller.")
+	TEST_ASSERT(!exchange.ledger.linked_tables[extension], "The linked ledger should not record the extension as a second table.")
 	qdel(red_bet)
+	qdel(exchange)
 	qdel(table)

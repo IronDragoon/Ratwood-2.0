@@ -116,6 +116,8 @@
 	name = "roulette table"
 	desc = "An ancient gaming table fitted with a single-zero wheel."
 	icon_state = "vtable"
+	/// Mapmaker ID used to link this table to a chip exchange at roundstart.
+	var/exid = 0
 	var/datum/casino_ledger/ledger
 	var/datum/weakref/extension_ref
 	var/datum/weakref/dealer_ref
@@ -165,6 +167,19 @@
 	other_half.dir = dir
 	extension_ref = WEAKREF(other_half)
 	return TRUE
+
+/obj/structure/table/vtable/roulette/proc/get_controller()
+	if(is_extension)
+		return null
+	return src
+
+/obj/structure/table/vtable/roulette/proc/is_within_link_range(atom/source, link_range)
+	if(!source || source.z != z)
+		return FALSE
+	if(get_dist(src, source) <= link_range)
+		return TRUE
+	var/obj/structure/table/vtable/roulette/extension/other_half = extension_ref?.resolve()
+	return other_half && other_half.z == source.z && get_dist(other_half, source) <= link_range
 
 /obj/structure/table/vtable/roulette/roundstart
 
@@ -447,6 +462,9 @@
 	. = ..()
 	if(controller)
 		controller_ref = WEAKREF(controller)
+
+/obj/structure/table/vtable/roulette/extension/get_controller()
+	return controller_ref?.resolve()
 
 /obj/structure/table/vtable/roulette/extension/attack_hand(mob/living/user)
 	var/obj/structure/table/vtable/roulette/controller = controller_ref?.resolve()

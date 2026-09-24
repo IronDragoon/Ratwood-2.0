@@ -17,6 +17,17 @@
 /datum/casino_ledger/proc/is_owner(mob/user)
 	return user && owner_ref?.resolve() == user
 
+/datum/casino_ledger/proc/has_owner()
+	return owner_ref?.resolve() ? TRUE : FALSE
+
+/datum/casino_ledger/proc/claim_owner(mob/living/owner)
+	if(!owner || has_owner())
+		return FALSE
+	owner_ref = WEAKREF(owner)
+	casino_name = "[owner.real_name]'s Gaming House"
+	authorized_dealers[owner] = TRUE
+	return TRUE
+
 /datum/casino_ledger/proc/is_authorized_dealer(mob/user)
 	return user && authorized_dealers[user]
 
@@ -99,8 +110,33 @@
 	icon_state = "goldvendor"
 	density = TRUE
 	anchored = TRUE
+	/// Mapmaker ID used to link roulette tables at roundstart.
+	var/exid = 0
 	var/datum/casino_ledger/ledger
 	var/list/pending_credit = list()
+
+/obj/structure/roguemachine/chip_exchange/Initialize(mapload)
+	. = ..()
+	if(mapload && exid)
+		return INITIALIZE_HINT_LATELOAD
+
+/obj/structure/roguemachine/chip_exchange/LateInitialize()
+	ensure_ledger()
+	link_mapped_tables()
+
+/obj/structure/roguemachine/chip_exchange/proc/ensure_ledger()
+	if(!ledger)
+		ledger = new()
+	return ledger
+
+/obj/structure/roguemachine/chip_exchange/proc/link_mapped_tables()
+	if(!exid)
+		return
+	var/datum/casino_ledger/exchange_ledger = ensure_ledger()
+	for(var/obj/structure/table/vtable/roulette/table in world)
+		if(table.is_extension || table.exid != exid)
+			continue
+		table.link_ledger(exchange_ledger)
 
 /obj/structure/roguemachine/chip_exchange/attack_hand(mob/living/user)
 	ui_interact(user)
@@ -168,7 +204,7 @@
 
 /obj/structure/roguemachine/chip_exchange/ui_data(mob/user)
 	var/list/data = list(
-		"claimed" = ledger ? TRUE : FALSE,
+		"claimed" = ledger?.has_owner() ? TRUE : FALSE,
 		"is_owner" = ledger?.is_owner(user) ? TRUE : FALSE,
 		"casino_name" = ledger?.casino_name || "Unclaimed Gaming House",
 		"exchange_rate" = ledger?.exchange_rate || 1,
@@ -187,7 +223,12 @@
 				"name" = person.real_name,
 				"authorized" = ledger.is_authorized_dealer(person) ? TRUE : FALSE,
 			))
-		for(var/obj/structure/table/vtable/roulette/table in range(2, src))
+		var/list/seen_tables = list()
+		for(var/obj/structure/table/vtable/roulette/table_part in range(20, src))
+			var/obj/structure/table/vtable/roulette/table = table_part.get_controller()
+			if(!table || seen_tables[table])
+				continue
+			seen_tables[table] = TRUE
 			nearby_tables += list(list(
 				"ref" = REF(table),
 				"name" = table.name,
@@ -208,6 +249,8 @@
 		if("claim")
 			if(!ledger)
 				ledger = new(user)
+			else
+				ledger.claim_owner(user)
 		if("set_rate")
 			if(ledger?.is_owner(user))
 				ledger.set_rate(text2num(params["rate"]))
@@ -230,8 +273,9 @@
 					ledger.set_dealer(dealer, !ledger.is_authorized_dealer(dealer))
 		if("link_table")
 			if(ledger?.is_owner(user))
-				var/obj/structure/table/vtable/roulette/table = locate(params["ref"])
-				if(table && table.z == z && get_dist(table, src) <= 2)
+				var/obj/structure/table/vtable/roulette/table_part = locate(params["ref"])
+				var/obj/structure/table/vtable/roulette/table = table_part?.get_controller()
+				if(table?.is_within_link_range(src, 20))
 					table.link_ledger(ledger)
 		if("buy")
 			try_buy_chips(user, text2num(params["denomination"]), text2num(params["count"]))
