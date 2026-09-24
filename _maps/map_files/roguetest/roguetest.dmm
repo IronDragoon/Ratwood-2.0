@@ -479,6 +479,10 @@
 /obj/item/reagent_containers/glass/cup,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors)
+"ps" = (
+/obj/structure/table/vtable/roulette/roundstart/east,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/indoors)
 "px" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -646,10 +650,6 @@
 	pixel_y = 3
 	},
 /turf/open/floor/rogue/tile/harem,
-/area/rogue/indoors)
-"ts" = (
-/obj/structure/table/vtable/roulette,
-/turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
 "tt" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/saiga/saigabuck/tame/saddled,
@@ -1709,10 +1709,6 @@
 "WM" = (
 /obj/structure/roguewindow,
 /turf/open/floor/rogue/ruinedwood/herringbone,
-/area/rogue/indoors)
-"WS" = (
-/obj/structure/table/vtable/roulette/extension,
-/turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
 "WY" = (
 /obj/structure/broadcast_horn/paid{
@@ -3559,7 +3555,7 @@ CZ
 CZ
 SE
 CZ
-CZ
+ps
 CZ
 AX
 rT
@@ -3611,7 +3607,7 @@ AX
 AX
 FP
 CZ
-ts
+CZ
 CZ
 AX
 vq
@@ -3663,7 +3659,7 @@ CZ
 AX
 xY
 CZ
-WS
+CZ
 CZ
 CZ
 AX
