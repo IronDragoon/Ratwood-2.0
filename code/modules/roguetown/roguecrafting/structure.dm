@@ -830,6 +830,34 @@
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
 
+/datum/crafting_recipe/roguetown/structure/roulette_table
+	name = "roulette table (4 planks)"
+	result = /obj/structure/table/vtable/roulette
+	reqs = list(/obj/item/natural/wood/plank = 4)
+	skillcraft = /datum/skill/craft/carpentry
+	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/structure/roulette_table/TurfCheck(mob/user, turf/T)
+	if(!..())
+		return FALSE
+	var/turf/other_turf = get_step(T, EAST)
+	if(!other_turf || other_turf.density)
+		return FALSE
+	for(var/atom/movable/obstacle in other_turf)
+		if(obstacle.density)
+			return FALSE
+	return TRUE
+
+/datum/crafting_recipe/roguetown/structure/chip_exchange
+	name = "chip exchange (2 planks, 1 iron bar)"
+	result = /obj/structure/roguemachine/chip_exchange
+	reqs = list(
+		/obj/item/natural/wood/plank = 2,
+		/obj/item/ingot/iron = 1,
+	)
+	skillcraft = /datum/skill/craft/carpentry
+	craftdiff = 4
+
 /datum/crafting_recipe/roguetown/structure/longtablealt
 	name = "nice long table(middle) (2 planks)"
 	result = /obj/structure/table/wood/long_table/mid/alt
