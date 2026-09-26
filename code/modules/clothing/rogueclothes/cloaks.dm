@@ -2058,6 +2058,36 @@
 	icon_state = "citywatch_cape"
 	item_state = "citywatch_cape"
 	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	detail_tag = "_detail"
+	var/ducal_color = TRUE
+
+/obj/item/clothing/cloak/citywatch/Initialize(mapload)
+	. = ..()
+	if(ducal_color)
+		if(GLOB.lordprimary)
+			lordcolor(GLOB.lordprimary, GLOB.lordsecondary)
+		GLOB.lordcolor += src
+
+/obj/item/clothing/cloak/citywatch/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+/obj/item/clothing/cloak/citywatch/lordcolor(primary, secondary)
+	color = primary
+	detail_color = secondary
+	update_icon()
+	if(ismob(loc))
+		var/mob/L = loc
+		L.update_inv_cloak()
+
+/obj/item/clothing/cloak/citywatch/Destroy()
+	GLOB.lordcolor -= src
+	return ..()
 
 /obj/item/clothing/cloak/citywatchcaptain
 	name = "citywatch captain's cloak"
