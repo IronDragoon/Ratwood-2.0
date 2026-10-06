@@ -37,7 +37,6 @@
 			if(QDELETED(M) || !user.canUseTopic(src, BE_CLOSE) || !user.Adjacent(M))
 				return
 			upload_painting(user, M)
-			to_chat(user, span_notice("The painting has been uploaded."))
 		else
 			to_chat(user, span_notice("You decide not to upload the painting."))
 		return
@@ -194,10 +193,11 @@
 	if(!PB.written)
 		to_chat(user, span_warning("Finish authoring this book before uploading it."))
 		return
-	to_chat(user, span_notice("[SSlibrarian.playerbook2file(PB.player_book_text, PB.player_book_title, PB.player_book_author, PB.player_book_author_ckey, PB.player_book_icon)]"))
+	if(SSlibrarian.playerbook2file(PB.player_book_text, PB.player_book_title, PB.player_book_author, PB.player_book_author_ckey, PB.player_book_icon, user, PB.player_book_date))
+		PB.is_in_round_player_generated = FALSE
 
 /obj/machinery/printingpress/proc/upload_painting(mob/user, obj/item/canvas/M)
-	M.upload_painting()
+	return M.upload_painting(user)
 
 /obj/machinery/printingpress/proc/print_bibble(mob/user)
 	// Creates a static book (Bibble)
@@ -227,7 +227,7 @@
 		to_chat(user, span_warning("The book archive index is unavailable. Please notify an administrator."))
 		return
 	var/dat = "<h3>Book Search Results:</h3><br>"
-	dat += "<table><tr><th>Title</th><th>Author</th><th>Print</th></tr>"
+	dat += "<table><tr><th>Title</th><th>Author</th><th>Written</th><th>Print</th></tr>"
 	var/matches = 0
 	for(var/filename in available_books)
 		var/list/book = SSlibrarian.file2playerbook(filename)
@@ -238,10 +238,10 @@
 		if(search_author && !findtext(book["author"], search_author))
 			continue
 		matches++
-		dat += "<tr><td>[html_encode(book["book_title"])]</td><td>[html_encode(book["author"])]</td><td><a href='byond://?src=[REF(src)];print=1;filename=[url_encode(filename)]'>Print</a></td></tr>"
+		dat += "<tr><td>[player_archive_display_text(book["book_title"])]</td><td>[player_archive_display_text(book["author"])]</td><td>[player_archive_display_text(book["ic_date"])]</td><td><a href='byond://?src=[REF(src)];print=1;filename=[url_encode(filename)]'>Print</a></td></tr>"
 
 	if(!matches)
-		dat += "<tr><td colspan='3'>No results found.</td></tr>"
+		dat += "<tr><td colspan='4'>No results found.</td></tr>"
 
 	dat += "</table>"
 	var/datum/browser/popup = new(user, "printing press", "Which book to print?", 460, 500)

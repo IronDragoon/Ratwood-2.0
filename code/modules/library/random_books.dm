@@ -54,8 +54,8 @@
 			if(!PB.written)
 				to_chat(user, span_warning("Finish authoring this book before archiving it."))
 				return
-			to_chat(user, span_notice("[SSlibrarian.playerbook2file(PB.player_book_text, PB.player_book_title, PB.player_book_author, PB.player_book_author_ckey, PB.player_book_icon)]"))
-			PB.is_in_round_player_generated = FALSE
+			if(SSlibrarian.playerbook2file(PB.player_book_text, PB.player_book_title, PB.player_book_author, PB.player_book_author_ckey, PB.player_book_icon, user, PB.player_book_date))
+				PB.is_in_round_player_generated = FALSE
 
 	. = ..()
 
@@ -89,14 +89,23 @@
 	qdel(query_get_random_books)
 
 /proc/create_random_books_rogue(amount = 2, location)
-	var/list/possible_books = subtypesof(/obj/item/book/rogue/)
+	var/list/possible_books = subtypesof(/obj/item/book/rogue/) - typesof(/obj/item/book/rogue/playerbook)
 	var/list/player_book_titles = SSlibrarian.pull_player_book_titles()
+	// Each archived book can only be placed once per shelf.
+	var/list/unused_player_titles = islist(player_book_titles) ? player_book_titles.Copy() : list()
+	var/player_book_chance = clamp(length(unused_player_titles), 10, 90)
 	for(var/b in 1 to amount)
 		if(prob(0.1))
 			new /obj/item/book_crafting_kit(location)
-		if(prob(clamp(length(player_book_titles), 10, 90)))
-			new /obj/item/book/rogue/playerbook(location)
-		else
+		var/placed_player_book = FALSE
+		if(length(unused_player_titles) && prob(player_book_chance))
+			while(length(unused_player_titles))
+				var/obj/item/book/rogue/playerbook/player_book = new(location, FALSE, null, null, pick_n_take(unused_player_titles))
+				if(player_book.written)
+					placed_player_book = TRUE
+					break
+				qdel(player_book)
+		if(!placed_player_book)
 			var/obj/item/book/rogue/addition = pick(possible_books)
 			var/obj/item/book/rogue/newbook = new addition(location)
 			if(istype(newbook, /obj/item/book/rogue/secret))

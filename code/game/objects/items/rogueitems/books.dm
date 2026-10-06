@@ -483,6 +483,7 @@
 	var/player_book_author = "unknown author"
 	var/player_book_icon = "basic_book"
 	var/player_book_author_ckey = "unknown"
+	var/player_book_date
 	var/is_in_round_player_generated
 	var/written = FALSE
 	var/list/player_book_titles
@@ -509,16 +510,17 @@
 	player_book_author = "[dd_limittext(SANITIZE_HEAR_MESSAGE(input(in_round_player_mob, "Do you want to preface your author name with an author title? (max 42 characters)", "Author Title", "")), MAX_NAME_LEN)] [in_round_player_mob.real_name]"
 	player_book_icon = book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in book_icons]
 	player_book_text = text
-	message_admins("[player_book_author_ckey]([in_round_player_mob.real_name]) has generated the player book: [player_book_title]")
+	player_book_date = get_ic_date_short_as_string()
+	message_admins("[player_archive_display_text(player_book_author_ckey)]([player_archive_display_text(in_round_player_mob.real_name)]) has generated the player book: [player_archive_display_text(player_book_title)]")
 	update_book_data()
 	written = TRUE
 
 /obj/item/book/rogue/playerbook/proc/update_book_data()
 	name = "[player_book_title]"
-	desc = "By [player_book_author]"
+	desc = "By [player_book_author][player_book_date ? ", written [player_book_date]" : ""]"
 	icon_state = "[player_book_icon]_0"
 	base_icon_state = "[player_book_icon]"
-	pages = list("<b3><h3>Title: [player_book_title]<br>Author: [player_book_author]</b><h3>[player_book_text]")
+	pages = list("<b3><h3>Title: [player_archive_display_text(player_book_title)]<br>Author: [player_archive_display_text(player_book_author)][player_book_date ? "<br>Written: [player_archive_display_text(player_book_date)]" : ""]</b><h3>[player_book_text]")
 
 /obj/item/book/rogue/playerbook/Initialize(mapload, in_round_player_generated, mob/living/in_round_player_mob, text, title)
 	. = ..()
@@ -526,18 +528,21 @@
 	if(is_in_round_player_generated)
 		INVOKE_ASYNC(src, PROC_REF(get_player_input), in_round_player_mob, text)
 	else
-		player_book_titles = SSlibrarian.pull_player_book_titles()
-		if(title)
-			player_book_content = SSlibrarian.file2playerbook(title)
-		else
-			player_book_content = SSlibrarian.file2playerbook(pick(player_book_titles))
-		player_book_title = player_book_content["book_title"]
-		player_book_author = player_book_content["author"]
-		player_book_author_ckey = player_book_content["author_ckey"]
-		player_book_icon = player_book_content["icon"]
-		player_book_text = player_book_content["text"]
+		if(!title)
+			player_book_titles = SSlibrarian.pull_player_book_titles()
+			if(length(player_book_titles))
+				title = pick(player_book_titles)
+		player_book_content = title ? SSlibrarian.file2playerbook(title) : null
+		// With no valid archive entry, keep the default water-damaged book.
+		if(length(player_book_content) && player_book_content["book_title"] && player_book_content["text"])
+			player_book_title = player_book_content["book_title"]
+			player_book_author = player_book_content["author"] || player_book_author
+			player_book_author_ckey = player_book_content["author_ckey"] || player_book_author_ckey
+			player_book_icon = player_book_content["icon"] || player_book_icon
+			player_book_text = player_book_content["text"]
+			player_book_date = player_book_content["ic_date"]
+			written = TRUE
 		update_book_data()
-		written = !!(player_book_title && player_book_author && player_book_author_ckey && player_book_icon && player_book_text)
 
 
 /obj/item/manuscript

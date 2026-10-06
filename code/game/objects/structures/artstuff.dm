@@ -76,14 +76,17 @@
 /obj/item/canvas/attackby(obj/item/I, mob/living/user, params)
 	. = ..()
 	if(istype(I, /obj/item/natural/feather))
-		author = input("Who's the author of this painting?")
+		var/new_author = stripped_input(user, "Who's the author of this painting?", "Author", "", MAX_NAME_LEN)
+		var/new_title = stripped_input(user, "What's the title of this painting?", "Title", "", MAX_NAME_LEN)
+		if(!new_author || !new_title)
+			to_chat(user, span_warning("A painting needs both an author and a title to be signed."))
+			return
+		author = new_author
 		author_ckey = user.ckey
-		title = input("What's the title of this painting.")
-		if(title)
-			name = title
-		if(author)
-			desc = "Painted by: [author]."
-
+		title = new_title
+		reject = FALSE
+		name = title
+		desc = "Painted by: [author]."
 		return
 
 	if(!istype(I, /obj/item/paint_brush))
@@ -132,14 +135,16 @@
 		cut_overlays()
 		overlay_to_index = list()
 
-/obj/item/canvas/proc/upload_painting()
-	if(!author || !title)
-		return
-	var/icon/rendered = usr.client.RenderIcon(src)
+/obj/item/canvas/proc/upload_painting(mob/user)
+	if(!author || !title || !user?.client)
+		return FALSE
+	var/icon/rendered = user.client.RenderIcon(src)
+	if(!rendered)
+		return FALSE
 	cut_overlays()
-	if(rendered)
-		icon = rendered
-		SSpaintings.playerpainting2file(icon, title, author, author_ckey, canvas_size, src)
+	icon = rendered
+	. = SSpaintings.playerpainting2file(icon, title, author, author_ckey, canvas_size, src, user)
+	if(.)
 		SSpaintings.update_paintings()
 
 /atom/movable/screen/canvas
@@ -229,7 +234,7 @@
 	icon = painting
 	name = painting_data["painting_title"]
 	if(painting_data["author"])
-		desc = "Painted by: [painting_data["author"]]."
+		desc = "Painted by: [painting_data["author"]][painting_data["ic_date"] ? ", [painting_data["ic_date"]]" : ""]."
 	var/icon/new_icon = getFlatIcon(src)
 	new_icon.Scale(canvas_size_x * canvas_divider_x, canvas_size_y * canvas_divider_y)
 	used_canvas.draw.Blend(new_icon, ICON_OVERLAY)

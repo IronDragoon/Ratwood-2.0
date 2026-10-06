@@ -68,6 +68,10 @@
 	},
 /turf/open/floor/rogue/grass,
 /area)
+"cc" = (
+/obj/item/canvas/random_painting,
+/turf/closed/wall/mineral/rogue/decowood/vert,
+/area/rogue/indoors)
 "cd" = (
 /turf/closed/mineral/rogue/bedrock,
 /area)
@@ -95,6 +99,9 @@
 /area/rogue/indoors)
 "cU" = (
 /obj/structure/fluff/railing/corner/north_east,
+/obj/structure/stairs{
+	dir = 1
+	},
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
 "cY" = (
@@ -348,12 +355,6 @@
 /obj/machinery/light/rogue/firebowl/stump,
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors)
-"mx" = (
-/obj/structure/stairs{
-	dir = 1
-	},
-/turf/open/floor/rogue/tile/harem,
-/area/rogue/indoors)
 "mA" = (
 /obj/structure/mineral_door/swing_door{
 	keylock = 1;
@@ -407,6 +408,12 @@
 /obj/item/needle/pestra,
 /obj/machinery/light/rogue/candle/l,
 /turf/open/floor/rogue/blocks/newstone/alt,
+/area/rogue/indoors)
+"nT" = (
+/obj/structure/table/wood,
+/obj/item/book_crafting_kit,
+/obj/item/book_crafting_kit,
+/turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
 "nU" = (
 /obj/machinery/light/rogue/forge,
@@ -644,6 +651,9 @@
 /obj/structure/fluff/railing/border{
 	dir = 9;
 	pixel_y = 3
+	},
+/obj/structure/stairs{
+	dir = 1
 	},
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
@@ -928,6 +938,10 @@
 	dir = 4
 	},
 /turf/open/floor/rogue/hay,
+/area/rogue/indoors)
+"AF" = (
+/obj/item/canvas,
+/turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
 "AM" = (
 /obj/structure/table/wood{
@@ -1571,6 +1585,10 @@
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
+"SG" = (
+/obj/structure/bookcase/random,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors)
 "Tj" = (
 /obj/structure/flora/roguegrass/bush,
 /turf/open/floor/rogue/dirt/road,
@@ -1725,6 +1743,10 @@
 /obj/item/rogueweapon/mace,
 /obj/item/rogueweapon/mace,
 /turf/open/floor/rogue/dirt/road,
+/area/rogue/indoors)
+"XA" = (
+/obj/machinery/printingpress,
+/turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
 "XE" = (
 /obj/structure/fluff/statue/small{
@@ -1882,8 +1904,8 @@ Nb
 aF
 zo
 WY
-zo
-zo
+cc
+SG
 Ey
 tc
 Ey
@@ -1935,7 +1957,7 @@ Ey
 kv
 wv
 tj
-mx
+Ey
 Ey
 zo
 Br
@@ -1987,8 +2009,8 @@ Ey
 zb
 rp
 cU
-mx
 Ey
+AF
 zo
 BX
 Ey
@@ -2038,9 +2060,9 @@ Ey
 Ey
 zo
 DG
-zo
-zo
-Ey
+cc
+XA
+nT
 zo
 KJ
 Ey

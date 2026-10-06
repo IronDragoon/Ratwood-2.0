@@ -929,7 +929,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	var/player_book = input(src, "What is the book file you want to delete? (spaces and other characters are their url encode versions for the file name, so for example spaces are +)")
 	if(player_book)
 		SSlibrarian.del_player_book(player_book)
-		message_admins("[src] has deleted the player book: [player_book]")
+		message_admins("[src] has deleted the player book: [player_archive_display_text(player_book)]")
 	else
 		to_chat(src, span_notice("Either the book file doesn't exist or you have failed to type it in properly (you can look up the file name by the verb 'database book file names'"))
 
@@ -944,7 +944,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		return
 	var/dat = ""
 	for(var/I in book_titles)
-		dat += "[I]<br>"
+		dat += "[player_archive_display_text(I)]<br>"
 	src << browse(dat, "window=reading;size=250x500;can_close=1;can_minimize=1;can_maximize=1;can_resize=1;titlebar=1")
 
 /client/proc/amend_player_book()
@@ -957,7 +957,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	var/amend_type = alert(src, "What type of text do you want to amend?", "", "book_title", "author", "icon")
 	var/amend_text = input(src, "What do you want to amend it to? (you don't have to make it in the file name format, use normal spaces)")
 	if(SSlibrarian.amend_player_book(book_title, amend_type, amend_text))
-		message_admins("[src] has amended [book_title]'s [amend_type] to [amend_text]")
+		message_admins("[src] has amended [player_archive_display_text(book_title)]'s [amend_type] to [player_archive_display_text(amend_text)]")
 	else
 		to_chat(src, span_notice("Either the book file doesn't exist or you have failed to type something in properly (you can look up the file name by the verb 'database book file names'"))
 
@@ -1009,7 +1009,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Title</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Player Author</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Author</th>"
-	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Category</th>"
+	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Written</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Actions</th>"
 	dat += "</tr>"
 
@@ -1020,18 +1020,18 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 			continue
 
 		dat += "<tr>"
-		dat += "<td style='padding: 12px 15px;'>[book["book_title"]]</td>"
-		dat += "<td style='padding: 12px 15px;'>[book["author_ckey"]]</td>"
-		dat += "<td style='padding: 12px 15px;'>[book["author"]]</td>"
-		dat += "<td style='padding: 12px 15px;'>[book["category"]]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["book_title"])]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["author_ckey"])]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["author"])]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["ic_date"])]</td>"
 		dat += "<td style='padding: 12px 15px;'>"
 		dat += "<a href='byond://?src=[REF(src)];show_book=1;id=[url_encode(encoded_title)]' style='margin-right: 10px;'>View</a>"
-		dat += "<a href='byond://?src=[REF(src)];delete_book=1;author_ckey=[book["author_ckey"]];id=[url_encode(encoded_title)]'>Delete</a>"
+		dat += "<a href='byond://?src=[REF(src)];delete_book=1;author_ckey=[url_encode(book["author_ckey"])];id=[url_encode(encoded_title)]'>Delete</a>"
 		dat += "</td>"
 		dat += "</tr>"
 
 	if(!length(decoded_books))
-		dat += "<tr><td colspan='4' style='padding: 20px; text-align: center;'>No books found</td></tr>"
+		dat += "<tr><td colspan='5' style='padding: 20px; text-align: center;'>No books found</td></tr>"
 
 	dat += "</table>"
 	var/datum/browser/popup = new(usr, "book_management", "Book Management", 800, 700)
@@ -1046,7 +1046,8 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	src << browse_rsc('html/book.png')
 
-	var/content = book["text"]
+	// Book text is the formatted paper HTML that players see in-game; the metadata is escaped separately.
+	var/content = "<h3>[player_archive_display_text(book["book_title"])]</h3><p>By [player_archive_display_text(book["author"])] ([player_archive_display_text(book["author_ckey"])]), written [player_archive_display_text(book["ic_date"])]</p>[book["text"]]"
 	var/dat = {"
 	<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
 	<html>
@@ -1082,6 +1083,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Preview</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Title</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Author</th>"
+	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Painted</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Delete</th>"
 	dat += "</tr>"
 
@@ -1102,14 +1104,15 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 					src << browse_rsc(painting_icon, res_name)
 					dat += "<tr>"
 					dat += "<td style='padding: 12px 15px;'><img src='[res_name]' height=64 width=64 style='display: block; margin: 0 auto;'></td>"
-					dat += "<td style='padding: 12px 15px;'>[raw_title]</td>"
-					dat += "<td style='padding: 12px 15px;'>[author]</td>"
+					dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(raw_title)]</td>"
+					dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(painting["author"])] ([player_archive_display_text(author)])</td>"
+					dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(painting["ic_date"])]</td>"
 					dat += "<td style='padding: 12px 15px;'>"
 					dat += "<a href='byond://?src=[REF(src)];delete_painting=1;id=[url_encode(raw_title)]'>Delete</a>"
 					dat += "</td>"
 					dat += "</tr>"
 	else
-		dat += "<tr><td colspan='4' style='padding: 20px; text-align: center;'>No paintings found</td></tr>"
+		dat += "<tr><td colspan='5' style='padding: 20px; text-align: center;'>No paintings found</td></tr>"
 
 	dat += "</table>"
 
