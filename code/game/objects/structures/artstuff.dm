@@ -139,8 +139,8 @@
 	cut_overlays()
 	if(rendered)
 		icon = rendered
-	//	SSpaintings.playerpainting2file(icon, title, author, author_ckey, canvas_size, src)
-	//	SSpaintings.update_paintings()
+		SSpaintings.playerpainting2file(icon, title, author, author_ckey, canvas_size, src)
+		SSpaintings.update_paintings()
 
 /atom/movable/screen/canvas
 	icon = 'icons/roguetown/items/paint_supplies/canvas_32x32.dmi'

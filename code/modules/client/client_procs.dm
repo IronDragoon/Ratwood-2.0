@@ -117,6 +117,40 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			keyUp(keycode)
 		return
 
+	if(href_list["delete_painting"])
+		if(!holder)
+			return
+		var/title = href_list["id"]
+		if(!title)
+			return
+		if(tgui_alert(src, "Are you sure you want to delete the painting '[title]'?", "Confirm Deletion", list("Yes", "No")) == "Yes")
+			if(SSpaintings.del_player_painting(title))
+				message_admins("[key_name_admin(src)] has deleted player made painting called: '[title]'")
+				SSpaintings.update_paintings()
+				manage_paintings()
+
+	if(href_list["delete_book"])
+		if(!holder)
+			return
+		var/title = href_list["id"]
+		var/author = href_list["author_ckey"]
+		if(!title)
+			return
+		var/real_title = url_decode(title)
+		if(tgui_alert(src, "Are you sure you want to delete the book '[real_title]'?", "Confirm Deletion", list("Yes", "No")) == "Yes")
+			if(SSlibrarian.del_player_book(title, author))
+				message_admins("[key_name_admin(src)] has deleted player made book called: '[real_title]' by [author]")
+				manage_books()
+
+	if(href_list["show_book"])
+		if(!holder)
+			return
+		var/title = href_list["id"]
+		if(!title)
+			return
+		show_book_content(title)
+	
+
 	// Admin PM
 	if(href_list["priv_msg"])
 		cmd_admin_pm(href_list["priv_msg"],null)

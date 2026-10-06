@@ -477,73 +477,67 @@
 	base_icon_state = "book6"
 	bookfile = "naledi4.json"
 
-
 /obj/item/book/rogue/playerbook
-	var/player_book_text
-	var/player_book_title
-	var/player_book_author
-	var/player_book_icon
-	var/player_book_author_ckey
+	var/player_book_text = "moisture in the air or water leaks have rendered the carefully written caligraphy of this book unreadable"
+	var/player_book_title = "unknown title"
+	var/player_book_author = "unknown author"
+	var/player_book_icon = "basic_book"
+	var/player_book_author_ckey = "unknown"
 	var/is_in_round_player_generated
+	var/written = FALSE
+	var/list/player_book_titles
+	var/list/player_book_content
 	var/list/book_icons = list(
 	"Sickly green with embossed bronze" = "book8",
-	"Red with embossed toper" = "book7",
-	"Purple with embossed obsidian" = "book6",
-	"Brown with embossed obsidian" = "book5",
-	"Yellow without embossed material" = "book4",
-	"Blue without embossed material" = "book3",
-	"Red without embossed material" = "book2",
-	"Black without embossed material" = "book",
-	"Green without embossed material" = "basic_book")
+	"White with embossed obsidian" = "book7",
+	"Black with embossed quartz" = "book6",
+	"Blue with embossed ruby" = "book5",
+	"Green with embossed amethyst" = "book4",
+	"Purple with embossed emerald" = "book3",
+	"Red with embossed sapphire" = "book2",
+	"Brown with embossed gold" = "book1",
+	"Brown without embossed material" = "basic_book")
 	name = "unknown title"
-	desc = "Penned by an unknown author."
+	desc = "by an unknown author"
 	icon_state = "basic_book_0"
 	base_icon_state = "basic_book"
 	override_find_book = TRUE
 
-/obj/item/book/rogue/playerbook/Initialize(mapload, in_round_player_generated, mob/living/in_round_player_mob, text)
+/obj/item/book/rogue/playerbook/proc/get_player_input(mob/living/in_round_player_mob, text)
+	player_book_author_ckey = in_round_player_mob.ckey
+	player_book_title = dd_limittext(capitalize(SANITIZE_HEAR_MESSAGE(input(in_round_player_mob, "What title do you want to give the book? (max 42 characters)", "Title", "Unknown"))), MAX_NAME_LEN)
+	player_book_author = "[dd_limittext(SANITIZE_HEAR_MESSAGE(input(in_round_player_mob, "Do you want to preface your author name with an author title? (max 42 characters)", "Author Title", "")), MAX_NAME_LEN)] [in_round_player_mob.real_name]"
+	player_book_icon = book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in book_icons]
+	player_book_text = text
+	message_admins("[player_book_author_ckey]([in_round_player_mob.real_name]) has generated the player book: [player_book_title]")
+	update_book_data()
+	written = TRUE
+
+/obj/item/book/rogue/playerbook/proc/update_book_data()
+	name = "[player_book_title]"
+	desc = "By [player_book_author]"
+	icon_state = "[player_book_icon]_0"
+	base_icon_state = "[player_book_icon]"
+	pages = list("<b3><h3>Title: [player_book_title]<br>Author: [player_book_author]</b><h3>[player_book_text]")
+
+/obj/item/book/rogue/playerbook/Initialize(mapload, in_round_player_generated, mob/living/in_round_player_mob, text, title)
 	. = ..()
 	is_in_round_player_generated = in_round_player_generated
 	if(is_in_round_player_generated)
-		player_book_text = text
-		INVOKE_ASYNC(src, PROC_REF(prompt_for_contents), in_round_player_mob)
+		INVOKE_ASYNC(src, PROC_REF(get_player_input), in_round_player_mob, text)
 	else
-		pick_random_book()
-
-//Just rewrite this entirely. STRIP_HTML_SIMPLE might be insufficient, but that's just the tip of the iceberg.area
-//This needs to check if an input is valid via reject_bad_text, and if not prompt the user again.
-/obj/item/book/rogue/playerbook/proc/prompt_for_contents(mob/living/in_round_player_mob)
-	while(!player_book_author_ckey) // doesn't have to be this, but better than defining a bool.
-		player_book_title = capitalize(STRIP_HTML_SIMPLE(input(in_round_player_mob, "What title do you want to give the book? (max 42 characters)", "Title", "Unknown"), MAX_NAME_LEN))
-		player_book_author = STRIP_HTML_SIMPLE(input(in_round_player_mob, "What do you want the author text to be? (max 42 characters)", "Author", ""), MAX_NAME_LEN)
-		player_book_icon = book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in book_icons]
-		player_book_author_ckey = in_round_player_mob.ckey
-		//This gives the icon_state name, not the descriptive name, i. e. "book8", instead of "Sickly green with embossed Bronze"
-		if(alert("Confirm?:\nTitle: [player_book_title]\nAuthor: [player_book_author]\nBook Cover: [player_book_icon]", "", "Yes", "No") == "No")
-			player_book_author_ckey = null
-		message_admins("[player_book_author_ckey]([in_round_player_mob.real_name]) has generated the player book: [player_book_title]")
-
-	name = "[player_book_title]"
-	desc = "By [player_book_author]"
-	icon_state = "[player_book_icon]_0"
-	base_icon_state = "[player_book_icon]"
-	pages = list("<b3><h3>Title: [player_book_title]<br>Author: [player_book_author]</b><h3>[player_book_text]")
-
-/obj/item/book/rogue/playerbook/proc/pick_random_book()
-	var/list/player_book_titles = SSlibrarian.pull_player_book_titles()
-	var/list/chosen_book = SSlibrarian.file2playerbook(pick(player_book_titles))
-
-	player_book_title = chosen_book["book_title"]
-	player_book_author = chosen_book["author"]
-	player_book_author_ckey = chosen_book["author_ckey"]
-	player_book_icon = chosen_book["icon"]
-	player_book_text = chosen_book["text"]
-
-	name = "[player_book_title]"
-	desc = "By [player_book_author]"
-	icon_state = "[player_book_icon]_0"
-	base_icon_state = "[player_book_icon]"
-	pages = list("<b3><h3>Title: [player_book_title]<br>Author: [player_book_author]</b><h3>[player_book_text]")
+		player_book_titles = SSlibrarian.pull_player_book_titles()
+		if(title)
+			player_book_content = SSlibrarian.file2playerbook(title)
+		else
+			player_book_content = SSlibrarian.file2playerbook(pick(player_book_titles))
+		player_book_title = player_book_content["book_title"]
+		player_book_author = player_book_content["author"]
+		player_book_author_ckey = player_book_content["author_ckey"]
+		player_book_icon = player_book_content["icon"]
+		player_book_text = player_book_content["text"]
+		update_book_data()
+		written = !!(player_book_title && player_book_author && player_book_author_ckey && player_book_icon && player_book_text)
 
 
 /obj/item/manuscript
@@ -563,7 +557,7 @@
 
 /obj/item/manuscript/examine()
 	. = ..()
-	. += span_info("It has [number_of_pages] pages. Use paper to add more. Finish the book with a book crafting kit.")
+	. += span_info("It has [number_of_pages] pages. Use paper to add more. Finish the book with a book crafting kit, then choose its title, author title, and cover before archiving it.")
 
 /obj/item/manuscript/attackby(obj/item/I, mob/living/user)
 	// why is a book crafting kit using the craft system, but crafting a book isn't? Well the crafting system for *some reason* is made in such a way as to make reworking it to allow you to put reqs vars in the crafted item near *impossible.*
