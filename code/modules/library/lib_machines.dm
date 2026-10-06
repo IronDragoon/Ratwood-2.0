@@ -11,16 +11,20 @@
 	var/printing = FALSE
 	var/has_paper = FALSE
 	var/obj/item/paper/loaded_paper
-	var/obj/item/output_item // Variable to store the prFliinted item
+	var/obj/item/output_item
 
 	var/static/list/manuel_name_to_path = list()
+
+/obj/machinery/printingpress/examine(mob/user)
+	. = ..()
+	. += span_info("Insert blank paper, then right-click to select a book to print. Use an empty hand to retrieve paper or a finished book. Apply a finished player book or signed canvas to archive it.")
 
 /obj/machinery/printingpress/attackby(obj/item/O, mob/user, list/modifiers)
 	if(printing)
 		to_chat(user, span_warning("[src] is currently printing. Please wait."))
 		return
 	if(output_item)
-		to_chat(user, span_notice("Please retrieve the printed 5item before inserting new items."))
+		to_chat(user, span_notice("Please retrieve the printed item before inserting new items."))
 		return
 	if(istype(O, /obj/item/canvas))
 		var/obj/item/canvas/M = O
@@ -30,6 +34,8 @@
 		// Prompt the user to upload the manuscript
 		var/choice = tgui_alert(user, "Do you want to add the painting to the archive?", "Confirm", list("Yes", "No"))
 		if(choice == "Yes")
+			if(QDELETED(M) || !user.canUseTopic(src, BE_CLOSE) || !user.Adjacent(M))
+				return
 			upload_painting(user, M)
 			to_chat(user, span_notice("The painting has been uploaded."))
 		else
@@ -47,7 +53,7 @@
 			return
 		var/choice = tgui_alert(user, "Do you want to add the book to the archive?", "Confirm", list("Yes", "No"))
 		if(choice == "Yes")
-			if(QDELETED(PB) || !user.Adjacent(src) || !user.Adjacent(PB))
+			if(QDELETED(PB) || !user.canUseTopic(src, BE_CLOSE) || !user.Adjacent(PB))
 				return
 			upload_manuscript(user, PB)
 		else
@@ -59,14 +65,19 @@
 		if(paper.info)
 			to_chat(user, span_warning("The paper needs to be blank to be put into [src]."))
 			return
+		if(!user.transferItemToLoc(paper, src))
+			to_chat(user, span_warning("You can't insert [paper] into [src]."))
+			return
 		has_paper = TRUE
-		loaded_paper = O
+		loaded_paper = paper
 		src.icon_state = "Ppress_Prepared"
 		to_chat(user, span_warning("You insert the blank paper into [src]."))
-		qdel(O)
+		return
 	return ..()
 
 /obj/machinery/printingpress/attack_hand(mob/user)
+	if(!user.canUseTopic(src, BE_CLOSE))
+		return
 	if(printing)
 		to_chat(user, span_warning("[src] is currently printing. Please wait."))
 		return
@@ -80,9 +91,8 @@
 		src.icon_state = "Ppress_Clean"
 		return
 	if(loaded_paper)
-		// Allow the user to retrieve the blank paper
-		var/obj/item/paper/P = new /obj/item/paper(get_turf(user)) // Create the item at the user's location
-		if(!user.put_in_hands(P)) // Try to put the item in the user's hands
+		var/obj/item/paper/P = loaded_paper
+		if(!user.put_in_hands(P))
 			P.forceMove(get_turf(user)) // If not, drop it at the user's location
 		to_chat(user, span_warning("You retrieve [P.name] from [src]."))
 		has_paper = FALSE
@@ -94,11 +104,9 @@
 		to_chat(user, span_warning("[src] is empty."))
 		return
 
-/obj/machinery/printingpress/attack_hand_secondary(mob/user, list/modifiers)
-	. = ..()
-	if(. == SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN)
+/obj/machinery/printingpress/attack_right(mob/user)
+	if(!user.canUseTopic(src, BE_CLOSE))
 		return
-	. = SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 	if(printing)
 		to_chat(user, span_warning("[src] is currently printing. Please wait."))
 		return
@@ -108,7 +116,7 @@
 	if(!has_paper)
 		to_chat(user, span_warning("[src] requires a blank piece of paper to print."))
 		return
-	var/choice = input(user, "Choose an option for \the [src]") as null|anything in list("Print The Book", "Print a Tome of Justice", "Print from the Archive", "Profession Manuel")
+	var/choice = input(user, "Choose an option for \the [src]") as null|anything in list("Print The Book", "Print a Tome of Justice", "Print from the Archive", "Profession Manual")
 	switch(choice)
 		if ("Print The Book")
 			start_printing(user, "bibble")
@@ -116,7 +124,7 @@
 			start_printing(user, "justice")
 		if ("Print from the Archive")
 			choose_search_parameters(user)
-		if("Profession Manuel")
+		if("Profession Manual")
 			if(!length(manuel_name_to_path))
 				for(var/obj/item/recipe_book/book as anything in subtypesof(/obj/item/recipe_book))
 					if(!initial(book.can_spawn))
@@ -128,8 +136,29 @@
 				start_printing(user, manuel_name_to_path[choice])
 
 /obj/machinery/printingpress/proc/start_printing(mob/user, print_type, id = null)
+	if(!user || !user.canUseTopic(src, BE_CLOSE))
+		return
+	if(printing)
+		to_chat(user, span_warning("[src] is currently printing. Please wait."))
+		return
+	if(output_item)
+		to_chat(user, span_warning("Retrieve the finished book before printing another."))
+		return
+	if(QDELETED(loaded_paper) || loaded_paper.loc != src)
+		has_paper = FALSE
+		loaded_paper = null
+		to_chat(user, span_warning("[src] requires a blank piece of paper to print."))
+		return
 	if(cooldown > world.time)
 		to_chat(user, span_warning("[src] is still recalibrating."))
+		return
+	if(print_type == "archive")
+		var/list/available_books = SSlibrarian.pull_player_book_titles()
+		if(!(id in available_books) || !length(SSlibrarian.file2playerbook(id)))
+			to_chat(user, span_warning("This book is no longer in the archive."))
+			return
+	else if(print_type != "bibble" && print_type != "justice" && !ispath(print_type, /obj/item/recipe_book))
+		to_chat(user, span_warning("That book cannot be printed."))
 		return
 	printing = TRUE
 	src.icon_state = "Ppress_Printing"
@@ -141,6 +170,8 @@
 		loaded_paper = null
 		has_paper = FALSE
 	sleep(PRINTING_TIME)
+	if(QDELETED(src))
+		return
 	if(print_type == "bibble")
 		print_bibble(user)
 	else if(print_type == "justice")
@@ -149,7 +180,7 @@
 		print_manuscript(user, id)
 	else if (ispath(print_type))
 		var/obj/item/recipe_book/path = print_type
-		var/obj/item/recipe_book/book = new path()
+		var/obj/item/recipe_book/book = new path(src)
 		output_item = book
 		visible_message("<span class='notice'>The printing press hums as it produces [book.name].</span>")
 
@@ -170,13 +201,13 @@
 
 /obj/machinery/printingpress/proc/print_bibble(mob/user)
 	// Creates a static book (Bibble)
-	var/obj/item/book/bibble/B = new()
+	var/obj/item/book/rogue/bibble/B = new(src)
 	output_item = B
 	visible_message("<span class='notice'>The printing press hums as it produces [B.name].</span>")
 
 /obj/machinery/printingpress/proc/print_justice(mob/user)
 	// Creates a static book (Tome of Justice)
-	var/obj/item/book/law/B = new()
+	var/obj/item/book/rogue/law/B = new(src)
 	output_item = B
 	visible_message("<span class='notice'>[src] hums as it produces [B.name].</span>")
 
@@ -186,30 +217,31 @@
 /obj/machinery/printingpress/proc/choose_search_parameters(mob/user)
 	var/search_title = input(user, "Enter the title (optional):") as text|null
 	var/search_author = input(user, "Enter the author (optional):") as text|null
-	var/search_category = input(user, "Select a category (optional):") in list("Any", "Myths & Tales", "Legends & Accounts", "Thesis", "Eoratica") // Removed "Apocrypha & Grimoires"
-	// Pass the selected parameters to search_manuscripts
-	search_manuscripts(user, search_title, search_author, search_category)
+	if(!user.canUseTopic(src, BE_CLOSE))
+		return
+	search_manuscripts(user, search_title, search_author)
 
-/obj/machinery/printingpress/proc/search_manuscripts(mob/user, search_title, search_author, search_category)
-	var/list/matching_books = SSlibrarian.get_books(search_title, search_author, search_category)
+/obj/machinery/printingpress/proc/search_manuscripts(mob/user, search_title, search_author)
 	var/list/available_books = SSlibrarian.pull_player_book_titles()
-
-	var/list/book_data_to_filename = list()
+	if(isnull(available_books))
+		to_chat(user, span_warning("The book archive index is unavailable. Please notify an administrator."))
+		return
+	var/dat = "<h3>Book Search Results:</h3><br>"
+	dat += "<table><tr><th>Title</th><th>Author</th><th>Print</th></tr>"
+	var/matches = 0
 	for(var/filename in available_books)
-		var/list/book_data = SSlibrarian.file2playerbook(filename)
-		if(book_data && book_data["book_title"])
-			book_data_to_filename[json_encode(book_data)] = filename
+		var/list/book = SSlibrarian.file2playerbook(filename)
+		if(!book["book_title"])
+			continue
+		if(search_title && !findtext(book["book_title"], search_title))
+			continue
+		if(search_author && !findtext(book["author"], search_author))
+			continue
+		matches++
+		dat += "<tr><td>[html_encode(book["book_title"])]</td><td>[html_encode(book["author"])]</td><td><a href='byond://?src=[REF(src)];print=1;filename=[url_encode(filename)]'>Print</a></td></tr>"
 
-	var/dat = "<h3>Manuscript Search Results:</h3><br>"
-	dat += "<table><tr><th>Title</th><th>Author</th><th>Category</th><th>Print</th></tr>"
-
-	for(var/list/book in matching_books)
-		var/filename = book_data_to_filename[json_encode(book)]
-		if(filename)
-			dat += "<tr><td>[book["book_title"]]</td><td>[book["author"]]</td><td>[book["category"]]</td><td><a href='byond://?src=[REF(src)];print=1;filename=[url_encode(filename)]'>Print</a></td></tr>"
-
-	if(!length(matching_books))
-		dat += "<tr><td colspan='4'>No results found.</td></tr>"
+	if(!matches)
+		dat += "<tr><td colspan='3'>No results found.</td></tr>"
 
 	dat += "</table>"
 	var/datum/browser/popup = new(user, "printing press", "Which book to print?", 460, 500)
@@ -217,16 +249,11 @@
 	popup.open()
 
 /obj/machinery/printingpress/Topic(href, href_list)
-	if(printing)
+	. = ..()
+	if(!usr || !usr.canUseTopic(src, BE_CLOSE))
 		return
 	if("print" in href_list)
-		var/filename = SANITIZE_FILENAME(href_list["filename"])
-
-		if(!SSlibrarian.player_book_exists(filename))
-			to_chat(usr, span_notice("This book doesn't exist."))
-			return
-
-		start_printing(usr, "archive", filename)
+		start_printing(usr, "archive", href_list["filename"])
 
 #undef PRINTER_COOLDOWN
 #undef PRINTING_TIME
