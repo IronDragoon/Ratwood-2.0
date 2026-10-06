@@ -486,8 +486,6 @@
 	var/player_book_date
 	var/is_in_round_player_generated
 	var/written = FALSE
-	var/list/player_book_titles
-	var/list/player_book_content
 	var/list/book_icons = list(
 	"Sickly green with embossed bronze" = "book8",
 	"White with embossed obsidian" = "book7",
@@ -506,8 +504,13 @@
 
 /obj/item/book/rogue/playerbook/proc/get_player_input(mob/living/in_round_player_mob, text)
 	player_book_author_ckey = in_round_player_mob.ckey
-	player_book_title = dd_limittext(capitalize(SANITIZE_HEAR_MESSAGE(input(in_round_player_mob, "What title do you want to give the book? (max 42 characters)", "Title", "Unknown"))), MAX_NAME_LEN)
-	player_book_author = "[dd_limittext(SANITIZE_HEAR_MESSAGE(input(in_round_player_mob, "Do you want to preface your author name with an author title? (max 42 characters)", "Author Title", "")), MAX_NAME_LEN)] [in_round_player_mob.real_name]"
+	do
+		player_book_title = capitalize(trim(STRIP_HTML_SIMPLE(input(in_round_player_mob, "What title do you want to give the book? (max 42 characters)", "Title", "Unknown"), MAX_NAME_LEN)))
+		if(!player_archive_filename(player_book_title))
+			to_chat(in_round_player_mob, span_warning("Choose a nonempty title of at most 42 characters that does not begin with an underscore."))
+	while(!player_archive_filename(player_book_title))
+	var/author_title = stripped_input(in_round_player_mob, "Do you want to preface your author name with an author title? (max 42 characters)", "Author Title", "", MAX_NAME_LEN)
+	player_book_author = trim("[author_title] [player_archive_display_text(in_round_player_mob.real_name)]")
 	player_book_icon = book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in book_icons]
 	player_book_text = text
 	player_book_date = get_ic_date_short_as_string()
@@ -529,10 +532,10 @@
 		INVOKE_ASYNC(src, PROC_REF(get_player_input), in_round_player_mob, text)
 	else
 		if(!title)
-			player_book_titles = SSlibrarian.pull_player_book_titles()
+			var/list/player_book_titles = SSlibrarian.pull_player_book_titles()
 			if(length(player_book_titles))
 				title = pick(player_book_titles)
-		player_book_content = title ? SSlibrarian.file2playerbook(title) : null
+		var/list/player_book_content = title ? SSlibrarian.file2playerbook(title) : null
 		// With no valid archive entry, keep the default water-damaged book.
 		if(length(player_book_content) && player_book_content["book_title"] && player_book_content["text"])
 			player_book_title = player_book_content["book_title"]
@@ -567,6 +570,9 @@
 /obj/item/manuscript/attackby(obj/item/I, mob/living/user)
 	// why is a book crafting kit using the craft system, but crafting a book isn't? Well the crafting system for *some reason* is made in such a way as to make reworking it to allow you to put reqs vars in the crafted item near *impossible.*
 	if(istype(I, /obj/item/book_crafting_kit))
+		if(!compiled_pages)
+			to_chat(user, span_warning("Write the manuscript before binding it."))
+			return
 		qdel(I)
 		var/obj/item/book/rogue/playerbook/PB = new /obj/item/book/rogue/playerbook(get_turf(loc), TRUE, user, compiled_pages)
 		if(user.Adjacent(PB))

@@ -128,19 +128,22 @@ GLOBAL_LIST_EMPTY(respawncounts)
 				message_admins("[key_name_admin(src)] has deleted player made painting called: '[player_archive_display_text(title)]'")
 				SSpaintings.update_paintings()
 				manage_paintings()
+			else
+				to_chat(src, span_warning("The painting could not be deleted."))
 
 	if(href_list["delete_book"])
 		if(!holder)
 			return
 		var/title = href_list["id"]
-		var/author = href_list["author_ckey"]
 		if(!title)
 			return
 		var/real_title = url_decode(title)
 		if(tgui_alert(src, "Are you sure you want to delete the book '[real_title]'?", "Confirm Deletion", list("Yes", "No")) == "Yes")
-			if(SSlibrarian.del_player_book(title, author))
-				message_admins("[key_name_admin(src)] has deleted player made book called: '[player_archive_display_text(real_title)]' by [player_archive_display_text(author)]")
+			if(SSlibrarian.del_player_book(title))
+				message_admins("[key_name_admin(src)] has deleted player made book called: '[player_archive_display_text(real_title)]'")
 				manage_books()
+			else
+				to_chat(src, span_warning("The book could not be deleted."))
 
 	if(href_list["show_book"])
 		if(!holder)

@@ -927,8 +927,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	if(!holder)
 		return
 	var/player_book = input(src, "What is the book file you want to delete? (spaces and other characters are their url encode versions for the file name, so for example spaces are +)")
-	if(player_book)
-		SSlibrarian.del_player_book(player_book)
+	if(player_book && SSlibrarian.del_player_book(player_book))
 		message_admins("[src] has deleted the player book: [player_archive_display_text(player_book)]")
 	else
 		to_chat(src, span_notice("Either the book file doesn't exist or you have failed to type it in properly (you can look up the file name by the verb 'database book file names'"))
@@ -1026,7 +1025,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["ic_date"])]</td>"
 		dat += "<td style='padding: 12px 15px;'>"
 		dat += "<a href='byond://?src=[REF(src)];show_book=1;id=[url_encode(encoded_title)]' style='margin-right: 10px;'>View</a>"
-		dat += "<a href='byond://?src=[REF(src)];delete_book=1;author_ckey=[url_encode(book["author_ckey"])];id=[url_encode(encoded_title)]'>Delete</a>"
+		dat += "<a href='byond://?src=[REF(src)];delete_book=1;id=[url_encode(encoded_title)]'>Delete</a>"
 		dat += "</td>"
 		dat += "</tr>"
 
@@ -1034,7 +1033,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		dat += "<tr><td colspan='5' style='padding: 20px; text-align: center;'>No books found</td></tr>"
 
 	dat += "</table>"
-	var/datum/browser/popup = new(usr, "book_management", "Book Management", 800, 700)
+	var/datum/browser/popup = new(src, "book_management", "Book Management", 800, 700)
 	popup.set_content(dat)
 	popup.open()
 
@@ -1087,10 +1086,10 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Delete</th>"
 	dat += "</tr>"
 
-	if(SSpaintings?.paintings && length(SSpaintings.paintings))
+	if(length(SSpaintings.paintings))
 		for(var/encoded_title in SSpaintings.paintings)
 			var/list/painting = SSpaintings.paintings[encoded_title]
-			if(!painting || !islist(painting))
+			if(!painting["painting_title"])
 				continue
 
 			var/raw_title = painting["painting_title"]
@@ -1116,6 +1115,6 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	dat += "</table>"
 
-	var/datum/browser/popup = new(usr, "painting_management", "Painting Management", 700, 700)
+	var/datum/browser/popup = new(src, "painting_management", "Painting Management", 700, 700)
 	popup.set_content(dat)
 	popup.open()

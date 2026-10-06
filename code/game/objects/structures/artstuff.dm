@@ -81,6 +81,9 @@
 		if(!new_author || !new_title)
 			to_chat(user, span_warning("A painting needs both an author and a title to be signed."))
 			return
+		if(!player_archive_filename(new_title))
+			to_chat(user, span_warning("Choose a shorter title that does not begin with an underscore."))
+			return
 		author = new_author
 		author_ckey = user.ckey
 		title = new_title
@@ -137,9 +140,11 @@
 
 /obj/item/canvas/proc/upload_painting(mob/user)
 	if(!author || !title || !user?.client)
+		player_archive_feedback(user, "A painting needs a title and an author before it can be archived.")
 		return FALSE
 	var/icon/rendered = user.client.RenderIcon(src)
 	if(!rendered)
+		player_archive_feedback(user, "The painting could not be rendered for the archive.")
 		return FALSE
 	cut_overlays()
 	icon = rendered

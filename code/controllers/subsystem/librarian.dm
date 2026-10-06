@@ -59,64 +59,76 @@ SUBSYSTEM_DEF(librarian)
 		return html_encode(fallback)
 	return html_encode(html_decode("[text]"))
 
-/// Writes through a temporary file so an interrupted save does not truncate the existing file.
+/// Keeps the previous file until the staged replacement has been copied successfully.
+/proc/commit_player_archive_file(temp_path, path)
+	var/backup_path = "[path].bak"
+	if(fexists(path))
+		if(!fcopy(path, backup_path))
+			message_admins("Unable to back up archive file [path]; the original has been retained.")
+			return FALSE
+		if(!fdel(path))
+			message_admins("Unable to replace archive file [path].")
+			return FALSE
+	if(!fcopy(temp_path, path))
+		if(fexists(backup_path) && !fcopy(backup_path, path))
+			message_admins("Unable to restore archive file [path]; its backup remains at [backup_path].")
+		message_admins("Unable to save archive file [path]; its staged copy remains at [temp_path].")
+		return FALSE
+	fdel(temp_path)
+	fdel(backup_path)
+	return TRUE
+
+/proc/read_player_archive_file(path)
+	for(var/candidate in list(path, "[path].tmp", "[path].bak"))
+		if(!fexists(candidate))
+			continue
+		var/list/contents = safe_json_decode(file2text(candidate))
+		if(!islist(contents))
+			message_admins("Archive file [candidate] contains invalid JSON.")
+			continue
+		if(candidate != path)
+			fdel(path)
+			if(fcopy(candidate, path))
+				message_admins("Recovered archive file [path] from [candidate].")
+			else
+				message_admins("Unable to recover archive file [path] from [candidate].")
+		return contents
+	return null
+
+/// Stages JSON before replacing the original; failed writes retain a recoverable copy.
 /proc/write_player_archive_file(path, list/contents)
 	var/temp_path = "[path].tmp"
 	fdel(temp_path)
 	if(!text2file(json_encode(contents), temp_path))
+		message_admins("Unable to stage archive file [path].")
 		return FALSE
-	fdel(path)
-	. = fcopy(temp_path, path)
-	fdel(temp_path)
+	return commit_player_archive_file(temp_path, path)
 
 /proc/scan_player_archive(directory)
 	var/list/index = list()
 	for(var/file_name in flist(directory))
-		if(copytext(file_name, -5) != ".json" || copytext(file_name, 1, 2) == "_")
+		if(copytext(file_name, 1, 2) == "_")
 			continue
-		index += copytext(file_name, 1, -5)
+		if(copytext(file_name, -9) == ".json.tmp" || copytext(file_name, -9) == ".json.bak")
+			file_name = copytext(file_name, 1, -4)
+			read_player_archive_file("[directory][file_name]")
+		if(copytext(file_name, -5) != ".json" || !fexists("[directory][file_name]"))
+			continue
+		index |= copytext(file_name, 1, -5)
 	return index
 
-/proc/write_player_archive_index(directory, index_name, list/index)
+/// Rebuild on startup or if the index is missing; otherwise use the shared JSON reader.
+/proc/read_player_archive_index(directory, index_name, rebuild = FALSE)
 	var/index_path = "[directory][index_name]"
-	var/temp_path = "[index_path].tmp"
-	fdel(temp_path)
-	if(!text2file(json_encode(index), temp_path))
-		return FALSE
-	fdel(index_path)
-	if(!fcopy(temp_path, index_path))
-		return FALSE
-	fdel(temp_path)
-	return TRUE
-
-/// Reads an archive index, recovering from an interrupted write or rebuilding it from the archive folder if needed.
-/proc/read_player_archive_index(directory, index_name)
-	var/index_path = "[directory][index_name]"
-	for(var/path in list(index_path, "[index_path].tmp"))
-		if(!fexists(path))
-			continue
-		var/list/index = safe_json_decode(file2text(path))
-		if(!islist(index))
-			continue
-		if(path != index_path)
-			write_player_archive_index(directory, index_name, index)
+	var/list/index = read_player_archive_file(index_path)
+	if(!rebuild && islist(index) && fexists(index_path))
 		return index
-	var/list/rebuilt = scan_player_archive(directory)
-	if(length(rebuilt))
-		message_admins("[index_path] was missing or unreadable and has been rebuilt from [length(rebuilt)] archived file\s.")
-	write_player_archive_index(directory, index_name, rebuilt)
-	return rebuilt
-
-/// Makes the archive index match the files on disk, removing stale or duplicate entries.
-/proc/repair_player_archive_index(directory, index_name)
-	var/list/index = read_player_archive_index(directory, index_name)
-	var/list/scanned = scan_player_archive(directory)
-	if(length(index) == length(scanned) && !length(index ^ scanned))
-		return
-	write_player_archive_index(directory, index_name, scanned)
+	index = scan_player_archive(directory)
+	write_player_archive_file(index_path, index)
+	return index
 
 /datum/controller/subsystem/librarian/Initialize(start_timeofday)
-	repair_player_archive_index(PLAYER_BOOK_DIRECTORY, PLAYER_BOOK_INDEX)
+	read_player_archive_index(PLAYER_BOOK_DIRECTORY, PLAYER_BOOK_INDEX, TRUE)
 	return ..()
 
 /datum/controller/subsystem/librarian/proc/playerbook2file(input, book_title = "Unknown", author = "Unknown", author_ckey = "Unknown", icon = "basic_book", mob/user, ic_date)
@@ -132,32 +144,25 @@ SUBSYSTEM_DEF(librarian)
 	if(!file_name)
 		player_archive_feedback(user, "That title cannot be archived. Use a shorter title that does not begin with an underscore.")
 		return FALSE
-	if(fexists("[PLAYER_BOOK_DIRECTORY][file_name].json"))
+	var/list/existing = file2playerbook(file_name)
+	if(length(existing) || fexists("[PLAYER_BOOK_DIRECTORY][file_name].json"))
 		player_archive_feedback(user, "There is already a book by this title!")
 		return FALSE
 
 	var/list/contents = list("book_title" = "[book_title]", "author" = "[author]", "author_ckey" = "[author_ckey]", "icon" = "[icon]", "text" = "[input]", "ic_date" = "[ic_date]")
-	if(!save_player_book(file_name, contents))
+	var/list/index = pull_player_book_titles()
+	index |= file_name
+	if(!write_player_archive_file("[PLAYER_BOOK_DIRECTORY][file_name].json", contents) || !write_player_archive_file("[PLAYER_BOOK_DIRECTORY][PLAYER_BOOK_INDEX]", index))
 		player_archive_feedback(user, "The archive could not store this book.")
 		return FALSE
 	message_admins("Book [player_archive_display_text(book_title)] has been saved to the player book database by [player_archive_display_text(author_ckey)]([player_archive_display_text(author)])")
 	player_archive_feedback(user, "You have a feeling the newly written book will remain in the archive for a very long time...", TRUE)
 	return TRUE
 
-/datum/controller/subsystem/librarian/proc/save_player_book(file_name, list/contents)
-	if(!write_player_archive_file("[PLAYER_BOOK_DIRECTORY][file_name].json", contents))
-		return FALSE
-	var/list/index = pull_player_book_titles()
-	index |= file_name
-	return write_player_archive_index(PLAYER_BOOK_DIRECTORY, PLAYER_BOOK_INDEX, index)
-
 /datum/controller/subsystem/librarian/proc/file2playerbook(filename)
 	if(!is_safe_player_archive_filename(filename))
 		return list()
-	var/json_file = "[PLAYER_BOOK_DIRECTORY][filename].json"
-	if(!fexists(json_file))
-		return list()
-	var/list/contents = safe_json_decode(file2text(json_file))
+	var/list/contents = read_player_archive_file("[PLAYER_BOOK_DIRECTORY][filename].json")
 	return islist(contents) ? contents : list()
 
 /datum/controller/subsystem/librarian/proc/del_player_book(book_title)
@@ -166,10 +171,14 @@ SUBSYSTEM_DEF(librarian)
 	var/json_file = "[PLAYER_BOOK_DIRECTORY][book_title].json"
 	if(!fexists(json_file))
 		return FALSE
-	fdel(json_file)
+	if(!fdel(json_file))
+		message_admins("Unable to delete archived book [json_file].")
+		return FALSE
+	fdel("[json_file].tmp")
+	fdel("[json_file].bak")
 	var/list/index = pull_player_book_titles()
 	index -= book_title
-	return write_player_archive_index(PLAYER_BOOK_DIRECTORY, PLAYER_BOOK_INDEX, index)
+	return write_player_archive_file("[PLAYER_BOOK_DIRECTORY][PLAYER_BOOK_INDEX]", index)
 
 /datum/controller/subsystem/librarian/proc/pull_player_book_titles()
 	return read_player_archive_index(PLAYER_BOOK_DIRECTORY, PLAYER_BOOK_INDEX)
@@ -193,10 +202,11 @@ SUBSYSTEM_DEF(librarian)
 		return FALSE
 	var/list/index = pull_player_book_titles()
 	if(new_file_name != book_title)
-		fdel("[PLAYER_BOOK_DIRECTORY][book_title].json")
+		if(!del_player_book(book_title))
+			return FALSE
 		index -= book_title
 	index |= new_file_name
-	return write_player_archive_index(PLAYER_BOOK_DIRECTORY, PLAYER_BOOK_INDEX, index)
+	return write_player_archive_file("[PLAYER_BOOK_DIRECTORY][PLAYER_BOOK_INDEX]", index)
 
 #undef PLAYER_BOOK_DIRECTORY
 #undef PLAYER_BOOK_INDEX
