@@ -80,17 +80,26 @@ SUBSYSTEM_DEF(paintings)
 		fcopy(painting, "data/player_generated_paintings/paintings/[painting_title].png")
 		return "_painting_titles.json no longer exists, yell at your server host that some paintings have been lost!"
 
-/datum/controller/subsystem/paintings/proc/get_random_painting(canvas_size)
+/// Returns the metadata of a random archived painting of the given size whose image exists, or null if there are none.
+/datum/controller/subsystem/paintings/proc/get_random_painting_data(canvas_size)
 	var/list/painting_titles = pull_player_painting_titles()
-	if(!length(painting_titles))
+	if(!islist(painting_titles))
 		return
-	var/list/paint_list = file2playerpainting(pick_n_take(painting_titles))
+	painting_titles = painting_titles.Copy()
+	while(length(painting_titles))
+		var/list/paint_list = file2playerpainting(pick_n_take(painting_titles))
+		if(!paint_list["painting_title"] || paint_list["canvas_size"] != canvas_size)
+			continue
+		if(!fexists(get_painting_filename(paint_list["painting_title"])))
+			continue
+		return paint_list
 
-	while((paint_list["canvas_size"] != canvas_size) && length(painting_titles))
-		paint_list = file2playerpainting(pick_n_take(painting_titles))
-
-	var/icon/painting = icon("data/player_generated_paintings/paintings/[paint_list["painting_title"]].png")
-	return painting
+/// Returns the icon of a random archived painting of the given size, or null if there are none.
+/datum/controller/subsystem/paintings/proc/get_random_painting(canvas_size)
+	var/list/paint_list = get_random_painting_data(canvas_size)
+	if(!paint_list)
+		return
+	return icon(get_painting_filename(paint_list["painting_title"]))
 
 /datum/controller/subsystem/paintings/proc/del_player_painting(painting_title)
 	if(!painting_title)

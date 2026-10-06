@@ -156,8 +156,6 @@
 	var/list/overlay_to_index = list()
 	var/current_overlays = 0
 
-	var/loads_painting = FALSE
-
 /atom/movable/screen/canvas/Initialize(mapload, ...)
 	. = ..()
 	draw = icon(icon, icon_state)
@@ -217,16 +215,25 @@
 
 	host.update_drawing(x, y, current_color)
 
-/* /obj/item/canvas/random_painting
-	loads_painting = TRUE
+/// Mapping helper: loads a random archived player painting, or stays a blank canvas if none are available.
+/obj/item/canvas/random_painting
 
 /obj/item/canvas/random_painting/Initialize(mapload)
 	. = ..()
-	icon = SSpaintings.get_random_painting("32x32")
+	var/list/painting_data = SSpaintings.get_random_painting_data(canvas_size)
+	if(!painting_data)
+		return
+	var/icon/painting = icon(SSpaintings.get_painting_filename(painting_data["painting_title"]))
+	if(!painting)
+		return
+	icon = painting
+	name = painting_data["painting_title"]
+	if(painting_data["author"])
+		desc = "Painted by: [painting_data["author"]]."
 	var/icon/new_icon = getFlatIcon(src)
-	new_icon.Scale(160, 160)
+	new_icon.Scale(canvas_size_x * canvas_divider_x, canvas_size_y * canvas_divider_y)
 	used_canvas.draw.Blend(new_icon, ICON_OVERLAY)
-	used_canvas.icon = used_canvas.draw */
+	used_canvas.icon = used_canvas.draw
 
 ///////////
 // EASEL //
