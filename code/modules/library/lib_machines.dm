@@ -18,6 +18,17 @@
 /obj/machinery/printingpress/examine(mob/user)
 	. = ..()
 	. += span_info("Insert blank paper, then right-click to select a book to print. Use an empty hand to retrieve paper or a finished book. Apply a finished player book or signed canvas to archive it.")
+	if(printing)
+		. += span_info("It is currently printing.")
+	else
+		if(output_item)
+			. += span_info("It has a finished book ready. Use an empty hand to retrieve it.")
+		else if(!QDELETED(loaded_paper) && loaded_paper.loc == src)
+			. += span_info("It has blank paper loaded.")
+		else
+			. += span_info("It is empty and has no paper loaded.")
+		if(cooldown > world.time)
+			. += span_info("It is currently recalibrating and cannot print yet.")
 
 /obj/machinery/printingpress/attackby(obj/item/O, mob/user, list/modifiers)
 	if(printing)
@@ -117,7 +128,7 @@
 		return
 	var/choice = input(user, "Choose an option for \the [src]") as null|anything in list("Print The Book", "Print a Tome of Justice", "Print from the Archive", "Profession Manual")
 	switch(choice)
-		if ("Print The Book")
+		if ("Print The Verses and Acts of the Ten")
 			start_printing(user, "bibble")
 		if ("Print a Tome of Justice")
 			start_printing(user, "justice")
