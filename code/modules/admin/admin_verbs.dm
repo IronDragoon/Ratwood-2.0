@@ -38,12 +38,9 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/cmd_admin_say,
 	/client/proc/deadmin,				/*destroys our own admin datum so we can play as a regular player*/
 	/client/proc/set_context_menu_enabled,
-	/client/proc/delete_player_book,
-	/client/proc/amend_player_book,
 	/client/proc/manage_books,
 	/client/proc/manage_paintings,
 	/client/proc/enable_browser_debug,
-	/client/proc/pull_book_file_names,
 	/client/proc/admin_spread_effect,
 	/client/proc/open_bounty_menu,
 	/client/proc/remove_bounty,
@@ -922,46 +919,6 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		SSticker.end_party=FALSE
 		to_chat(src, span_interface("Ending DISABLED."))
 
-/client/proc/delete_player_book()
-	set name = "Database Delete Player Book"
-	set category = "Debug"
-	set desc = ""
-	if(!holder)
-		return
-	var/player_book = input(src, "What is the book file you want to delete? (spaces and other characters are their url encode versions for the file name, so for example spaces are +)")
-	if(player_book && SSlibrarian.del_player_book(player_book))
-		message_admins("[src] has deleted the player book: [player_archive_display_text(player_book)]")
-	else
-		to_chat(src, span_notice("Either the book file doesn't exist or you have failed to type it in properly (you can look up the file name by the verb 'database book file names'"))
-
-/client/proc/pull_book_file_names()
-	set name = "Database Book File Names"
-	set category = "Debug"
-	set desc = ""
-	if(!holder)
-		return
-	var/list/book_titles = SSlibrarian.pull_player_book_titles()
-	if(!book_titles)
-		return
-	var/dat = ""
-	for(var/I in book_titles)
-		dat += "[player_archive_display_text(I)]<br>"
-	src << browse(dat, "window=reading;size=250x500;can_close=1;can_minimize=1;can_maximize=1;can_resize=1;titlebar=1")
-
-/client/proc/amend_player_book()
-	set name = "Database Amend Player Book"
-	set category = "Debug"
-	set desc = ""
-	if(!holder)
-		return
-	var/book_title = input(src, "What is the book file name?")
-	var/amend_type = alert(src, "What type of text do you want to amend?", "", "book_title", "author", "icon")
-	var/amend_text = input(src, "What do you want to amend it to? (you don't have to make it in the file name format, use normal spaces)")
-	if(SSlibrarian.amend_player_book(book_title, amend_type, amend_text))
-		message_admins("[src] has amended [player_archive_display_text(book_title)]'s [amend_type] to [player_archive_display_text(amend_text)]")
-	else
-		to_chat(src, span_notice("Either the book file doesn't exist or you have failed to type something in properly (you can look up the file name by the verb 'database book file names'"))
-
 /client/proc/remove_bounty()
 	set category = "-Admin-"
 	set name = "Remove Bounty"
@@ -1026,6 +983,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["ic_date"])]</td>"
 		dat += "<td style='padding: 12px 15px;'>"
 		dat += "<a href='byond://?_src_=holder;[HrefToken()];show_player_book=[url_encode(file_name)]' style='margin-right: 10px;'>View</a>"
+		dat += "<a href='byond://?_src_=holder;[HrefToken()];amend_player_book=[url_encode(file_name)]' style='margin-right: 10px;'>Amend</a>"
 		dat += "<a href='byond://?_src_=holder;[HrefToken()];delete_player_book=[url_encode(file_name)]'>Delete</a>"
 		dat += "</td>"
 		dat += "</tr>"

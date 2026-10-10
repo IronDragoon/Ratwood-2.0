@@ -7,12 +7,12 @@
 	icon_state = "Ppress_Clean"
 	desc = "The Archivist's wonder. Gears, ink, and wood blocks can turn the written word to the printed word."
 	density = TRUE
-	var/cooldown = 0
 	var/printing = FALSE
 	var/obj/item/paper/loaded_paper
 	var/obj/item/output_item
 
 	var/static/list/manual_name_to_path = list()
+	COOLDOWN_DECLARE(print_cooldown)
 
 /obj/machinery/printingpress/Exited(atom/movable/AM, atom/newloc)
 	. = ..()
@@ -20,6 +20,19 @@
 		loaded_paper = null
 	if(AM == output_item)
 		output_item = null
+	if(!QDELETED(src))
+		update_icon()
+
+/obj/machinery/printingpress/update_icon_state()
+	. = ..()
+	if(printing)
+		icon_state = "Ppress_Printing"
+	else if(output_item)
+		icon_state = "Ppress_Done"
+	else if(loaded_paper)
+		icon_state = "Ppress_Prepared"
+	else
+		icon_state = "Ppress_Clean"
 
 /obj/machinery/printingpress/examine(mob/user)
 	. = ..()
@@ -33,20 +46,20 @@
 			. += span_info("It has blank paper loaded.")
 		else
 			. += span_info("It is empty and has no paper loaded.")
-		if(cooldown > world.time)
+		if(!COOLDOWN_FINISHED(src, print_cooldown))
 			. += span_info("It is currently recalibrating and cannot print yet.")
 
-/obj/machinery/printingpress/attackby(obj/item/O, mob/user, list/modifiers)
+/obj/machinery/printingpress/attackby(obj/item/O, mob/user, params)
 	if(printing)
 		to_chat(user, span_warning("[src] is currently printing. Please wait."))
 		return
 	if(output_item)
-		to_chat(user, span_notice("Please retrieve the printed item before inserting new items."))
+		to_chat(user, span_warning("Retrieve the printed item before inserting new items."))
 		return
 	if(istype(O, /obj/item/canvas))
 		var/obj/item/canvas/M = O
 		if(!M.author || !M.title)
-			to_chat(user, span_notice("This canvas isn't signed."))
+			to_chat(user, span_warning("This canvas isn't signed."))
 			return
 		var/choice = tgui_alert(user, "Do you want to add the painting to the archive?", "Confirm", list("Yes", "No"))
 		if(choice == "Yes")
@@ -58,17 +71,17 @@
 		return
 
 	if(istype(O, /obj/item/manuscript))
-		to_chat(user, span_notice("Finish this manuscript with a book crafting kit and give it a title and author before uploading it."))
+		to_chat(user, span_warning("Finish this manuscript with a book crafting kit and give it a title before uploading it."))
 		return
 
 	if(istype(O, /obj/item/book/rogue/playerbook))
 		var/obj/item/book/rogue/playerbook/PB = O
 		if(!PB.written)
-			to_chat(user, span_notice("This book has yet to be authored and titled. You'll need to do so before uploading it."))
+			to_chat(user, span_warning("This book has yet to be authored and titled. You'll need to do so before uploading it."))
 			return
 		// Copies printed or shelved from the archive must not restore books an admin has removed.
 		if(!PB.is_in_round_player_generated)
-			to_chat(user, span_notice("Only newly bound books can be added to the archive."))
+			to_chat(user, span_warning("Only newly bound books can be added to the archive."))
 			return
 		var/choice = tgui_alert(user, "Do you want to add the book to the archive?", "Confirm", list("Yes", "No"))
 		if(choice == "Yes")
@@ -91,8 +104,8 @@
 			to_chat(user, span_warning("You can't insert [paper] into [src]."))
 			return
 		loaded_paper = paper
-		src.icon_state = "Ppress_Prepared"
-		to_chat(user, span_warning("You insert the blank paper into [src]."))
+		update_icon()
+		to_chat(user, span_notice("You insert the blank paper into [src]."))
 		return
 	return ..()
 
@@ -108,14 +121,12 @@
 		if(!user.put_in_hands(printed))
 			printed.forceMove(get_turf(user))
 		to_chat(user, span_notice("You retrieve [printed] from [src]."))
-		src.icon_state = "Ppress_Clean"
 		return
 	if(loaded_paper)
 		var/obj/item/paper/P = loaded_paper
 		if(!user.put_in_hands(P))
 			P.forceMove(get_turf(user))
-		to_chat(user, span_warning("You retrieve [P.name] from [src]."))
-		src.icon_state = "Ppress_Clean"
+		to_chat(user, span_notice("You retrieve [P.name] from [src]."))
 		return
 	to_chat(user, span_warning("[src] is empty."))
 
@@ -161,7 +172,7 @@
 	if(!loaded_paper)
 		to_chat(user, span_warning("[src] requires a blank piece of paper to print."))
 		return
-	if(cooldown > world.time)
+	if(!COOLDOWN_FINISHED(src, print_cooldown))
 		to_chat(user, span_warning("[src] is still recalibrating."))
 		return
 	if(print_type == "archive")
@@ -178,18 +189,20 @@
 	else
 		output_item = new print_type(src)
 	printing = TRUE
-	src.icon_state = "Ppress_Printing"
-	to_chat(user, span_warning("[src] starts printing..."))
+	to_chat(user, span_notice("[src] starts printing..."))
 	playsound(src, 'sound/misc/ppress.ogg', 100, FALSE)
 	qdel(loaded_paper)
-	sleep(PRINTING_TIME)
-	if(QDELETED(src))
+	update_icon()
+	addtimer(CALLBACK(src, PROC_REF(finish_printing)), PRINTING_TIME)
+
+/obj/machinery/printingpress/proc/finish_printing()
+	printing = FALSE
+	COOLDOWN_START(src, print_cooldown, PRINTER_COOLDOWN)
+	update_icon()
+	if(!output_item)
 		return
 	visible_message(span_notice("[src] hums as it produces [output_item]."))
 	record_round_statistic(STATS_BOOKS_PRINTED)
-	printing = FALSE
-	src.icon_state = "Ppress_Done"
-	cooldown = world.time + PRINTER_COOLDOWN
 
 /obj/machinery/printingpress/proc/choose_search_parameters(mob/user)
 	var/search_title = input(user, "Enter the title (optional):") as text|null

@@ -477,6 +477,19 @@
 	base_icon_state = "book6"
 	bookfile = "naledi4.json"
 
+/// Cover styles players can choose for their books, mapped to icon states.
+GLOBAL_LIST_INIT(player_book_icons, list(
+	"Sickly green with embossed bronze" = "book8",
+	"Red with embossed toper" = "book7",
+	"Purple with embossed obsidian" = "book6",
+	"Brown with embossed obsidian" = "book5",
+	"Yellow without embossed material" = "book4",
+	"Blue without embossed material" = "book3",
+	"Red without embossed material" = "book2",
+	"Black without embossed material" = "book",
+	"Green without embossed material" = "basic_book",
+))
+
 /obj/item/book/rogue/playerbook
 	var/player_book_text = "moisture in the air or water leaks have rendered the carefully written caligraphy of this book unreadable"
 	var/player_book_title = "unknown title"
@@ -486,16 +499,6 @@
 	var/player_book_date
 	var/is_in_round_player_generated
 	var/written = FALSE
-	var/list/book_icons = list(
-	"Sickly green with embossed bronze" = "book8",
-	"Red with embossed toper" = "book7",
-	"Purple with embossed obsidian" = "book6",
-	"Brown with embossed obsidian" = "book5",
-	"Yellow without embossed material" = "book4",
-	"Blue without embossed material" = "book3",
-	"Red without embossed material" = "book2",
-	"Black without embossed material" = "book",
-	"Green without embossed material" = "basic_book")
 	name = "unknown title"
 	desc = "by an unknown author"
 	icon_state = "basic_book_0"
@@ -514,11 +517,10 @@
 		if(!player_archive_filename(player_book_title))
 			to_chat(in_round_player_mob, span_warning("Choose a nonempty title of at most 42 characters that does not begin with an underscore."))
 	while(!player_archive_filename(player_book_title))
-	var/author_title = stripped_input(in_round_player_mob, "Do you want to preface your author name with an author title? (max 42 characters)", "Author Title", "", MAX_NAME_LEN)
-	player_book_author = trim("[author_title] [player_archive_display_text(in_round_player_mob.real_name)]")
-	player_book_icon = book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in book_icons] || player_book_icon
+	player_book_author = player_archive_author_name(in_round_player_mob)
+	player_book_icon = GLOB.player_book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in GLOB.player_book_icons] || player_book_icon
 	player_book_date = get_ic_date_short_as_string()
-	message_admins("[player_archive_display_text(player_book_author_ckey)]([player_archive_display_text(in_round_player_mob.real_name)]) has generated the player book: [player_archive_display_text(player_book_title)]")
+	message_admins("[player_archive_display_text(player_book_author_ckey)]([player_book_author]) has generated the player book: [player_archive_display_text(player_book_title)]")
 	update_book_data()
 	written = TRUE
 
@@ -567,7 +569,7 @@
 
 /obj/item/manuscript/examine()
 	. = ..()
-	. += span_info("It has [number_of_pages] pages. Use paper to add more. Finish the book with a book crafting kit, then choose its title, author title, and cover before archiving it.")
+	. += span_info("It has [number_of_pages] pages. Use paper to add more. Finish the book with a book crafting kit, then choose its title and cover before archiving it.")
 
 /obj/item/manuscript/attackby(obj/item/I, mob/living/user)
 	// why is a book crafting kit using the craft system, but crafting a book isn't? Well the crafting system for *some reason* is made in such a way as to make reworking it to allow you to put reqs vars in the crafted item near *impossible.*

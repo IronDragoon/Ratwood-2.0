@@ -83,8 +83,7 @@
 		if(!player_archive_filename(new_title))
 			to_chat(user, span_warning("Choose a shorter title that does not begin with an underscore."))
 			return
-		// Paintings are always signed with the painter's true name, matching player books.
-		author = player_archive_display_text(user.real_name)
+		author = player_archive_author_name(user)
 		author_ckey = user.ckey
 		title = new_title
 		reject = FALSE

@@ -31,6 +31,31 @@
 		owner.show_book_content(href_list["show_player_book"])
 		return
 
+	if(href_list["amend_player_book"])
+		var/file_name = href_list["amend_player_book"]
+		var/list/book = SSlibrarian.file2playerbook(file_name)
+		if(!book["book_title"])
+			return
+		var/static/list/amend_types = list("Title" = "book_title", "Author" = "author", "Cover" = "icon")
+		var/amend_choice = tgui_input_list(usr, "What do you want to amend?", "Amend Book", amend_types)
+		if(!amend_choice)
+			return
+		var/amend_type = amend_types[amend_choice]
+		var/amend_text
+		if(amend_type == "icon")
+			amend_text = GLOB.player_book_icons[tgui_input_list(usr, "Choose a new cover", "Amend Book", GLOB.player_book_icons)]
+		else
+			amend_text = stripped_input(usr, "What do you want the [lowertext(amend_choice)] to be?", "Amend Book", html_decode(book[amend_type]), MAX_NAME_LEN)
+		if(!amend_text)
+			return
+		if(!SSlibrarian.amend_player_book(file_name, amend_type, amend_text))
+			to_chat(usr, span_warning("The book could not be amended. Titles must be unique and must not begin with an underscore."))
+			return
+		message_admins("[key_name_admin(usr)] has amended player made book '[player_archive_display_text(book["book_title"])]': [lowertext(amend_choice)] is now '[player_archive_display_text(amend_text)]'")
+		log_admin("[key_name(usr)] has amended player made book '[book["book_title"]]': [lowertext(amend_choice)] is now '[amend_text]'")
+		owner.manage_books()
+		return
+
 	if(href_list["delete_player_book"])
 		var/file_name = href_list["delete_player_book"]
 		var/list/book = SSlibrarian.file2playerbook(file_name)

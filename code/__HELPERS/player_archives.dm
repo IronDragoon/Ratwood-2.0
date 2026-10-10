@@ -23,6 +23,10 @@
 		return html_encode(fallback)
 	return html_encode(html_decode("[text]"))
 
+/// Archived books and paintings are always signed with the creator's true name.
+/proc/player_archive_author_name(mob/user)
+	return player_archive_display_text(user?.real_name)
+
 /// Loads every archive entry in a directory, keyed by filename without the .json extension.
 /proc/load_player_archive(directory)
 	. = list()
