@@ -1,5 +1,7 @@
 #define PRINTER_COOLDOWN (60 SECONDS)
 #define PRINTING_TIME (25 SECONDS)
+#define PRESS_ARCHIVE_BOOK "book"
+#define PRESS_ARCHIVE_PAINTING "painting"
 
 /obj/machinery/printingpress
 	name = "printing press"
@@ -8,16 +10,19 @@
 	desc = "The Archivist's wonder. Gears, ink, and wood blocks can turn the written word to the printed word."
 	density = TRUE
 	var/printing = FALSE
-	var/obj/item/paper/loaded_paper
+	/// Blank paper for printing books, or a blank canvas for printing paintings.
+	var/obj/item/loaded_medium
 	var/obj/item/output_item
+	/// Which archive each user has open in the archive UI, keyed by REF(user).
+	var/list/archive_browsers = list()
 
 	var/static/list/manual_name_to_path = list()
 	COOLDOWN_DECLARE(print_cooldown)
 
 /obj/machinery/printingpress/Exited(atom/movable/AM, atom/newloc)
 	. = ..()
-	if(AM == loaded_paper)
-		loaded_paper = null
+	if(AM == loaded_medium)
+		loaded_medium = null
 	if(AM == output_item)
 		output_item = null
 	if(!QDELETED(src))
@@ -29,23 +34,23 @@
 		icon_state = "Ppress_Printing"
 	else if(output_item)
 		icon_state = "Ppress_Done"
-	else if(loaded_paper)
+	else if(loaded_medium)
 		icon_state = "Ppress_Prepared"
 	else
 		icon_state = "Ppress_Clean"
 
 /obj/machinery/printingpress/examine(mob/user)
 	. = ..()
-	. += span_info("Insert blank paper, then right-click to select a book to print. Use an empty hand to retrieve paper or a finished book. Apply a finished player book or signed canvas to archive it.")
+	. += span_info("Insert blank paper or a blank canvas, then right-click to select what to print. Use an empty hand to retrieve the loaded material or a finished print. Apply a finished player book or signed canvas to archive it.")
 	if(printing)
 		. += span_info("It is currently printing.")
 	else
 		if(output_item)
-			. += span_info("It has a finished book ready. Use an empty hand to retrieve it.")
-		else if(loaded_paper)
-			. += span_info("It has blank paper loaded.")
+			. += span_info("It has [output_item] ready. Use an empty hand to retrieve it.")
+		else if(loaded_medium)
+			. += span_info("It has a blank [loaded_medium.name] loaded.")
 		else
-			. += span_info("It is empty and has no paper loaded.")
+			. += span_info("It is empty and has nothing loaded.")
 		if(!COOLDOWN_FINISHED(src, print_cooldown))
 			. += span_info("It is currently recalibrating and cannot print yet.")
 
@@ -58,6 +63,12 @@
 		return
 	if(istype(O, /obj/item/canvas))
 		var/obj/item/canvas/M = O
+		if(M.is_blank())
+			load_medium(M, user)
+			return
+		if(M.archived)
+			to_chat(user, span_warning("Only newly painted canvases can be added to the archive."))
+			return
 		if(!M.author || !M.title)
 			to_chat(user, span_warning("This canvas isn't signed."))
 			return
@@ -93,21 +104,24 @@
 			to_chat(user, span_notice("You decide not to upload the book."))
 		return
 	if(O.type == /obj/item/paper)
-		if(loaded_paper)
-			to_chat(user, span_warning("It already has paper loaded."))
-			return
 		var/obj/item/paper/paper = O
 		if(paper.info)
 			to_chat(user, span_warning("The paper needs to be blank to be put into [src]."))
 			return
-		if(!user.transferItemToLoc(paper, src))
-			to_chat(user, span_warning("You can't insert [paper] into [src]."))
-			return
-		loaded_paper = paper
-		update_icon()
-		to_chat(user, span_notice("You insert the blank paper into [src]."))
+		load_medium(paper, user)
 		return
 	return ..()
+
+/obj/machinery/printingpress/proc/load_medium(obj/item/medium, mob/user)
+	if(loaded_medium)
+		to_chat(user, span_warning("It already has [loaded_medium] loaded."))
+		return
+	if(!user.transferItemToLoc(medium, src))
+		to_chat(user, span_warning("You can't insert [medium] into [src]."))
+		return
+	loaded_medium = medium
+	update_icon()
+	to_chat(user, span_notice("You insert the blank [medium.name] into [src]."))
 
 /obj/machinery/printingpress/attack_hand(mob/user)
 	if(!user.canUseTopic(src, BE_CLOSE))
@@ -122,11 +136,11 @@
 			printed.forceMove(get_turf(user))
 		to_chat(user, span_notice("You retrieve [printed] from [src]."))
 		return
-	if(loaded_paper)
-		var/obj/item/paper/P = loaded_paper
-		if(!user.put_in_hands(P))
-			P.forceMove(get_turf(user))
-		to_chat(user, span_notice("You retrieve [P.name] from [src]."))
+	if(loaded_medium)
+		var/obj/item/medium = loaded_medium
+		if(!user.put_in_hands(medium))
+			medium.forceMove(get_turf(user))
+		to_chat(user, span_notice("You retrieve [medium] from [src]."))
 		return
 	to_chat(user, span_warning("[src] is empty."))
 
@@ -139,17 +153,16 @@
 	if(output_item)
 		to_chat(user, span_warning("There is a finished product in [src]. Use an empty hand to retrieve it."))
 		return
-	if(!loaded_paper)
-		to_chat(user, span_warning("[src] requires a blank piece of paper to print."))
-		return
-	var/choice = input(user, "Choose an option for \the [src]") as null|anything in list("Print The Verses and Acts of the Ten", "Print a Tome of Justice", "Print from the Archive", "Profession Manual")
+	var/choice = input(user, "Choose an option for \the [src]") as null|anything in list("Print The Verses and Acts of the Ten", "Print a Tome of Justice", "Print a book from the archive", "Print a painting from the archive", "Profession Manual")
 	switch(choice)
-		if ("Print The Verses and Acts of the Ten")
+		if("Print The Verses and Acts of the Ten")
 			start_printing(user, /obj/item/book/rogue/bibble)
-		if ("Print a Tome of Justice")
+		if("Print a Tome of Justice")
 			start_printing(user, /obj/item/book/rogue/law)
-		if ("Print from the Archive")
-			choose_search_parameters(user)
+		if("Print a book from the archive")
+			open_archive(user, PRESS_ARCHIVE_BOOK)
+		if("Print a painting from the archive")
+			open_archive(user, PRESS_ARCHIVE_PAINTING)
 		if("Profession Manual")
 			if(!length(manual_name_to_path))
 				for(var/obj/item/recipe_book/book as anything in subtypesof(/obj/item/recipe_book))
@@ -160,40 +173,64 @@
 			if(choice)
 				start_printing(user, manual_name_to_path[choice])
 
-/obj/machinery/printingpress/proc/start_printing(mob/user, print_type, id = null)
+/// Returns the blank material needed to print the given type, or null if the type cannot be printed.
+/obj/machinery/printingpress/proc/get_print_medium(print_type)
+	if(print_type == PRESS_ARCHIVE_PAINTING)
+		return /obj/item/canvas
+	if(print_type == PRESS_ARCHIVE_BOOK || print_type == /obj/item/book/rogue/bibble || print_type == /obj/item/book/rogue/law || ispath(print_type, /obj/item/recipe_book))
+		return /obj/item/paper
+
+/// Returns TRUE if the press is ready to print the given type.
+/obj/machinery/printingpress/proc/can_print(mob/user, print_type)
 	if(!user || !user.canUseTopic(src, BE_CLOSE))
-		return
+		return FALSE
 	if(printing)
 		to_chat(user, span_warning("[src] is currently printing. Please wait."))
-		return
+		return FALSE
 	if(output_item)
-		to_chat(user, span_warning("Retrieve the finished book before printing another."))
-		return
-	if(!loaded_paper)
-		to_chat(user, span_warning("[src] requires a blank piece of paper to print."))
-		return
+		to_chat(user, span_warning("Retrieve the finished print before printing another."))
+		return FALSE
+	var/medium_type = get_print_medium(print_type)
+	if(!medium_type)
+		to_chat(user, span_warning("That cannot be printed."))
+		return FALSE
+	if(!istype(loaded_medium, medium_type))
+		to_chat(user, span_warning("[src] requires [medium_type == /obj/item/canvas ? "a blank canvas" : "a blank piece of paper"] to print that."))
+		return FALSE
 	if(!COOLDOWN_FINISHED(src, print_cooldown))
 		to_chat(user, span_warning("[src] is still recalibrating."))
-		return
-	if(print_type == "archive")
-		var/list/book = SSlibrarian.file2playerbook(id)
-		if(!book["book_title"] || !book["text"])
-			to_chat(user, span_warning("This book is no longer in the archive."))
-			return
-	else if(print_type != /obj/item/book/rogue/bibble && print_type != /obj/item/book/rogue/law && !ispath(print_type, /obj/item/recipe_book))
-		to_chat(user, span_warning("That book cannot be printed."))
-		return
-	// Load the archive entry before waiting, so deletion during printing cannot produce a damaged book.
-	if(print_type == "archive")
-		output_item = new /obj/item/book/rogue/playerbook(src, FALSE, null, null, id)
-	else
-		output_item = new print_type(src)
+		return FALSE
+	return TRUE
+
+/// Returns TRUE if printing started.
+/obj/machinery/printingpress/proc/start_printing(mob/user, print_type, id = null)
+	if(!can_print(user, print_type))
+		return FALSE
+	// Load the archive entry before waiting, so deletion during printing cannot produce a damaged print.
+	switch(print_type)
+		if(PRESS_ARCHIVE_BOOK)
+			var/list/book = SSlibrarian.file2playerbook(id)
+			if(!book["book_title"] || !book["text"])
+				to_chat(user, span_warning("This book is no longer in the archive."))
+				return FALSE
+			output_item = new /obj/item/book/rogue/playerbook(src, FALSE, null, null, id)
+		if(PRESS_ARCHIVE_PAINTING)
+			var/obj/item/canvas/print = new /obj/item/canvas(src)
+			if(!print.load_archived_painting(id))
+				qdel(print)
+				to_chat(user, span_warning("This painting can no longer be printed."))
+				return FALSE
+			output_item = print
+		else
+			output_item = new print_type(src)
+	output_item.desc = output_item.desc ? "[output_item.desc]<br>It is a printed copy." : "It is a printed copy."
 	printing = TRUE
 	to_chat(user, span_notice("[src] starts printing..."))
 	playsound(src, 'sound/misc/ppress.ogg', 100, FALSE)
-	qdel(loaded_paper)
+	qdel(loaded_medium)
 	update_icon()
 	addtimer(CALLBACK(src, PROC_REF(finish_printing)), PRINTING_TIME)
+	return TRUE
 
 /obj/machinery/printingpress/proc/finish_printing()
 	printing = FALSE
@@ -202,44 +239,69 @@
 	if(!output_item)
 		return
 	visible_message(span_notice("[src] hums as it produces [output_item]."))
-	record_round_statistic(STATS_BOOKS_PRINTED)
+	if(!istype(output_item, /obj/item/canvas))
+		record_round_statistic(STATS_BOOKS_PRINTED)
 
-/obj/machinery/printingpress/proc/choose_search_parameters(mob/user)
-	var/search_title = input(user, "Enter the title (optional):") as text|null
-	var/search_author = input(user, "Enter the author (optional):") as text|null
-	if(!user.canUseTopic(src, BE_CLOSE))
+/// Opens the archive UI listing the books or paintings that can be printed.
+/obj/machinery/printingpress/proc/open_archive(mob/user, archive_type)
+	if(!can_print(user, archive_type))
 		return
-	search_manuscripts(user, search_title, search_author)
+	// Reopen rather than update, so switching archives resends the entries and window title.
+	SStgui.get_open_ui(user, src)?.close()
+	archive_browsers[REF(user)] = archive_type
+	ui_interact(user)
 
-/obj/machinery/printingpress/proc/search_manuscripts(mob/user, search_title, search_author)
-	var/dat = "<h3>Book Search Results:</h3><br>"
-	dat += "<table><tr><th>Title</th><th>Author</th><th>Written</th><th>Print</th></tr>"
-	var/matches = 0
-	for(var/filename in SSlibrarian.player_books)
-		var/list/book = SSlibrarian.player_books[filename]
-		if(!book["book_title"])
-			continue
-		if(search_title && !findtext(book["book_title"], search_title))
-			continue
-		if(search_author && !findtext(book["author"], search_author))
-			continue
-		matches++
-		dat += "<tr><td>[player_archive_display_text(book["book_title"])]</td><td>[player_archive_display_text(book["author"])]</td><td>[player_archive_display_text(book["ic_date"])]</td><td><a href='byond://?src=[REF(src)];print=1;filename=[url_encode(filename)]'>Print</a></td></tr>"
+/obj/machinery/printingpress/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "PrintingPressArchive", "[archive_browsers[REF(user)] == PRESS_ARCHIVE_PAINTING ? "Painting" : "Book"] Archive")
+		ui.open()
 
-	if(!matches)
-		dat += "<tr><td colspan='4'>No results found.</td></tr>"
-
-	dat += "</table>"
-	var/datum/browser/popup = new(user, "printing press", "Which book to print?", 460, 500)
-	popup.set_content(dat)
-	popup.open()
-
-/obj/machinery/printingpress/Topic(href, href_list)
+/obj/machinery/printingpress/ui_close(mob/user)
 	. = ..()
-	if(!usr || !usr.canUseTopic(src, BE_CLOSE))
+	archive_browsers -= REF(user)
+
+/obj/machinery/printingpress/ui_static_data(mob/user)
+	var/list/data = ..()
+	var/archive_type = archive_browsers[REF(user)]
+	var/list/entries = list()
+	if(archive_type == PRESS_ARCHIVE_PAINTING)
+		for(var/file_name in SSpaintings.paintings)
+			var/list/painting = SSpaintings.paintings[file_name]
+			if(!painting["painting_title"] || !fexists(SSpaintings.get_painting_image_path(file_name)))
+				continue
+			UNTYPED_LIST_ADD(entries, list(
+				"filename" = file_name,
+				"title" = html_decode(painting["painting_title"]),
+				"author" = html_decode(painting["author"] || "Unknown"),
+				"date" = painting["ic_date"],
+			))
+	else
+		for(var/file_name in SSlibrarian.player_books)
+			var/list/book = SSlibrarian.player_books[file_name]
+			if(!book["book_title"])
+				continue
+			UNTYPED_LIST_ADD(entries, list(
+				"filename" = file_name,
+				"title" = html_decode(book["book_title"]),
+				"author" = html_decode(book["author"] || "Unknown"),
+				"date" = book["ic_date"],
+			))
+	data["archive_type"] = archive_type
+	data["entries"] = entries
+	return data
+
+/obj/machinery/printingpress/ui_act(action, list/params, datum/tgui/ui)
+	. = ..()
+	if(.)
 		return
-	if(href_list["print"])
-		start_printing(usr, "archive", href_list["filename"])
+	if(action != "print")
+		return
+	if(start_printing(ui.user, archive_browsers[REF(ui.user)], params["filename"]))
+		ui.close()
+	return TRUE
 
 #undef PRINTER_COOLDOWN
 #undef PRINTING_TIME
+#undef PRESS_ARCHIVE_BOOK
+#undef PRESS_ARCHIVE_PAINTING

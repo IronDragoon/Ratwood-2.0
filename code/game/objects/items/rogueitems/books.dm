@@ -506,10 +506,12 @@ GLOBAL_LIST_INIT(player_book_icons, list(
 	override_find_book = TRUE
 
 /obj/item/book/rogue/playerbook/proc/get_player_input(mob/living/in_round_player_mob, text)
-	player_book_author_ckey = in_round_player_mob.ckey
+	player_book_author_ckey = in_round_player_mob?.ckey
 	player_book_text = text
 	var/new_title
 	do
+		if(QDELETED(src))
+			return
 		// input() returns immediately without a client, so stop rather than loop forever. The book stays readable but unarchivable.
 		if(!in_round_player_mob?.client)
 			update_book_data()
