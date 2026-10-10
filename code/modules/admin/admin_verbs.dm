@@ -40,6 +40,8 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/set_context_menu_enabled,
 	/client/proc/delete_player_book,
 	/client/proc/amend_player_book,
+	/client/proc/manage_books,
+	/client/proc/manage_paintings,
 	/client/proc/enable_browser_debug,
 	/client/proc/pull_book_file_names,
 	/client/proc/admin_spread_effect,
@@ -1012,10 +1014,9 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Actions</th>"
 	dat += "</tr>"
 
-	var/list/decoded_books = SSlibrarian.pull_player_book_titles()
-	for(var/encoded_title in decoded_books)
-		var/list/book = SSlibrarian.file2playerbook(encoded_title)
-		if(!book || !book["book_title"])
+	for(var/file_name in SSlibrarian.player_books)
+		var/list/book = SSlibrarian.player_books[file_name]
+		if(!book["book_title"])
 			continue
 
 		dat += "<tr>"
@@ -1024,12 +1025,12 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["author"])]</td>"
 		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["ic_date"])]</td>"
 		dat += "<td style='padding: 12px 15px;'>"
-		dat += "<a href='byond://?src=[REF(src)];show_book=1;id=[url_encode(encoded_title)]' style='margin-right: 10px;'>View</a>"
-		dat += "<a href='byond://?src=[REF(src)];delete_book=1;id=[url_encode(encoded_title)]'>Delete</a>"
+		dat += "<a href='byond://?_src_=holder;[HrefToken()];show_player_book=[url_encode(file_name)]' style='margin-right: 10px;'>View</a>"
+		dat += "<a href='byond://?_src_=holder;[HrefToken()];delete_player_book=[url_encode(file_name)]'>Delete</a>"
 		dat += "</td>"
 		dat += "</tr>"
 
-	if(!length(decoded_books))
+	if(!length(SSlibrarian.player_books))
 		dat += "<tr><td colspan='5' style='padding: 20px; text-align: center;'>No books found</td></tr>"
 
 	dat += "</table>"
@@ -1086,31 +1087,26 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Delete</th>"
 	dat += "</tr>"
 
-	if(length(SSpaintings.paintings))
-		for(var/encoded_title in SSpaintings.paintings)
-			var/list/painting = SSpaintings.paintings[encoded_title]
-			if(!painting["painting_title"])
-				continue
+	for(var/file_name in SSpaintings.paintings)
+		var/list/painting = SSpaintings.paintings[file_name]
+		var/disk_filename = SSpaintings.get_painting_filename(painting["painting_title"])
+		// Entries whose image is missing are still listed, so they can be cleaned up.
+		var/preview = "No image"
+		if(painting["painting_title"] && fexists(disk_filename))
+			var/res_name = "painting_[md5(file_name)].png"
+			src << browse_rsc(file(disk_filename), res_name)
+			preview = "<img src='[res_name]' height=64 width=64 style='display: block; margin: 0 auto;'>"
+		dat += "<tr>"
+		dat += "<td style='padding: 12px 15px;'>[preview]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(painting["painting_title"], file_name)]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(painting["author"])] ([player_archive_display_text(painting["author_ckey"])])</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(painting["ic_date"])]</td>"
+		dat += "<td style='padding: 12px 15px;'>"
+		dat += "<a href='byond://?_src_=holder;[HrefToken()];delete_player_painting=[url_encode(file_name)]'>Delete</a>"
+		dat += "</td>"
+		dat += "</tr>"
 
-			var/raw_title = painting["painting_title"]
-			var/author = painting["author_ckey"]
-			var/disk_filename = SSpaintings.get_painting_filename(raw_title)
-
-			if(fexists(disk_filename))
-				var/icon/painting_icon = icon(disk_filename)
-				if(painting_icon)
-					var/res_name = "painting_[md5(raw_title)].png"
-					src << browse_rsc(painting_icon, res_name)
-					dat += "<tr>"
-					dat += "<td style='padding: 12px 15px;'><img src='[res_name]' height=64 width=64 style='display: block; margin: 0 auto;'></td>"
-					dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(raw_title)]</td>"
-					dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(painting["author"])] ([player_archive_display_text(author)])</td>"
-					dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(painting["ic_date"])]</td>"
-					dat += "<td style='padding: 12px 15px;'>"
-					dat += "<a href='byond://?src=[REF(src)];delete_painting=1;id=[url_encode(raw_title)]'>Delete</a>"
-					dat += "</td>"
-					dat += "</tr>"
-	else
+	if(!length(SSpaintings.paintings))
 		dat += "<tr><td colspan='5' style='padding: 20px; text-align: center;'>No paintings found</td></tr>"
 
 	dat += "</table>"

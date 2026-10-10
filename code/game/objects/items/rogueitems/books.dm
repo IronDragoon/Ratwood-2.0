@@ -488,14 +488,14 @@
 	var/written = FALSE
 	var/list/book_icons = list(
 	"Sickly green with embossed bronze" = "book8",
-	"White with embossed obsidian" = "book7",
-	"Black with embossed quartz" = "book6",
-	"Blue with embossed ruby" = "book5",
-	"Green with embossed amethyst" = "book4",
-	"Purple with embossed emerald" = "book3",
-	"Red with embossed sapphire" = "book2",
-	"Brown with embossed gold" = "book1",
-	"Brown without embossed material" = "basic_book")
+	"Red with embossed toper" = "book7",
+	"Purple with embossed obsidian" = "book6",
+	"Brown with embossed obsidian" = "book5",
+	"Yellow without embossed material" = "book4",
+	"Blue without embossed material" = "book3",
+	"Red without embossed material" = "book2",
+	"Black without embossed material" = "book",
+	"Green without embossed material" = "basic_book")
 	name = "unknown title"
 	desc = "by an unknown author"
 	icon_state = "basic_book_0"
@@ -504,15 +504,19 @@
 
 /obj/item/book/rogue/playerbook/proc/get_player_input(mob/living/in_round_player_mob, text)
 	player_book_author_ckey = in_round_player_mob.ckey
+	player_book_text = text
 	do
+		// input() returns immediately without a client, so stop rather than loop forever. The book stays readable but unarchivable.
+		if(!in_round_player_mob.client)
+			update_book_data()
+			return
 		player_book_title = capitalize(trim(STRIP_HTML_SIMPLE(input(in_round_player_mob, "What title do you want to give the book? (max 42 characters)", "Title", "Unknown"), MAX_NAME_LEN)))
 		if(!player_archive_filename(player_book_title))
 			to_chat(in_round_player_mob, span_warning("Choose a nonempty title of at most 42 characters that does not begin with an underscore."))
 	while(!player_archive_filename(player_book_title))
 	var/author_title = stripped_input(in_round_player_mob, "Do you want to preface your author name with an author title? (max 42 characters)", "Author Title", "", MAX_NAME_LEN)
 	player_book_author = trim("[author_title] [player_archive_display_text(in_round_player_mob.real_name)]")
-	player_book_icon = book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in book_icons]
-	player_book_text = text
+	player_book_icon = book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in book_icons] || player_book_icon
 	player_book_date = get_ic_date_short_as_string()
 	message_admins("[player_archive_display_text(player_book_author_ckey)]([player_archive_display_text(in_round_player_mob.real_name)]) has generated the player book: [player_archive_display_text(player_book_title)]")
 	update_book_data()
@@ -531,10 +535,8 @@
 	if(is_in_round_player_generated)
 		INVOKE_ASYNC(src, PROC_REF(get_player_input), in_round_player_mob, text)
 	else
-		if(!title)
-			var/list/player_book_titles = SSlibrarian.pull_player_book_titles()
-			if(length(player_book_titles))
-				title = pick(player_book_titles)
+		if(!title && length(SSlibrarian.player_books))
+			title = pick(SSlibrarian.player_books)
 		var/list/player_book_content = title ? SSlibrarian.file2playerbook(title) : null
 		// With no valid archive entry, keep the default water-damaged book.
 		if(length(player_book_content) && player_book_content["book_title"] && player_book_content["text"])

@@ -99,9 +99,6 @@
 /area/rogue/indoors)
 "cU" = (
 /obj/structure/fluff/railing/corner/north_east,
-/obj/structure/stairs{
-	dir = 1
-	},
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
 "cY" = (
@@ -379,6 +376,12 @@
 /obj/machinery/light/rogue/candle,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors)
+"nr" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors)
 "nv" = (
 /obj/effect/landmark/latejoin,
 /turf/open/floor/rogue/carpet/lord/center,
@@ -651,9 +654,6 @@
 /obj/structure/fluff/railing/border{
 	dir = 9;
 	pixel_y = 3
-	},
-/obj/structure/stairs{
-	dir = 1
 	},
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
@@ -1957,7 +1957,7 @@ Ey
 kv
 wv
 tj
-Ey
+nr
 Ey
 zo
 Br
@@ -2009,7 +2009,7 @@ Ey
 zb
 rp
 cU
-Ey
+nr
 AF
 zo
 BX

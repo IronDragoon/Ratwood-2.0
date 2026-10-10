@@ -1,58 +1,28 @@
 #define PLAYER_PAINTING_DIRECTORY "data/player_generated_paintings/"
-#define PLAYER_PAINTING_INDEX "_painting_titles.json"
 #define PLAYER_PAINTING_IMAGE_DIRECTORY "data/player_generated_paintings/paintings/"
 
 SUBSYSTEM_DEF(paintings)
 	name = "Paintings"
-	init_order = INIT_ORDER_PATH
+	init_order = INIT_ORDER_PLAYER_ARCHIVES
 	flags = SS_NO_FIRE
 
+	/// Archived painting metadata, keyed by filename. Loaded once at init and kept in sync with the files on every change.
 	var/list/paintings = list()
 
 /datum/controller/subsystem/paintings/Initialize(start_timeofday)
-	read_player_archive_index(PLAYER_PAINTING_DIRECTORY, PLAYER_PAINTING_INDEX, TRUE)
-	update_paintings()
+	paintings = load_player_archive(PLAYER_PAINTING_DIRECTORY)
 	return ..()
 
-/// Older paintings were saved with the raw title as the filename; only look those up when the title is path safe.
-/datum/controller/subsystem/paintings/proc/get_legacy_painting_filename(title)
-	if(!istext(title))
-		return
-	var/static/regex/unsafe_filename = regex(@{"[\\/:*?"<>|]"})
-	if(!length(title) || unsafe_filename.Find(title))
-		return
-	return "[PLAYER_PAINTING_IMAGE_DIRECTORY][title].png"
-
 /datum/controller/subsystem/paintings/proc/get_painting_filename(title)
-	var/encoded_path = "[PLAYER_PAINTING_IMAGE_DIRECTORY][url_encode(title)].png"
-	if(fexists(encoded_path))
-		return encoded_path
-	for(var/recovery_path in list("[encoded_path].tmp", "[encoded_path].bak"))
-		if(fexists(recovery_path))
-			if(fcopy(recovery_path, encoded_path))
-				message_admins("Recovered painting image [encoded_path].")
-				return encoded_path
-			message_admins("Unable to recover painting image [encoded_path] from [recovery_path].")
-	var/legacy_path = get_legacy_painting_filename(title)
-	if(legacy_path && fexists(legacy_path))
-		return legacy_path
-	return encoded_path
-
-/datum/controller/subsystem/paintings/proc/update_paintings()
-	paintings = list()
-	for(var/painting in pull_player_painting_titles())
-		var/list/painting_data = file2playerpainting(painting)
-		if(length(painting_data))
-			paintings[painting] = painting_data
+	return "[PLAYER_PAINTING_IMAGE_DIRECTORY][url_encode(title)].png"
 
 /datum/controller/subsystem/paintings/proc/pull_player_painting_titles()
-	return read_player_archive_index(PLAYER_PAINTING_DIRECTORY, PLAYER_PAINTING_INDEX)
+	return assoc_list_strip_value(paintings)
 
+/// Returns the archived painting metadata stored under a filename, or an empty list if there is none.
 /datum/controller/subsystem/paintings/proc/file2playerpainting(filename)
-	if(!is_safe_player_archive_filename(filename))
-		return list()
-	var/list/contents = read_player_archive_file("[PLAYER_PAINTING_DIRECTORY][filename].json")
-	return islist(contents) ? contents : list()
+	var/list/contents = paintings[filename]
+	return contents ? contents : list()
 
 /datum/controller/subsystem/paintings/proc/playerpainting2file(icon/painting, painting_title = "Unknown", author = "Unknown", author_ckey = "Unknown", canvas_size, obj/item/canvas/canvas, mob/user)
 	if(!painting)
@@ -67,9 +37,10 @@ SUBSYSTEM_DEF(paintings)
 		return FALSE
 
 	var/json_path = "[PLAYER_PAINTING_DIRECTORY][file_name].json"
-	var/list/existing = file2playerpainting(file_name)
-	if(length(existing) || fexists(json_path))
-		if(existing["author_ckey"] != author_ckey)
+	var/list/existing = paintings[file_name]
+	// fexists also catches titles differing only in case on case-insensitive filesystems.
+	if(existing || fexists(json_path))
+		if(existing?["author_ckey"] != author_ckey)
 			player_archive_feedback(user, "There is already a painting by this title!")
 			return FALSE
 		if(canvas?.reject)
@@ -85,74 +56,49 @@ SUBSYSTEM_DEF(paintings)
 				canvas.reject = TRUE
 			player_archive_feedback(user, "The painter has refused to replace [painting_title].")
 			return FALSE
-		// Another painter may have claimed the title while the alert was open.
-		existing = file2playerpainting(file_name)
-		if(length(existing) && existing["author_ckey"] != author_ckey)
+		// The painting may have been deleted or replaced while the alert was open.
+		existing = paintings[file_name]
+		if(existing && existing["author_ckey"] != author_ckey)
 			player_archive_feedback(user, "There is already a painting by this title!")
 			return FALSE
 
 	var/image_path = "[PLAYER_PAINTING_IMAGE_DIRECTORY][file_name].png"
-	var/temp_image_path = "[image_path].tmp"
-	fdel(temp_image_path)
-	if(!fcopy(painting, temp_image_path) || !commit_player_archive_file(temp_image_path, image_path))
+	fdel(image_path)
+	if(!fcopy(painting, image_path))
 		player_archive_feedback(user, "The archive could not store this painting.")
 		return FALSE
 	var/list/contents = list("painting_title" = "[painting_title]", "author" = "[author]", "author_ckey" = "[author_ckey]", "canvas_size" = canvas_size, "ic_date" = get_ic_date_short_as_string())
 	if(!write_player_archive_file(json_path, contents))
 		player_archive_feedback(user, "The archive could not store this painting.")
 		return FALSE
-	var/legacy_path = get_legacy_painting_filename(painting_title)
-	if(legacy_path && legacy_path != image_path && fexists(legacy_path))
-		fdel(legacy_path)
-
-	var/list/index = pull_player_painting_titles()
-	index |= file_name
-	if(!write_player_archive_file("[PLAYER_PAINTING_DIRECTORY][PLAYER_PAINTING_INDEX]", index))
-		player_archive_feedback(user, "The archive could not store this painting.")
-		return FALSE
+	paintings[file_name] = contents
 	message_admins("Painting [player_archive_display_text(painting_title)] has been saved to the player painting database by [player_archive_display_text(author_ckey)]([player_archive_display_text(author)])")
 	player_archive_feedback(user, "You have a feeling the painting will remain in the archive for a very long time...", TRUE)
 	return TRUE
 
 /// Returns the metadata of a random archived painting of the given size whose image exists, or null if there are none.
 /datum/controller/subsystem/paintings/proc/get_random_painting_data(canvas_size)
-	var/list/painting_titles = pull_player_painting_titles()
-	if(!islist(painting_titles))
-		return
-	painting_titles = painting_titles.Copy()
-	while(length(painting_titles))
-		var/list/paint_list = file2playerpainting(pick_n_take(painting_titles))
-		if(!paint_list["painting_title"] || paint_list["canvas_size"] != canvas_size)
-			continue
-		if(!fexists(get_painting_filename(paint_list["painting_title"])))
-			continue
-		return paint_list
+	var/list/candidates = list()
+	for(var/file_name in paintings)
+		var/list/painting_data = paintings[file_name]
+		if(painting_data["painting_title"] && painting_data["canvas_size"] == canvas_size)
+			candidates += file_name
+	while(length(candidates))
+		var/file_name = pick_n_take(candidates)
+		if(fexists("[PLAYER_PAINTING_IMAGE_DIRECTORY][file_name].png"))
+			return paintings[file_name]
 
-/datum/controller/subsystem/paintings/proc/del_player_painting(painting_title)
-	if(!istext(painting_title) || !length(painting_title))
+/datum/controller/subsystem/paintings/proc/del_player_painting(filename)
+	if(!paintings[filename])
 		return FALSE
-
-	var/encoded_title = url_encode(painting_title)
-	var/json_file = "[PLAYER_PAINTING_DIRECTORY][encoded_title].json"
-	if(!is_safe_player_archive_filename(encoded_title) || !fexists(json_file))
-		return FALSE
-
-	if(!fdel(json_file))
+	var/json_file = "[PLAYER_PAINTING_DIRECTORY][filename].json"
+	fdel(json_file)
+	if(fexists(json_file))
 		message_admins("Unable to delete archived painting [json_file].")
 		return FALSE
-	fdel("[json_file].tmp")
-	fdel("[json_file].bak")
-	var/image_path = "[PLAYER_PAINTING_IMAGE_DIRECTORY][encoded_title].png"
-	fdel(image_path)
-	fdel("[image_path].tmp")
-	fdel("[image_path].bak")
-	var/legacy_path = get_legacy_painting_filename(painting_title)
-	if(legacy_path && fexists(legacy_path))
-		fdel(legacy_path)
-	var/list/index = pull_player_painting_titles()
-	index -= encoded_title
-	return write_player_archive_file("[PLAYER_PAINTING_DIRECTORY][PLAYER_PAINTING_INDEX]", index)
+	fdel("[PLAYER_PAINTING_IMAGE_DIRECTORY][filename].png")
+	paintings -= filename
+	return TRUE
 
 #undef PLAYER_PAINTING_DIRECTORY
-#undef PLAYER_PAINTING_INDEX
 #undef PLAYER_PAINTING_IMAGE_DIRECTORY

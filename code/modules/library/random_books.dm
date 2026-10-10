@@ -90,9 +90,8 @@
 
 /proc/create_random_books_rogue(amount = 2, location)
 	var/list/possible_books = subtypesof(/obj/item/book/rogue/) - typesof(/obj/item/book/rogue/playerbook)
-	var/list/player_book_titles = SSlibrarian.pull_player_book_titles()
 	// Each archived book can only be placed once per shelf.
-	var/list/unused_player_titles = islist(player_book_titles) ? player_book_titles.Copy() : list()
+	var/list/unused_player_titles = SSlibrarian.pull_player_book_titles()
 	var/player_book_chance = clamp(length(unused_player_titles), 10, 90)
 	for(var/b in 1 to amount)
 		if(prob(0.1))

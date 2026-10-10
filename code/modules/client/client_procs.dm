@@ -117,43 +117,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			keyUp(keycode)
 		return
 
-	if(href_list["delete_painting"])
-		if(!holder)
-			return
-		var/title = href_list["id"]
-		if(!title)
-			return
-		if(tgui_alert(src, "Are you sure you want to delete the painting '[title]'?", "Confirm Deletion", list("Yes", "No")) == "Yes")
-			if(SSpaintings.del_player_painting(title))
-				message_admins("[key_name_admin(src)] has deleted player made painting called: '[player_archive_display_text(title)]'")
-				SSpaintings.update_paintings()
-				manage_paintings()
-			else
-				to_chat(src, span_warning("The painting could not be deleted."))
-
-	if(href_list["delete_book"])
-		if(!holder)
-			return
-		var/title = href_list["id"]
-		if(!title)
-			return
-		var/real_title = url_decode(title)
-		if(tgui_alert(src, "Are you sure you want to delete the book '[real_title]'?", "Confirm Deletion", list("Yes", "No")) == "Yes")
-			if(SSlibrarian.del_player_book(title))
-				message_admins("[key_name_admin(src)] has deleted player made book called: '[player_archive_display_text(real_title)]'")
-				manage_books()
-			else
-				to_chat(src, span_warning("The book could not be deleted."))
-
-	if(href_list["show_book"])
-		if(!holder)
-			return
-		var/title = href_list["id"]
-		if(!title)
-			return
-		show_book_content(title)
-	
-
 	// Admin PM
 	if(href_list["priv_msg"])
 		cmd_admin_pm(href_list["priv_msg"],null)

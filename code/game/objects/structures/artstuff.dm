@@ -76,15 +76,15 @@
 /obj/item/canvas/attackby(obj/item/I, mob/living/user, params)
 	. = ..()
 	if(istype(I, /obj/item/natural/feather))
-		var/new_author = stripped_input(user, "Who's the author of this painting?", "Author", "", MAX_NAME_LEN)
 		var/new_title = stripped_input(user, "What's the title of this painting?", "Title", "", MAX_NAME_LEN)
-		if(!new_author || !new_title)
-			to_chat(user, span_warning("A painting needs both an author and a title to be signed."))
+		if(!new_title)
+			to_chat(user, span_warning("A painting needs a title to be signed."))
 			return
 		if(!player_archive_filename(new_title))
 			to_chat(user, span_warning("Choose a shorter title that does not begin with an underscore."))
 			return
-		author = new_author
+		// Paintings are always signed with the painter's true name, matching player books.
+		author = player_archive_display_text(user.real_name)
 		author_ckey = user.ckey
 		title = new_title
 		reject = FALSE
@@ -148,9 +148,7 @@
 		return FALSE
 	cut_overlays()
 	icon = rendered
-	. = SSpaintings.playerpainting2file(icon, title, author, author_ckey, canvas_size, src, user)
-	if(.)
-		SSpaintings.update_paintings()
+	return SSpaintings.playerpainting2file(icon, title, author, author_ckey, canvas_size, src, user)
 
 /atom/movable/screen/canvas
 	icon = 'icons/roguetown/items/paint_supplies/canvas_32x32.dmi'

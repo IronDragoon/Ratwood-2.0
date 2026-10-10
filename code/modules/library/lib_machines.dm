@@ -14,6 +14,13 @@
 
 	var/static/list/manual_name_to_path = list()
 
+/obj/machinery/printingpress/Exited(atom/movable/AM, atom/newloc)
+	. = ..()
+	if(AM == loaded_paper)
+		loaded_paper = null
+	if(AM == output_item)
+		output_item = null
+
 /obj/machinery/printingpress/examine(mob/user)
 	. = ..()
 	. += span_info("Insert blank paper, then right-click to select a book to print. Use an empty hand to retrieve paper or a finished book. Apply a finished player book or signed canvas to archive it.")
@@ -22,7 +29,7 @@
 	else
 		if(output_item)
 			. += span_info("It has a finished book ready. Use an empty hand to retrieve it.")
-		else if(!QDELETED(loaded_paper) && loaded_paper.loc == src)
+		else if(loaded_paper)
 			. += span_info("It has blank paper loaded.")
 		else
 			. += span_info("It is empty and has no paper loaded.")
@@ -59,6 +66,10 @@
 		if(!PB.written)
 			to_chat(user, span_notice("This book has yet to be authored and titled. You'll need to do so before uploading it."))
 			return
+		// Copies printed or shelved from the archive must not restore books an admin has removed.
+		if(!PB.is_in_round_player_generated)
+			to_chat(user, span_notice("Only newly bound books can be added to the archive."))
+			return
 		var/choice = tgui_alert(user, "Do you want to add the book to the archive?", "Confirm", list("Yes", "No"))
 		if(choice == "Yes")
 			if(QDELETED(PB) || !user.canUseTopic(src, BE_CLOSE) || !user.Adjacent(PB))
@@ -69,7 +80,7 @@
 			to_chat(user, span_notice("You decide not to upload the book."))
 		return
 	if(O.type == /obj/item/paper)
-		if(!QDELETED(loaded_paper) && loaded_paper.loc == src)
+		if(loaded_paper)
 			to_chat(user, span_warning("It already has paper loaded."))
 			return
 		var/obj/item/paper/paper = O
@@ -92,18 +103,18 @@
 		to_chat(user, span_warning("[src] is currently printing. Please wait."))
 		return
 	if(output_item)
-		if(!user.put_in_hands(output_item))
-			output_item.forceMove(get_turf(user))
-		to_chat(user, span_notice("You retrieve [output_item] from [src]."))
-		output_item = null
+		// Exited() clears output_item once it leaves, so keep a local reference.
+		var/obj/item/printed = output_item
+		if(!user.put_in_hands(printed))
+			printed.forceMove(get_turf(user))
+		to_chat(user, span_notice("You retrieve [printed] from [src]."))
 		src.icon_state = "Ppress_Clean"
 		return
-	if(!QDELETED(loaded_paper) && loaded_paper.loc == src)
+	if(loaded_paper)
 		var/obj/item/paper/P = loaded_paper
 		if(!user.put_in_hands(P))
 			P.forceMove(get_turf(user))
 		to_chat(user, span_warning("You retrieve [P.name] from [src]."))
-		loaded_paper = null
 		src.icon_state = "Ppress_Clean"
 		return
 	to_chat(user, span_warning("[src] is empty."))
@@ -117,7 +128,7 @@
 	if(output_item)
 		to_chat(user, span_warning("There is a finished product in [src]. Use an empty hand to retrieve it."))
 		return
-	if(QDELETED(loaded_paper) || loaded_paper.loc != src)
+	if(!loaded_paper)
 		to_chat(user, span_warning("[src] requires a blank piece of paper to print."))
 		return
 	var/choice = input(user, "Choose an option for \the [src]") as null|anything in list("Print The Verses and Acts of the Ten", "Print a Tome of Justice", "Print from the Archive", "Profession Manual")
@@ -147,17 +158,15 @@
 	if(output_item)
 		to_chat(user, span_warning("Retrieve the finished book before printing another."))
 		return
-	if(QDELETED(loaded_paper) || loaded_paper.loc != src)
-		loaded_paper = null
+	if(!loaded_paper)
 		to_chat(user, span_warning("[src] requires a blank piece of paper to print."))
 		return
 	if(cooldown > world.time)
 		to_chat(user, span_warning("[src] is still recalibrating."))
 		return
 	if(print_type == "archive")
-		var/list/available_books = SSlibrarian.pull_player_book_titles()
 		var/list/book = SSlibrarian.file2playerbook(id)
-		if(!(id in available_books) || !book["book_title"] || !book["text"])
+		if(!book["book_title"] || !book["text"])
 			to_chat(user, span_warning("This book is no longer in the archive."))
 			return
 	else if(print_type != /obj/item/book/rogue/bibble && print_type != /obj/item/book/rogue/law && !ispath(print_type, /obj/item/recipe_book))
@@ -173,7 +182,6 @@
 	to_chat(user, span_warning("[src] starts printing..."))
 	playsound(src, 'sound/misc/ppress.ogg', 100, FALSE)
 	qdel(loaded_paper)
-	loaded_paper = null
 	sleep(PRINTING_TIME)
 	if(QDELETED(src))
 		return
@@ -191,12 +199,11 @@
 	search_manuscripts(user, search_title, search_author)
 
 /obj/machinery/printingpress/proc/search_manuscripts(mob/user, search_title, search_author)
-	var/list/available_books = SSlibrarian.pull_player_book_titles()
 	var/dat = "<h3>Book Search Results:</h3><br>"
 	dat += "<table><tr><th>Title</th><th>Author</th><th>Written</th><th>Print</th></tr>"
 	var/matches = 0
-	for(var/filename in available_books)
-		var/list/book = SSlibrarian.file2playerbook(filename)
+	for(var/filename in SSlibrarian.player_books)
+		var/list/book = SSlibrarian.player_books[filename]
 		if(!book["book_title"])
 			continue
 		if(search_title && !findtext(book["book_title"], search_title))

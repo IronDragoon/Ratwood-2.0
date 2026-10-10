@@ -26,6 +26,43 @@
 		if(mass_direct_handle_topic(href_list))
 			return
 
+	// Player archive management, from Manage Books and Manage Paintings
+	if(href_list["show_player_book"])
+		owner.show_book_content(href_list["show_player_book"])
+		return
+
+	if(href_list["delete_player_book"])
+		var/file_name = href_list["delete_player_book"]
+		var/list/book = SSlibrarian.file2playerbook(file_name)
+		if(!book["book_title"])
+			return
+		var/book_title = player_archive_display_text(book["book_title"])
+		if(tgui_alert(usr, "Are you sure you want to delete the book '[html_decode(book_title)]'?", "Confirm Deletion", list("Yes", "No")) != "Yes")
+			return
+		if(!SSlibrarian.del_player_book(file_name))
+			to_chat(usr, span_warning("The book could not be deleted."))
+			return
+		message_admins("[key_name_admin(usr)] has deleted player made book called: '[book_title]'")
+		log_admin("[key_name(usr)] has deleted player made book called: '[book["book_title"]]'")
+		owner.manage_books()
+		return
+
+	if(href_list["delete_player_painting"])
+		var/file_name = href_list["delete_player_painting"]
+		var/list/painting = SSpaintings.file2playerpainting(file_name)
+		if(!length(painting))
+			return
+		var/painting_title = player_archive_display_text(painting["painting_title"], file_name)
+		if(tgui_alert(usr, "Are you sure you want to delete the painting '[html_decode(painting_title)]'?", "Confirm Deletion", list("Yes", "No")) != "Yes")
+			return
+		if(!SSpaintings.del_player_painting(file_name))
+			to_chat(usr, span_warning("The painting could not be deleted."))
+			return
+		message_admins("[key_name_admin(usr)] has deleted player made painting called: '[painting_title]'")
+		log_admin("[key_name(usr)] has deleted player made painting called: '[painting["painting_title"]]'")
+		owner.manage_paintings()
+		return
+
 	// Open Heal Panel from Player Panel
 	if(href_list["heal_panel"])
 		var/mob/living/M = locate(href_list["heal_panel"])
