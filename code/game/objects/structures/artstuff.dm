@@ -227,13 +227,11 @@
 
 /obj/item/canvas/random_painting/Initialize(mapload)
 	. = ..()
-	var/list/painting_data = SSpaintings.get_random_painting_data(canvas_size)
-	if(!painting_data)
+	var/file_name = SSpaintings.get_random_painting(canvas_size)
+	if(!file_name)
 		return
-	var/icon/painting = icon(SSpaintings.get_painting_filename(painting_data["painting_title"]))
-	if(!painting)
-		return
-	icon = painting
+	var/list/painting_data = SSpaintings.file2playerpainting(file_name)
+	icon = icon(file(SSpaintings.get_painting_image_path(file_name)))
 	name = painting_data["painting_title"]
 	if(painting_data["author"])
 		desc = "Painted by: [painting_data["author"]][painting_data["ic_date"] ? ", [painting_data["ic_date"]]" : ""]."

@@ -508,15 +508,17 @@ GLOBAL_LIST_INIT(player_book_icons, list(
 /obj/item/book/rogue/playerbook/proc/get_player_input(mob/living/in_round_player_mob, text)
 	player_book_author_ckey = in_round_player_mob.ckey
 	player_book_text = text
+	var/new_title
 	do
 		// input() returns immediately without a client, so stop rather than loop forever. The book stays readable but unarchivable.
-		if(!in_round_player_mob.client)
+		if(!in_round_player_mob?.client)
 			update_book_data()
 			return
-		player_book_title = capitalize(trim(STRIP_HTML_SIMPLE(input(in_round_player_mob, "What title do you want to give the book? (max 42 characters)", "Title", "Unknown"), MAX_NAME_LEN)))
-		if(!player_archive_filename(player_book_title))
+		new_title = capitalize(stripped_input(in_round_player_mob, "What title do you want to give the book? (max 42 characters)", "Title", "", MAX_NAME_LEN))
+		if(!player_archive_filename(new_title))
 			to_chat(in_round_player_mob, span_warning("Choose a nonempty title of at most 42 characters that does not begin with an underscore."))
-	while(!player_archive_filename(player_book_title))
+	while(!player_archive_filename(new_title))
+	player_book_title = new_title
 	player_book_author = player_archive_author_name(in_round_player_mob)
 	player_book_icon = GLOB.player_book_icons[input(in_round_player_mob, "Choose a book style", "Book Style") as anything in GLOB.player_book_icons] || player_book_icon
 	player_book_date = get_ic_date_short_as_string()
@@ -531,17 +533,17 @@ GLOBAL_LIST_INIT(player_book_icons, list(
 	base_icon_state = "[player_book_icon]"
 	pages = list("<b3><h3>Title: [player_archive_display_text(player_book_title)]<br>Author: [player_archive_display_text(player_book_author)][player_book_date ? "<br>Written: [player_archive_display_text(player_book_date)]" : ""]</b><h3>[player_book_text]")
 
-/obj/item/book/rogue/playerbook/Initialize(mapload, in_round_player_generated, mob/living/in_round_player_mob, text, title)
+/obj/item/book/rogue/playerbook/Initialize(mapload, in_round_player_generated, mob/living/in_round_player_mob, text, archive_file_name)
 	. = ..()
 	is_in_round_player_generated = in_round_player_generated
 	if(is_in_round_player_generated)
 		INVOKE_ASYNC(src, PROC_REF(get_player_input), in_round_player_mob, text)
 	else
-		if(!title && length(SSlibrarian.player_books))
-			title = pick(SSlibrarian.player_books)
-		var/list/player_book_content = title ? SSlibrarian.file2playerbook(title) : null
+		if(!archive_file_name && length(SSlibrarian.player_books))
+			archive_file_name = pick(SSlibrarian.player_books)
+		var/list/player_book_content = SSlibrarian.file2playerbook(archive_file_name)
 		// With no valid archive entry, keep the default water-damaged book.
-		if(length(player_book_content) && player_book_content["book_title"] && player_book_content["text"])
+		if(player_book_content["book_title"] && player_book_content["text"])
 			player_book_title = player_book_content["book_title"]
 			player_book_author = player_book_content["author"] || player_book_author
 			player_book_author_ckey = player_book_content["author_ckey"] || player_book_author_ckey

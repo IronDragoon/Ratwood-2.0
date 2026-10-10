@@ -238,7 +238,7 @@
 	. = ..()
 	if(!usr || !usr.canUseTopic(src, BE_CLOSE))
 		return
-	if("print" in href_list)
+	if(href_list["print"])
 		start_printing(usr, "archive", href_list["filename"])
 
 #undef PRINTER_COOLDOWN

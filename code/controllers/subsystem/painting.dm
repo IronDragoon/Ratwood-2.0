@@ -13,11 +13,9 @@ SUBSYSTEM_DEF(paintings)
 	paintings = load_player_archive(PLAYER_PAINTING_DIRECTORY)
 	return ..()
 
-/datum/controller/subsystem/paintings/proc/get_painting_filename(title)
-	return "[PLAYER_PAINTING_IMAGE_DIRECTORY][url_encode(title)].png"
-
-/datum/controller/subsystem/paintings/proc/pull_player_painting_titles()
-	return assoc_list_strip_value(paintings)
+/// Returns the path of the image for the archived painting stored under a filename.
+/datum/controller/subsystem/paintings/proc/get_painting_image_path(filename)
+	return "[PLAYER_PAINTING_IMAGE_DIRECTORY][filename].png"
 
 /// Returns the archived painting metadata stored under a filename, or an empty list if there is none.
 /datum/controller/subsystem/paintings/proc/file2playerpainting(filename)
@@ -50,7 +48,7 @@ SUBSYSTEM_DEF(paintings)
 		if(!author_client)
 			player_archive_feedback(user, "The painter must be present to replace their painting titled [painting_title].")
 			return FALSE
-		var/replace = tgui_alert(author_client, "Someone wants to replace [html_decode(painting_title)] with another one by you, do you want to replace this?", "Confirm", list("Yes", "No"))
+		var/replace = tgui_alert(author_client, "Replace your archived painting '[html_decode(painting_title)]' with this new one?", "Replace Painting", list("Yes", "No"))
 		if(replace != "Yes")
 			if(canvas)
 				canvas.reject = TRUE
@@ -62,7 +60,7 @@ SUBSYSTEM_DEF(paintings)
 			player_archive_feedback(user, "There is already a painting by this title!")
 			return FALSE
 
-	var/image_path = "[PLAYER_PAINTING_IMAGE_DIRECTORY][file_name].png"
+	var/image_path = get_painting_image_path(file_name)
 	fdel(image_path)
 	if(!fcopy(painting, image_path))
 		player_archive_feedback(user, "The archive could not store this painting.")
@@ -76,8 +74,8 @@ SUBSYSTEM_DEF(paintings)
 	player_archive_feedback(user, "You have a feeling the painting will remain in the archive for a very long time...", TRUE)
 	return TRUE
 
-/// Returns the metadata of a random archived painting of the given size whose image exists, or null if there are none.
-/datum/controller/subsystem/paintings/proc/get_random_painting_data(canvas_size)
+/// Returns the filename of a random archived painting of the given size whose image exists, or null if there are none.
+/datum/controller/subsystem/paintings/proc/get_random_painting(canvas_size)
 	var/list/candidates = list()
 	for(var/file_name in paintings)
 		var/list/painting_data = paintings[file_name]
@@ -85,8 +83,8 @@ SUBSYSTEM_DEF(paintings)
 			candidates += file_name
 	while(length(candidates))
 		var/file_name = pick_n_take(candidates)
-		if(fexists("[PLAYER_PAINTING_IMAGE_DIRECTORY][file_name].png"))
-			return paintings[file_name]
+		if(fexists(get_painting_image_path(file_name)))
+			return file_name
 
 /datum/controller/subsystem/paintings/proc/del_player_painting(filename)
 	if(!paintings[filename])
@@ -96,7 +94,7 @@ SUBSYSTEM_DEF(paintings)
 	if(fexists(json_file))
 		message_admins("Unable to delete archived painting [json_file].")
 		return FALSE
-	fdel("[PLAYER_PAINTING_IMAGE_DIRECTORY][filename].png")
+	fdel(get_painting_image_path(filename))
 	paintings -= filename
 	return TRUE
 

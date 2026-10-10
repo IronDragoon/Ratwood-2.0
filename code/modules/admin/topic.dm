@@ -34,7 +34,7 @@
 	if(href_list["amend_player_book"])
 		var/file_name = href_list["amend_player_book"]
 		var/list/book = SSlibrarian.file2playerbook(file_name)
-		if(!book["book_title"])
+		if(!length(book))
 			return
 		var/static/list/amend_types = list("Title" = "book_title", "Author" = "author", "Cover" = "icon")
 		var/amend_choice = tgui_input_list(usr, "What do you want to amend?", "Amend Book", amend_types)
@@ -51,7 +51,7 @@
 		if(!SSlibrarian.amend_player_book(file_name, amend_type, amend_text))
 			to_chat(usr, span_warning("The book could not be amended. Titles must be unique and must not begin with an underscore."))
 			return
-		message_admins("[key_name_admin(usr)] has amended player made book '[player_archive_display_text(book["book_title"])]': [lowertext(amend_choice)] is now '[player_archive_display_text(amend_text)]'")
+		message_admins("[key_name_admin(usr)] has amended player made book '[player_archive_display_text(book["book_title"], file_name)]': [lowertext(amend_choice)] is now '[player_archive_display_text(amend_text)]'")
 		log_admin("[key_name(usr)] has amended player made book '[book["book_title"]]': [lowertext(amend_choice)] is now '[amend_text]'")
 		owner.manage_books()
 		return
@@ -59,16 +59,16 @@
 	if(href_list["delete_player_book"])
 		var/file_name = href_list["delete_player_book"]
 		var/list/book = SSlibrarian.file2playerbook(file_name)
-		if(!book["book_title"])
+		if(!length(book))
 			return
-		var/book_title = player_archive_display_text(book["book_title"])
+		var/book_title = player_archive_display_text(book["book_title"], file_name)
 		if(tgui_alert(usr, "Are you sure you want to delete the book '[html_decode(book_title)]'?", "Confirm Deletion", list("Yes", "No")) != "Yes")
 			return
 		if(!SSlibrarian.del_player_book(file_name))
 			to_chat(usr, span_warning("The book could not be deleted."))
 			return
 		message_admins("[key_name_admin(usr)] has deleted player made book called: '[book_title]'")
-		log_admin("[key_name(usr)] has deleted player made book called: '[book["book_title"]]'")
+		log_admin("[key_name(usr)] has deleted player made book called: '[html_decode(book_title)]'")
 		owner.manage_books()
 		return
 
@@ -84,7 +84,7 @@
 			to_chat(usr, span_warning("The painting could not be deleted."))
 			return
 		message_admins("[key_name_admin(usr)] has deleted player made painting called: '[painting_title]'")
-		log_admin("[key_name(usr)] has deleted player made painting called: '[painting["painting_title"]]'")
+		log_admin("[key_name(usr)] has deleted player made painting called: '[html_decode(painting_title)]'")
 		owner.manage_paintings()
 		return
 

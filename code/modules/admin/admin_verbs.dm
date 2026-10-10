@@ -965,7 +965,6 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	var/dat = "<table style='border-collapse: separate; border-spacing: 0 10px; width: 100%;'>"
 	dat += "<tr>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Title</th>"
-	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Player Author</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Author</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Written</th>"
 	dat += "<th style='padding: 10px 15px; text-align: left; color: #c72222;'>Actions</th>"
@@ -973,13 +972,9 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	for(var/file_name in SSlibrarian.player_books)
 		var/list/book = SSlibrarian.player_books[file_name]
-		if(!book["book_title"])
-			continue
-
 		dat += "<tr>"
-		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["book_title"])]</td>"
-		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["author_ckey"])]</td>"
-		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["author"])]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["book_title"], file_name)]</td>"
+		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["author"])] ([player_archive_display_text(book["author_ckey"])])</td>"
 		dat += "<td style='padding: 12px 15px;'>[player_archive_display_text(book["ic_date"])]</td>"
 		dat += "<td style='padding: 12px 15px;'>"
 		dat += "<a href='byond://?_src_=holder;[HrefToken()];show_player_book=[url_encode(file_name)]' style='margin-right: 10px;'>View</a>"
@@ -989,23 +984,23 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		dat += "</tr>"
 
 	if(!length(SSlibrarian.player_books))
-		dat += "<tr><td colspan='5' style='padding: 20px; text-align: center;'>No books found</td></tr>"
+		dat += "<tr><td colspan='4' style='padding: 20px; text-align: center;'>No books found</td></tr>"
 
 	dat += "</table>"
 	var/datum/browser/popup = new(src, "book_management", "Book Management", 800, 700)
 	popup.set_content(dat)
 	popup.open()
 
-/client/proc/show_book_content(title)
-	var/list/book = SSlibrarian.file2playerbook(title)
-	if(!book || !book["book_title"])
-		to_chat(src, "<span class='warning'>Book not found!</span>")
+/client/proc/show_book_content(file_name)
+	var/list/book = SSlibrarian.file2playerbook(file_name)
+	if(!length(book))
+		to_chat(src, span_warning("Book not found!"))
 		return
 
 	src << browse_rsc('html/book.png')
 
 	// Book text is the formatted paper HTML that players see in-game; the metadata is escaped separately.
-	var/content = "<h3>[player_archive_display_text(book["book_title"])]</h3><p>By [player_archive_display_text(book["author"])] ([player_archive_display_text(book["author_ckey"])]), written [player_archive_display_text(book["ic_date"])]</p>[book["text"]]"
+	var/content = "<h3>[player_archive_display_text(book["book_title"], file_name)]</h3><p>By [player_archive_display_text(book["author"])] ([player_archive_display_text(book["author_ckey"])]), written [player_archive_display_text(book["ic_date"])]</p>[book["text"]]"
 	var/dat = {"
 	<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
 	<html>
@@ -1047,12 +1042,12 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	for(var/file_name in SSpaintings.paintings)
 		var/list/painting = SSpaintings.paintings[file_name]
-		var/disk_filename = SSpaintings.get_painting_filename(painting["painting_title"])
+		var/image_path = SSpaintings.get_painting_image_path(file_name)
 		// Entries whose image is missing are still listed, so they can be cleaned up.
 		var/preview = "No image"
-		if(painting["painting_title"] && fexists(disk_filename))
+		if(fexists(image_path))
 			var/res_name = "painting_[md5(file_name)].png"
-			src << browse_rsc(file(disk_filename), res_name)
+			src << browse_rsc(file(image_path), res_name)
 			preview = "<img src='[res_name]' height=64 width=64 style='display: block; margin: 0 auto;'>"
 		dat += "<tr>"
 		dat += "<td style='padding: 12px 15px;'>[preview]</td>"
