@@ -1,5 +1,5 @@
-/datum/patron/old_god
-	name = "Psydon"
+/datum/patron/orthodoxism
+	name = "Reformist Psydonism"
 	domain = "Life, Creation, Compassion and Perseverance"
 	desc = "The One arrived to PSYDONIA on the COMET SYON, reshaping the barren world in His image. He was struck down by the Necromantress Zizo; some believe Him dead, others slumbering. May we ENDURE in His name."
 	worshippers = "Ancient Dwarves and Elves, Zybantines, Otavans, Those Who Dream of Peace"
@@ -112,7 +112,7 @@
 /////////////////////////////////
 // no he's dead - ok maybe he does
 
-/datum/patron/old_god/can_pray(mob/living/follower)
+/datum/patron/orthodoxism/can_pray(mob/living/follower)
 	. = ..()
 	. = TRUE
 	// Allows prayer near psycross.
