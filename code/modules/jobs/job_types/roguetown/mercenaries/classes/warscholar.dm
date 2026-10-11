@@ -35,7 +35,7 @@
 
 /datum/outfit/job/roguetown/mercenary/warscholar
 	var/detailcolor
-	allowed_patrons = list(/datum/patron/old_god)
+	allowed_patrons = list(/datum/patron/old_god/orthodoxism)
 
 /datum/outfit/job/roguetown/mercenary/warscholar/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -125,7 +125,7 @@
 
 /datum/outfit/job/roguetown/mercenary/warscholar_pontifex
 	var/detailcolor
-	allowed_patrons = list(/datum/patron/old_god)
+	allowed_patrons = list(/datum/patron/old_god/orthodoxism)
 
 /datum/outfit/job/roguetown/mercenary/warscholar_pontifex/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -225,7 +225,7 @@
 
 /datum/outfit/job/roguetown/mercenary/warscholar_vizier
 	var/detailcolor
-	allowed_patrons = list(/datum/patron/old_god)
+	allowed_patrons = list(/datum/patron/old_god/orthodoxism)
 
 /datum/outfit/job/roguetown/mercenary/warscholar_vizier/pre_equip(mob/living/carbon/human/H)
 	..()

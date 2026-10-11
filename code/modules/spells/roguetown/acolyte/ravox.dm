@@ -99,7 +99,7 @@
 		if(istype(target.patron, /datum/patron/inhumen))
 			target.apply_status_effect(/datum/status_effect/debuff/call_to_arms)	//Debuffs inhumen worshipers.
 			continue
-		if(istype(target.patron, /datum/patron/old_god))
+		if(istype(target.patron, /datum/patron/old_god/orthodoxism))
 			to_chat(target, span_danger("You feel a hot-wave wash over you, leaving as quickly as it came.."))	//No effect on Psydonians!
 			continue
 		if(!user.faction_check_mob(target))

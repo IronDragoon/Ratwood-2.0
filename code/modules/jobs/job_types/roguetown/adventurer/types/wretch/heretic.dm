@@ -189,7 +189,7 @@
 			H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 			ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			H.change_stat(STATKEY_WIL, 2) //ENDVRE. You give up useful miracles, rites and miracle-healing from other Heretics, so you'll need this.
 			var/heavypsyfashion = list("Traditionalist", "Orthodoxist", "Reformist") //Only outfits differ.
 			var/heavypsyfashion_choice = input(H, "What is your faith in HIM like?", "HE LYVES, HE ENDURES, HE DIES") as anything in heavypsyfashion
@@ -415,7 +415,7 @@
 			H.adjust_skillrank(/datum/skill/craft/armorsmithing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			H.change_stat(STATKEY_WIL, 2) //ENDVRE. You give up useful miracles, rites and miracle-healing from other Heretics, so you'll need this.
 			var/lightpsyfashion = list("Traditionalist", "Orthodoxist", "Reformist")
 			var/lightpsyfashion_choice = input(H, "What is your faith in HIM like?", "HE LYVES, HE ENDURES, HE DIES") as anything in lightpsyfashion
@@ -522,7 +522,7 @@
 			monkstyles += list("Eastern Custodian")
 		if(istype(H.patron, /datum/patron/inhumen))
 			monkstyles += list("Atgervi Shaman")
-		if(istype(H.patron, /datum/patron/old_god))
+		if(istype(H.patron, /datum/patron/old_god/orthodoxism))
 			monkstyles += list("Disgraced Disciple (Natural Armor)")
 		var/style_choice = input(H, "Choose your equipment.", "YOU MIGHT JUST BE A PRETENDER") as anything in monkstyles
 		switch(style_choice)
@@ -622,7 +622,7 @@
 					H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/divineblast)
 				if(istype(H.patron, /datum/patron/inhumen))
 					H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/divineblast/unholyblast)
-				if(istype(H.patron, /datum/patron/old_god)) //Honestly, why not?
+				if(istype(H.patron, /datum/patron/old_god/orthodoxism)) //Honestly, why not?
 					H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/psydonic_sacrosanctity) //To get your blood back.
 
 
@@ -704,7 +704,7 @@
 			H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 			ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			H.change_stat(STATKEY_WIL, 2) //ENDVRE. You give up useful miracles, rites and miracle-healing from other Heretics, so you'll need this.
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/silver, SLOT_RING, TRUE)
 

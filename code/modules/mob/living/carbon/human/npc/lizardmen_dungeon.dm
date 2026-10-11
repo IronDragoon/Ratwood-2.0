@@ -86,7 +86,7 @@
 	ADD_TRAIT(src, TRAIT_STRONGBITE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 	equipOutfit(new /datum/outfit/job/roguetown/human/species/lizardfolk/psy_vault_guard)
-	patron = /datum/patron/old_god
+	patron = /datum/patron/old_god/orthodoxism
 	update_hair()
 	update_body()
 	update_overlays()

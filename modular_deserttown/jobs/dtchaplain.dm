@@ -7,7 +7,7 @@
 	spawn_positions = 1
 
 	allowed_races = ACCEPTED_RACES
-	allowed_patrons = list(/datum/patron/old_god)
+	allowed_patrons = list(/datum/patron/old_god/orthodoxism)
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/dtchaplain
 	tutorial = "SOMETHING SOMETHING PSYDON, something something REFUGEE TENNITES in your BIG TEMPLE... UNEASY ALLIANCE? Brokering PEACE  with the tennites? Idunno!"

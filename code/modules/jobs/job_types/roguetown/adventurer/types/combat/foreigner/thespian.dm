@@ -212,7 +212,7 @@
 		)
 	H.set_blindness(0)
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			id = /obj/item/clothing/neck/roguetown/psicross/bronze
 		if(/datum/patron/inhumen/zizo)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/bronze

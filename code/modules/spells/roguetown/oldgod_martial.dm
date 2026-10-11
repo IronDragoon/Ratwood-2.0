@@ -127,7 +127,7 @@ Given the nature of Psydon, two of these are INTENDED to be refluffed Tennite sp
 	user.handle_blood()
 	new /obj/effect/decal/cleanable/blood/puddle(user.loc)
 	for(var/mob/living/carbon/target in view(6, get_turf(user)))
-		if(!istype(target.patron, /datum/patron/old_god))
+		if(!istype(target.patron, /datum/patron/old_god/orthodoxism))
 			to_chat(target, span_danger("A presence witnesses you. For a time, it weeps."))
 			continue
 		if(!user.faction_check_mob(target))

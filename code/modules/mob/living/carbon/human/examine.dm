@@ -1132,7 +1132,7 @@
 					. += span_userdanger("EXCOMMUNICATED! SHAME!")
 				if (istype(H.patron, /datum/patron/inhumen))
 					. += span_userdanger("HERETIC! SHAME!")
-				if (istype(H.patron, /datum/patron/old_god))
+				if (istype(H.patron, /datum/patron/old_god/orthodoxism))
 					. += span_userdanger("HEATHEN! SHAME!")
 */
 		if(name in GLOB.outlawed_players)

@@ -43,7 +43,7 @@
 		if(/datum/patron/divine/abyssor)
 			ritechoices+="Rune of Storm"
 			ritechoices+="Rune of Stirring"
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			ritechoices+="Rune of Enduring"
 
 	if(HAS_TRAIT(user, TRAIT_DREAMWALKER) && !("Rune of Stirring" in ritechoices))

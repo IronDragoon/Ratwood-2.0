@@ -61,7 +61,7 @@
 		)
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			cloak = /obj/item/clothing/cloak/psydontabard
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/astrata)
@@ -126,7 +126,7 @@
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/divineblast)
 
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			neck = /obj/item/clothing/neck/roguetown/psicross
 		if(/datum/patron/divine/astrata)
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata
@@ -198,7 +198,7 @@
 	extra_context = "This is a psydonite only subclass, it will force you to be one if it is not set. You will be a pacifist and are able to draw upon a weaker version of the abilities known by a Psydonic Absolver."
 
 /datum/outfit/job/roguetown/adventurer/kj_chaplain_stigmata
-	allowed_patrons = list(/datum/patron/old_god)
+	allowed_patrons = list(/datum/patron/old_god/orthodoxism)
 
 /datum/outfit/job/roguetown/adventurer/kj_chaplain_stigmata/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..()

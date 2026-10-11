@@ -35,7 +35,7 @@
 //This is gross, but it works. Better than a new define.
 /datum/outfit/job/roguetown/adventurer/dnomad
 	allowed_patrons = list(/datum/patron/inhumen/baotha, /datum/patron/inhumen/graggar,
-	/datum/patron/inhumen/zizo, /datum/patron/inhumen/matthios, /datum/patron/old_god)
+	/datum/patron/inhumen/zizo, /datum/patron/inhumen/matthios, /datum/patron/old_god/orthodoxism)
 
 /datum/outfit/job/roguetown/adventurer/dnomad/pre_equip(mob/living/carbon/human/H)
 	..()

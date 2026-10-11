@@ -40,7 +40,7 @@
 		var/mob/living/carbon/human/H = target
 		if(istype(H.patron, /datum/patron/divine))
 			damage += 20
-		if(istype(H.patron, /datum/patron/old_god))
+		if(istype(H.patron, /datum/patron/old_god/orthodoxism))
 			damage += 20
 		if(HAS_TRAIT(H, TRAIT_SILVER_WEAK) && !H.has_status_effect(STATUS_EFFECT_ANTIMAGIC))
 			H.visible_message("<font color='white'>The unholy strike weakens the curse temporarily!</font>")

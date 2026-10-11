@@ -2030,7 +2030,7 @@
 	var/psydonrites = list("Conversion", "Admonishment", "Freedom")
 
 /obj/structure/ritualcircle/psydon/attack_hand(mob/living/user)
-	if((user.patron?.type) != /datum/patron/old_god)
+	if((user.patron?.type) != /datum/patron/old_god/orthodoxism)
 		to_chat(user,span_smallred("I don't know the proper rites for this..."))
 		return
 	if(!HAS_TRAIT(user, TRAIT_RITUALIST))
@@ -2456,11 +2456,11 @@
 /obj/structure/ritualcircle/psydon/proc/psydonconversion_stage4(mob/living/carbon/human/target)
 	to_chat(target, span_mind_control("..."))
 	if(target.devotion == null)
-		target.set_patron(new /datum/patron/old_god)
+		target.set_patron(new /datum/patron/old_god/orthodoxism)
 		return
 	else
 		var/previous_level = target.devotion.level //now you might ask why we get previous_level variable before switching le patron. reason is when swapping patrons it completely fucks up devotion data for people
-		target.set_patron(new /datum/patron/old_god)
+		target.set_patron(new /datum/patron/old_god/orthodoxism)
 		var/datum/devotion/C = new /datum/devotion(target, target.patron)
 		if(previous_level == 4)
 			target.mind?.RemoveAllMiracles()

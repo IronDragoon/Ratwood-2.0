@@ -40,7 +40,7 @@
 	switch(path)
 
 		if("Refugee (Default)")//dodgeexpert, quarter staff standard refugee
-			H.set_patron(/datum/patron/old_god)
+			H.set_patron(/datum/patron/old_god/orthodoxism)
 			to_chat(H, span_warning("An asylum-seeker from the war-torn deserts of Naledi, \
 			the ruins of your great city are as unsafe as the deserts being ravaged by the Djinn."))
 			r_hand = /obj/item/rogueweapon/spear/assegai
@@ -51,7 +51,7 @@
 			backpack_contents = list(/obj/item/rogueweapon/huntingknife = 1)
 
 		if("Conclave Dropout (Hierophant)")//on par with sorcerer mage, but worse stats and skills. given leylines however
-			H.set_patron(/datum/patron/old_god)
+			H.set_patron(/datum/patron/old_god/orthodoxism)
 			to_chat(H, span_warning("A would be promising Magos in the Hierophant halls, during a better era. The Fall of Naledi a hundred yils ago leaves whatever arcyne teachings of the hireophants you have managed to gather incomplete."))
 			r_hand = /obj/item/rogueweapon/woodstaff
 			head = /obj/item/clothing/head/roguetown/roguehood/hierophant
@@ -78,7 +78,7 @@
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/ley_lines)
 
 		if("Desert Ascetic (Pontifex)")//reduced spellpoints, stats, no dodge expert. Toughened up refugee.
-			H.set_patron(/datum/patron/old_god)
+			H.set_patron(/datum/patron/old_god/orthodoxism)
 			to_chat(H, span_warning("You were being being taught the ways of a Pontifex, training in body and will. The Fall of Naledi a hundred yils ago left whatever your training incomplete, whatever it's source. Shunned for your survival and left without a master, you wandered the deserts with unfinished discipline."))
 			r_hand = /obj/item/rogueweapon/katar
 			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/pontifex
@@ -125,7 +125,7 @@
 				H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/shadowstep)//All paths get shadowstep as a minimum
 				H.mind?.adjust_spellpoints(2)
 		if("Abandoned Diviner (Vizier)")	//reduced stats/skills/spellpoints from Vizier, Not given Stasis
-			H.set_patron(/datum/patron/old_god)
+			H.set_patron(/datum/patron/old_god/orthodoxism)
 			to_chat(H, span_warning("A Vizier healer in training, your studies revolved around the esoteric Origin Magyck - The drawing of Psydon power as the origin of creation. The Fall of Naledi a hundred yils ago ensures that you are wandering in exile with only fragments of the art."))
 			r_hand = /obj/item/rogueweapon/woodstaff
 			cloak = /obj/item/clothing/cloak/hierophant

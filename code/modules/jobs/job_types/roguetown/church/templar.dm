@@ -147,7 +147,7 @@
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum
 			cloak = /obj/item/clothing/cloak/templar/malumite
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/malum
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			wrists = /obj/item/clothing/neck/roguetown/psicross
 			cloak = /obj/item/clothing/cloak/tabard/crusader/psydon
 	gloves = /obj/item/clothing/gloves/roguetown/chain

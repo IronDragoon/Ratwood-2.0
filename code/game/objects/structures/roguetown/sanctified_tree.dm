@@ -64,7 +64,7 @@
 	if(HAS_TRAIT(H, TRAIT_PSYDONITE))
 		return FALSE
 	// Old-god worshippers and all inhumen (Zizo, Baotha, Graggar, Matthios) patrons are excluded.
-	if(istype(H.patron, /datum/patron/old_god))
+	if(istype(H.patron, /datum/patron/old_god/orthodoxism/orthodoxism))
 		return FALSE
 	if(istype(H.patron, /datum/patron/inhumen))
 		return FALSE

@@ -117,7 +117,7 @@
 	H.cmode_music = 'sound/music/combat_holy.ogg'
 
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism/orthodoxism)
 			cloak = /obj/item/clothing/cloak/psydontabard
 			mask = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/astrata)
@@ -148,7 +148,7 @@
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe //placeholder, anyone who doesn't have cool patron drip sprites just gets generic robes
 			mask = /obj/item/clothing/head/roguetown/roguehood
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism/orthodoxism)
 			neck = /obj/item/clothing/neck/roguetown/psicross
 		if(/datum/patron/divine/astrata)
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata
@@ -249,7 +249,7 @@
 			backpack_contents[/obj/item/clothing/neck/roguetown/psicross/inhumen/baotha] = 1
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			cloak = /obj/item/clothing/cloak/psydontabard
 			if(H.mind)
 				var/helmets = list("Barbute", "Sallet", "Armet","Buckethelm","Volfskulle Bascinet")
@@ -321,7 +321,7 @@
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	if(H.mind)
-		if(!istype(H?.patron, /datum/patron/old_god)) //Psydonics are special.
+		if(!istype(H?.patron, /datum/patron/old_god/orthodoxism)) //Psydonics are special.
 			C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1) //Capped to T1 miracles.
 			var/oaths = list("Cleric - Medicine & Mirth","Crusader - Silver Weapon")
 			var/oath_choice = input(H, "Choose your OATH.", "PROFESS YOUR BLESSINGS.") as anything in oaths
@@ -413,7 +413,7 @@
 			r_hand = /obj/item/rogueweapon/stoneaxe/woodcut
 	H.set_blindness(0)
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			wrists = /obj/item/clothing/neck/roguetown/psicross
 		if(/datum/patron/divine/astrata)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/astrata
@@ -514,7 +514,7 @@
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/mockery)
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			cloak = /obj/item/clothing/cloak/templar/psydon
 		if(/datum/patron/divine/astrata)
 			cloak = /obj/item/clothing/cloak/templar/astrata
@@ -581,7 +581,7 @@
 				backr = /obj/item/rogue/instrument/vocals
 
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			neck = /obj/item/clothing/neck/roguetown/psicross
 		if(/datum/patron/divine/astrata)
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata
@@ -678,7 +678,7 @@
 		ADD_TRAIT(H, TRAIT_RITUALIST, TRAIT_GENERIC)
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			cloak = /obj/item/clothing/cloak/psydontabard
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/astrata)
@@ -747,7 +747,7 @@
 		H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/divineblast/unholyblast)
 
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god/orthodoxism)
 			neck = /obj/item/clothing/neck/roguetown/psicross
 		if(/datum/patron/divine/astrata)
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata
@@ -828,7 +828,7 @@
 	extra_context = "This is a psydonite only subclass, it will force you to be one if it is not set. You will be a pacifist and are able to draw upon a weaker version of the abilities known by a Psydonic Absolver."
 
 /datum/outfit/job/roguetown/adventurer/stigmata
-	allowed_patrons = list(/datum/patron/old_god)
+	allowed_patrons = list(/datum/patron/old_god/orthodoxism)
 
 /datum/outfit/job/roguetown/adventurer/stigmata/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..()
