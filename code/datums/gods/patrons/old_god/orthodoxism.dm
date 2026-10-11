@@ -1,4 +1,4 @@
-/datum/patron/orthodoxism
+/datum/patron/old_god/orthodoxism
 	name = "Orthodox Psydonism"
 	domain = "Life, Creation, Compassion and Perseverance"
 	desc = "The One arrived to PSYDONIA on the COMET SYON, reshaping the barren world in His image. He was struck down by the Necromantress Zizo; some believe Him dead, others slumbering. May we ENDURE in His name."
@@ -112,7 +112,7 @@
 /////////////////////////////////
 // no he's dead - ok maybe he does
 
-/datum/patron/orthodoxism/can_pray(mob/living/follower)
+/datum/patron/old_god/orthodoxism/can_pray(mob/living/follower)
 	. = ..()
 	. = TRUE
 	// Allows prayer near psycross.
