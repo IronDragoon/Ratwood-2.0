@@ -911,7 +911,7 @@
 	if(mob)
 		if(isliving(mob))
 			var/mob/living/living_user_mob = mob
-			if(istype(living_user_mob.patron, /datum/patron/old_god/orthodoxism/orthodoxism))
+			if(istype(living_user_mob.patron, /datum/patron/old_god/orthodoxism))
 				psydonite_user = TRUE
 
 	var/psydon_followers = GLOB.patron_follower_counts["Psydon"] || 0

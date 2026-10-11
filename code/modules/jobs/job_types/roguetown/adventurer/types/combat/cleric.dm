@@ -117,7 +117,7 @@
 	H.cmode_music = 'sound/music/combat_holy.ogg'
 
 	switch(H.patron?.type)
-		if(/datum/patron/old_god/orthodoxism/orthodoxism)
+		if(/datum/patron/old_god/orthodoxism)
 			cloak = /obj/item/clothing/cloak/psydontabard
 			mask = /obj/item/clothing/head/roguetown/roguehood/psydon
 		if(/datum/patron/divine/astrata)
@@ -148,7 +148,7 @@
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe //placeholder, anyone who doesn't have cool patron drip sprites just gets generic robes
 			mask = /obj/item/clothing/head/roguetown/roguehood
 	switch(H.patron?.type)
-		if(/datum/patron/old_god/orthodoxism/orthodoxism)
+		if(/datum/patron/old_god/orthodoxism)
 			neck = /obj/item/clothing/neck/roguetown/psicross
 		if(/datum/patron/divine/astrata)
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata

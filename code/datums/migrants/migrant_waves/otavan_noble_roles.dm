@@ -245,9 +245,9 @@
 
 /datum/outfit/job/roguetown/otavan/preacher/pre_equip(mob/living/carbon/human/H)
 	..()
-	if (!(istype(H.patron, /datum/patron/old_god/orthodoxism/orthodoxism)))		//PSYDON ENDURE PURITY AFLOAT PSYDON PSYDON ENDURE PSYDON OTAVA PSYDON WAH WAH WAH
+	if (!(istype(H.patron, /datum/patron/old_god/orthodoxism)))		//PSYDON ENDURE PURITY AFLOAT PSYDON PSYDON ENDURE PSYDON OTAVA PSYDON WAH WAH WAH
 		to_chat(H, span_warning("PSYDON has taught me to ENDURE whatever it takes - and HE guides my hand and words."))
-		H.set_patron(/datum/patron/old_god/orthodoxism/orthodoxism)
+		H.set_patron(/datum/patron/old_god/orthodoxism)
 	r_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/psy
 	head = /obj/item/clothing/head/roguetown/roguehood/psydon
 	mask = /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns
