@@ -5007,12 +5007,6 @@
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/garrison)
-"baw" = (
-/obj/structure/lever/hidden{
-	pixel_x = 32
-	},
-/turf/open/floor/rogue/carpet,
-/area/rogue/indoors/town/manor/rockhill)
 "baz" = (
 /turf/open/floor/rogue/churchbrick,
 /area/rogue/indoors/town/dwarfin/rockhill)
@@ -56721,6 +56715,12 @@
 /obj/structure/flora/ausbushes/ywflowers,
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/rtfield/rockhill)
+"lOa" = (
+/obj/structure/lever/hidden{
+	redstone_id = "heirsecret"
+	},
+/turf/closed/wall/mineral/rogue/stonebrick,
+/area/rogue/indoors/town/manor/rockhill)
 "lOc" = (
 /turf/closed/wall/mineral/rogue/craftstone,
 /area/rogue/indoors/town/cell)
@@ -105975,6 +105975,12 @@
 /obj/item/book/rogue/beardling,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/academy)
+"who" = (
+/obj/structure/falsewall/stonebrick{
+	redstone_id = "heirsecret"
+	},
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town/manor/rockhill)
 "whr" = (
 /obj/structure/stairs{
 	dir = 4
@@ -509870,8 +509876,8 @@ hbN
 yfE
 wtF
 jRC
-jRC
-baw
+who
+nBW
 ppH
 nBW
 nBW
@@ -510303,7 +510309,7 @@ xlm
 wtF
 wtF
 wtF
-wtF
+lOa
 wtF
 wtF
 rJf
