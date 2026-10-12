@@ -125,7 +125,7 @@
 	sheet_amount = 2
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
-	canSmoothWith = list(/turf/closed/wall/mineral/rogue/craftstone)
+	canSmoothWith = list(/turf/closed/wall/mineral/rogue/craftstone, /obj/structure/falsewall/craftstone)
 	above_floor = /turf/open/floor/rogue/blocks
 	baseturfs = /turf/open/floor/rogue/blocks
 	neighborlay = "dirtedge"
@@ -148,7 +148,7 @@
 	sheet_amount = 1
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
-	canSmoothWith = list(/turf/closed/wall/mineral/rogue/stonebrick, /turf/closed/wall/mineral/rogue/wooddark)
+	canSmoothWith = list(/turf/closed/wall/mineral/rogue/stonebrick, /turf/closed/wall/mineral/rogue/wooddark, /obj/structure/falsewall/stonebrick)
 	above_floor = /turf/open/floor/rogue/blocks
 	baseturfs = /turf/open/floor/rogue/blocks
 	neighborlay = "dirtedge"
@@ -172,7 +172,7 @@
 	max_integrity = 1100
 	break_sound = 'sound/combat/hits/onwood/destroywalldoor.ogg'
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
-	canSmoothWith = list(/turf/closed/wall/mineral/rogue/wood, /obj/structure/roguewindow, /obj/structure/roguetent, /turf/closed/wall/mineral/rogue/wooddark)
+	canSmoothWith = list(/turf/closed/wall/mineral/rogue/wood, /obj/structure/roguewindow, /obj/structure/roguetent, /turf/closed/wall/mineral/rogue/wooddark, /obj/structure/falsewall/wood)
 //	sheet_type = /obj/item/grown/log/tree/lumber
 	above_floor = /turf/open/floor/rogue/ruinedwood
 	baseturfs = /turf/open/floor/rogue/ruinedwood
@@ -419,7 +419,7 @@
 	sheet_type = /obj/item/natural/brick
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
-	canSmoothWith = list(/turf/closed/wall/mineral/rogue/brick)
+	canSmoothWith = list(/turf/closed/wall/mineral/rogue/brick, /obj/structure/falsewall/brick)
 	above_floor = /turf/open/floor/rogue/tile/brick
 	baseturfs = /turf/open/floor/rogue/tile/brick
 	neighborlay = "dirtedge"

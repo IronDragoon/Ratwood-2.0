@@ -1,5 +1,6 @@
 //This file describes functionality of a fake wall (or a false wall, as they were described in TG)
-//This wall however reacts to a message
+//This wall however reacts to a message, or a redstone signal if given a redstone_id
+//Map it over an open turf; the floor beneath is revealed when it slides open
 /obj/structure/falsewall
 	plane = WALL_PLANE
 	density = TRUE
@@ -9,6 +10,8 @@
 	climbable = FALSE
 	can_be_unanchored = FALSE
 	layer = 2.05
+	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
+	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
 	var/smooth_icon = null
 	var/in_motion = FALSE
 	var/original_layer = 2.05
@@ -24,14 +27,58 @@
 	icon = 'icons/turf/walls/stone_wall.dmi'
 	icon_state = "stone"
 	max_integrity = 1800
-	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
-	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
 	canSmoothWith = list(/obj/structure/falsewall/stone, /turf/closed/wall/mineral/rogue/stone)
 	var/fake_icon = 'icons/turf/walls/wall.dmi'
 	var/mineral_amount = 2
 	var/walltype = /turf/closed/wall
 	var/opening = FALSE
 	damage_deflection = 10
+
+/obj/structure/falsewall/stone/moss
+	icon = 'icons/turf/walls/mossy_stone.dmi'
+
+/obj/structure/falsewall/stone/blue_moss
+	icon = 'icons/turf/walls/blue_mossy.dmi'
+
+/obj/structure/falsewall/stone/red_moss
+	icon = 'icons/turf/walls/red_mossy.dmi'
+
+/obj/structure/falsewall/craftstone
+	name = "stone wall"
+	desc = "A durable wall made from specially-crafted stone."
+	icon = 'icons/turf/walls/craftstone.dmi'
+	icon_state = "box"
+	max_integrity = 2200
+	damage_deflection = 10
+	canSmoothWith = list(/obj/structure/falsewall/craftstone, /turf/closed/wall/mineral/rogue/craftstone)
+
+/obj/structure/falsewall/stonebrick
+	name = "brick wall"
+	desc = "Rows of overlapping bricks form this wall."
+	icon = 'icons/turf/walls/stonebrick.dmi'
+	icon_state = "stonebrick"
+	max_integrity = 1500
+	damage_deflection = 20
+	canSmoothWith = list(/obj/structure/falsewall/stonebrick, /turf/closed/wall/mineral/rogue/stonebrick, /turf/closed/wall/mineral/rogue/wooddark)
+
+/obj/structure/falsewall/brick
+	name = "brick wall"
+	desc = "Rows of overlapping bricks held together by mortar form a nigh-impenetrable wall of stone."
+	icon = 'icons/turf/walls/brick_wall.dmi'
+	icon_state = "brick"
+	max_integrity = 2000
+	damage_deflection = 20
+	canSmoothWith = list(/obj/structure/falsewall/brick, /turf/closed/wall/mineral/rogue/brick)
+
+/obj/structure/falsewall/wood
+	name = "wooden wall"
+	desc = "A rough-hewn wall of wood."
+	icon = 'icons/turf/walls/roguewood.dmi'
+	icon_state = "wood"
+	max_integrity = 1100
+	break_sound = 'sound/combat/hits/onwood/destroywalldoor.ogg'
+	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
+	canSmoothWith = list(/obj/structure/falsewall/wood, /turf/closed/wall/mineral/rogue/wood, /obj/structure/roguewindow, /obj/structure/roguetent, /turf/closed/wall/mineral/rogue/wooddark)
 
 /obj/structure/falsewall/Initialize(mapload)
 	. = ..()
@@ -92,7 +139,7 @@
 		update_icon()
 
 /obj/structure/falsewall/proc/close()
-	if(QDELETED(src) || in_motion || is_closed)
+	if(QDELETED(src) || in_motion || is_closed || (locate(/mob/living) in loc))
 		return
 	in_motion = TRUE
 	if(isnull(slide_direction))
@@ -114,6 +161,12 @@
 	if(open_message != "" && findtext(message, open_message))
 		open()
 	if(close_message != "" && findtext(message, close_message))
+		close()
+
+/obj/structure/falsewall/redstone_triggered(mob/user)
+	if(is_closed)
+		open()
+	else
 		close()
 
 /obj/structure/falsewall/handle_mouseover(location, control, params)
