@@ -213,6 +213,10 @@
 /obj/effect/landmark/quest_spawner/medium,
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/bog/north)
+"hZ" = (
+/obj/effect/landmark/response_team,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors)
 "ia" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -264,6 +268,10 @@
 /obj/machinery/light/rogue/hearth,
 /obj/item/cooking/pan,
 /turf/open/floor/rogue/churchrough,
+/area/rogue/indoors)
+"iI" = (
+/obj/effect/landmark/response_team,
+/turf/open/floor/rogue/grass,
 /area/rogue/indoors)
 "jr" = (
 /obj/structure/table/wood{
@@ -1751,6 +1759,10 @@
 /area/rogue/outdoors)
 "YX" = (
 /turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors)
+"Zf" = (
+/obj/effect/landmark/response_team,
+/turf/open/floor/rogue/dirt/road,
 /area/rogue/indoors)
 "Zu" = (
 /turf/open/floor/rogue/concrete,
@@ -3547,11 +3559,11 @@ CZ
 CZ
 SE
 CZ
-CZ
-CZ
-AX
-rT
-rT
+Zf
+Zf
+iI
+hZ
+hZ
 rT
 rT
 rT
@@ -3651,11 +3663,11 @@ CZ
 AX
 xY
 CZ
-CZ
-CZ
-CZ
-AX
-AX
+Zf
+Zf
+Zf
+iI
+iI
 eg
 rT
 rT

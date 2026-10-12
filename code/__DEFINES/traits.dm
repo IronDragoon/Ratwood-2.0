@@ -127,6 +127,7 @@
 #define TRAIT_DRUNK_HEALING "Drunk Healing"//Having anything with booze power of 25 or more in your system slowly heals you.
 #define TRAIT_SIMPLESPEECH "Simple Speech" // Can only say the 1000 most common English-language words; other words get modified
 #define TRAIT_BLOODPOOL_BORN "Bloodpool Born"
+#define TRAIT_RESPONSE_TEAM "Response Team" // Admin-called response team member, examines as their role
 #define TRAIT_ROYALSERVANT "Household Insight" // Let's you see the keep inhabitants liked/hated food/drink
 #define TRAIT_WAGES_SUSPENDED "Wages Suspended" //Stops nerve master daily pay for this guy
 #define TRAIT_SCALEARMOR "Weathered Scales"//Mage armor, refluffed to scales.
