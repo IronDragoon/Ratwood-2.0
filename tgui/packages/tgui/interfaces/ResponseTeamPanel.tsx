@@ -42,6 +42,7 @@ type Member = {
 type Data = {
   types: TeamType[];
   role_max: number;
+  mission_max: number;
   stage: 'setup' | 'locked' | 'gathering' | 'active';
   is_admin: BooleanLike;
   can_control: BooleanLike;
@@ -82,7 +83,9 @@ const TeamSummary = () => {
           <LabeledList.Item label="Called By">{data.caller}</LabeledList.Item>
         )}
         {!!data.reason && (
-          <LabeledList.Item label="Reason">{data.reason}</LabeledList.Item>
+          <LabeledList.Item label="Reason">
+            <Box preserveWhitespace>{data.reason}</Box>
+          </LabeledList.Item>
         )}
         <LabeledList.Item label="Mission">
           <Box preserveWhitespace>{data.mission || 'None given.'}</Box>
@@ -173,7 +176,7 @@ const SetupStage = () => {
         <TextArea
           fluid
           height="120px"
-          maxLength={1024}
+          maxLength={data.mission_max}
           value={mission}
           onChange={(value: string) => setMission(value)}
         />
@@ -346,7 +349,7 @@ const GatheringStage = () => {
       {!!data.is_admin && (
         <Stack>
           <Stack.Item grow>
-            <Button.Confirm
+            <Button
               fluid
               color="bad"
               icon="times"
@@ -355,7 +358,7 @@ const GatheringStage = () => {
               onClick={() => act('cancel_team')}
             >
               Cancel Team
-            </Button.Confirm>
+            </Button>
           </Stack.Item>
           <Stack.Item grow>
             <Button
@@ -408,8 +411,8 @@ const ActiveStage = () => {
             <Table.Cell>Ckey</Table.Cell>
             <Table.Cell />
           </Table.Row>
-          {data.members.map((member, index) => (
-            <Table.Row key={index} className="candystripe">
+          {data.members.map((member) => (
+            <Table.Row key={member.ckey} className="candystripe">
               <Table.Cell>{member.name || 'Unknown'}</Table.Cell>
               <Table.Cell>{roleName(data.roles, member.role)}</Table.Cell>
               <Table.Cell color={statusColor(member.status)}>

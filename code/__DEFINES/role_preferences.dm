@@ -56,6 +56,7 @@
 #define ROLE_THIEVESGUILD "Thieves Guild"
 #define ROLE_VAMPIRE_SUMMON		"Vampire Summon"
 #define ROLE_NOTORIOUS_BOUNTY	"Notorious Bounty Target"
+#define ROLE_RESPONSE_TEAM		"Emergency Response Team"
 
 GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_MANIAC = /datum/antagonist/maniac,

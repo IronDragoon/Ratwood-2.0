@@ -258,7 +258,7 @@
 		var/list/long_job_lists = list("Peasants" = GLOB.peasant_positions,
 									"Yeomen" = GLOB.yeoman_positions,
 									"Youngfolk" = GLOB.youngfolk_positions,
-									"Ghost and Other Roles" = list(ROLE_NECRO_SKELETON, ROLE_LICH_SKELETON),
+									"Ghost and Other Roles" = list(ROLE_NECRO_SKELETON, ROLE_LICH_SKELETON, ROLE_RESPONSE_TEAM),
 									"Antagonist Positions" = list(ROLE_MANIAC, ROLE_WEREWOLF,
 									ROLE_VAMPIRE, ROLE_NBEAST, ROLE_BANDIT,
 									ROLE_DELF, ROLE_PREBEL, ROLE_ASPIRANT,

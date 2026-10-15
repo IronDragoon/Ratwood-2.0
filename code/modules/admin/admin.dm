@@ -1362,6 +1362,18 @@
 	H.admin_send_back_to_lobby(usr)
 
 
+/// Wipes this character from everyone's memory and frees its name, for when it leaves the round
+/mob/living/carbon/human/proc/forget_identity()
+	if(mind)
+		mind.unknow_all_people()
+		for(var/datum/mind/MF in get_minds())
+			mind.become_unknown_to(MF)
+		for(var/datum/bounty/removing_bounty in GLOB.head_bounties)
+			if(removing_bounty.target == real_name)
+				GLOB.head_bounties -= removing_bounty
+	GLOB.chosen_names -= real_name
+	LAZYREMOVE(GLOB.roleplay_ads, mobid)
+
 /mob/living/carbon/human/proc/admin_send_back_to_lobby(mob/admin, delete_character = FALSE)
 	var/datum/job/mob_job
 	var/target_job = SSrole_class_handler.get_advclass_by_name(advjob)
@@ -1372,20 +1384,13 @@
 			mob_job.current_positions = max(0, mob_job.current_positions - 1)
 		if(target_job)
 			SSrole_class_handler.adjust_class_amount(target_job, -1)
-		mind.unknow_all_people()
-		for(var/datum/mind/MF in get_minds())
-			mind.become_unknown_to(MF)
-		for(var/datum/bounty/removing_bounty in GLOB.head_bounties)
-			if(removing_bounty.target == real_name)
-				GLOB.head_bounties -= removing_bounty
 	else if(admin)
 		to_chat(admin, span_warning("Target has no mind!"))
-	GLOB.chosen_names -= real_name
+	forget_identity()
 	if(!mob_job)
 		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(WANDERERS, FALSE)], mobid)
 	else
 		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], mobid)
-	LAZYREMOVE(GLOB.roleplay_ads, mobid)
 	if(client)
 		SSdroning.kill_droning(client)
 		SSdroning.kill_loop(client)
