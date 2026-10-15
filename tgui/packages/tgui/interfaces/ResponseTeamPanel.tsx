@@ -281,19 +281,25 @@ const VolunteerControls = (props: { self: Member }) => {
               </Stack.Item>
             );
           })}
-        <Stack.Item>
-          <Stack>
-            <Stack.Item grow>
-              <Button
-                fluid
-                icon={self.ready ? 'check-square' : 'square'}
+        <Stack.Item mt={1}>
+          <Stack align="center">
+            <Stack.Item grow color="label">
+              {!self.role
+                ? 'Pick a role above.'
+                : self.ready
+                  ? 'You will deploy when the team is dispatched.'
+                  : 'Tick Ready to be included when the team is dispatched.'}
+            </Stack.Item>
+            <Stack.Item>
+              <Button.Checkbox
+                checked={self.ready}
                 color={self.ready ? 'good' : 'default'}
-                textAlign="center"
                 disabled={!self.role}
+                tooltip="Only ready responders are sent when the team is dispatched."
                 onClick={() => act('ready')}
               >
-                {self.ready ? 'Ready' : 'Mark Ready'}
-              </Button>
+                Ready
+              </Button.Checkbox>
             </Stack.Item>
             <Stack.Item>
               <Button icon="sign-out-alt" onClick={() => act('withdraw')}>
@@ -453,15 +459,17 @@ const ActiveStage = () => {
           ))}
         </Table>
       </Section>
-      <Button
+      <Button.Confirm
         fluid
         color="bad"
         icon="power-off"
         textAlign="center"
+        confirmIcon="exclamation-triangle"
+        confirmContent="Click again to delete every responder's body and gear"
         onClick={() => act('end')}
       >
         End Deployment
-      </Button>
+      </Button.Confirm>
     </>
   );
 };

@@ -40,6 +40,8 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	var/removed = FALSE
 	var/datum/weakref/body
 	var/datum/weakref/stone
+	/// Gold "A knight of Kingsfield." line others see when examining the body
+	var/examine_line
 
 /// Deletes the body, its stone and everything on it, and sends the player back to the lobby if they're still attached to it
 /datum/response_member/proc/despawn()
@@ -494,6 +496,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		H.put_in_hands(stone)
 	member.body = WEAKREF(H)
 	member.stone = WEAKREF(stone)
+	member.examine_line = team_type.examine_line(role)
 	to_chat(H, span_boldannounce("I am [H.real_name], a [role.name] of the [team_type.name]."))
 	if(mission)
 		to_chat(H, span_notice("<b>Mission:</b> [html_encode(mission)]"))
@@ -540,8 +543,6 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	return TRUE
 
 /datum/response_team/proc/end_deployment(mob/user)
-	if(tgui_alert(user, "Are you sure you want to end this deployment? Every responder's body and gear will be deleted.", "End Deployment", list("Yes", "No")) != "Yes")
-		return
 	if(stage != RESPONSE_STAGE_ACTIVE)
 		return
 	for(var/member_ckey in members)
@@ -550,6 +551,15 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 			member.despawn()
 	log_response(user, "ended the deployment of the [team_type.name] response team.")
 	reset()
+
+/// The team's gold examine line for this responder, if they are one
+/mob/living/carbon/human/proc/get_response_team_examine()
+	if(!HAS_TRAIT(src, TRAIT_RESPONSE_TEAM))
+		return
+	for(var/member_ckey in GLOB.response_team.members)
+		var/datum/response_member/member = GLOB.response_team.members[member_ckey]
+		if(member.body?.resolve() == src)
+			return member.examine_line
 
 /// Responders have no job, so they examine as their role instead
 /mob/living/carbon/human/get_role_title()

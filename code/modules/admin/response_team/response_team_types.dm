@@ -1,16 +1,41 @@
 // Emergency response team types and the roles they can field.
-// To add a team, subtype /datum/response_team_type and list its roles.
+// Every subtype of /datum/response_team_type shows up in the admin panel on its own, nothing else needs registering.
 // Roles are ordinary advclasses, so stats, skills, traits and outfits work as they do for jobs.
+//
+// Adding a team:
+//
+// /datum/response_team_type/my_team
+// 	name = "My Team"                    // shown in the admin panel and on the team's stones
+// 	desc = "Who they are."              // panel tooltip
+// 	affiliation = "the Somewhere"       // examines as "A <role examine_title> of the Somewhere."
+// 	roles = list(/datum/advclass/response_team/my_role)
+//
+// /datum/advclass/response_team/my_role
+// 	name = "My Role"
+// 	tutorial = "Shown to volunteers picking a role."
+// 	examine_title = "guard"             // defaults to "member"
+// 	outfit = /datum/outfit/job/roguetown/response_team/my_role
 
 /datum/response_team_type
 	var/name
 	var/desc
+	/// Who the team answers to, shown on examine as "A <role title> of <affiliation>."
+	var/affiliation
+	/// Colour of that examine line
+	var/examine_color = "#d4af37"
 	/// Advclass typepaths of the roles this team can field
 	var/list/roles
+
+/// The examine line for a member of this team in the given role
+/datum/response_team_type/proc/examine_line(datum/advclass/response_team/role)
+	var/title = role?.examine_title || "member"
+	var/article = (lowertext(copytext(title, 1, 2)) in list("a", "e", "i", "o", "u")) ? "An" : "A"
+	return "<span class='info'><font color='[examine_color]'><b>[article] [title] of [affiliation || name].</b></font></span>"
 
 /datum/response_team_type/kingsfield
 	name = "Kingsfield Knights"
 	desc = "Sworn swords of the Crown, sent from Kingsfield to restore order."
+	affiliation = "Kingsfield"
 	roles = list(
 		/datum/advclass/response_team/kingsfield_knight,
 		/datum/advclass/response_team/kingsfield_squire,
@@ -19,6 +44,7 @@
 /datum/response_team_type/holy_see
 	name = "Holy See Crusaders"
 	desc = "Faithful of the Holy See, dispatched to defend the Ten and their flock."
+	affiliation = "the Holy See"
 	roles = list(
 		/datum/advclass/response_team/holy_see_paladin,
 		/datum/advclass/response_team/holy_see_acolyte,
@@ -27,6 +53,8 @@
 
 /datum/advclass/response_team
 	applies_post_equipment = FALSE
+	/// What this role calls itself on examine, as in "A knight of Kingsfield."
+	var/examine_title = "member"
 
 /datum/outfit/job/roguetown/response_team/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -37,6 +65,7 @@
 /datum/advclass/response_team/kingsfield_knight
 	name = "Kingsfield Knight"
 	tutorial = "A knight of Kingsfield, answering the call of the Crown."
+	examine_title = "knight"
 	outfit = /datum/outfit/job/roguetown/response_team/kingsfield_knight
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED)
 	subclass_stats = list(
@@ -84,6 +113,7 @@
 /datum/advclass/response_team/kingsfield_squire
 	name = "Kingsfield Squire"
 	tutorial = "A squire of Kingsfield, following your knights into the fray."
+	examine_title = "squire"
 	outfit = /datum/outfit/job/roguetown/response_team/kingsfield_squire
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_SQUIRE_REPAIR)
 	subclass_stats = list(
@@ -147,6 +177,7 @@
 /datum/advclass/response_team/holy_see_paladin
 	name = "Holy See Paladin"
 	tutorial = "A paladin of the Holy See, the sword and shield of the faith."
+	examine_title = "paladin"
 	outfit = /datum/outfit/job/roguetown/response_team/holy_see/paladin
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED)
 	subclass_stats = list(
@@ -196,6 +227,7 @@
 /datum/advclass/response_team/holy_see_acolyte
 	name = "Holy See Acolyte"
 	tutorial = "An acolyte of the Holy See, tending to the wounded and the faithful."
+	examine_title = "acolyte"
 	outfit = /datum/outfit/job/roguetown/response_team/holy_see/acolyte
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -237,6 +269,7 @@
 /datum/advclass/response_team/holy_see_neophyte
 	name = "Holy See Neophyte"
 	tutorial = "A neophyte of the Holy See, a holy warrior in training with much to prove."
+	examine_title = "neophyte"
 	outfit = /datum/outfit/job/roguetown/response_team/holy_see/neophyte
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_SQUIRE_REPAIR)
 	subclass_stats = list(
