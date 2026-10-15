@@ -1374,6 +1374,15 @@
 	GLOB.chosen_names -= real_name
 	LAZYREMOVE(GLOB.roleplay_ads, mobid)
 
+/// Moves this mob's player to a fresh lobby mob, stopping the round's ambience
+/mob/proc/return_to_lobby(player_key = key)
+	if(client)
+		SSdroning.kill_droning(client)
+		SSdroning.kill_loop(client)
+		SSdroning.kill_rain(client)
+	var/mob/dead/new_player/NP = new()
+	NP.key = player_key
+
 /mob/living/carbon/human/proc/admin_send_back_to_lobby(mob/admin, delete_character = FALSE)
 	var/datum/job/mob_job
 	var/target_job = SSrole_class_handler.get_advclass_by_name(advjob)
@@ -1391,13 +1400,8 @@
 		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(WANDERERS, FALSE)], mobid)
 	else
 		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], mobid)
-	if(client)
-		SSdroning.kill_droning(client)
-		SSdroning.kill_loop(client)
-		SSdroning.kill_rain(client)
 	if(player_key)
-		var/mob/dead/new_player/NP = new()
-		NP.key = player_key
+		return_to_lobby(player_key)
 	else if(admin)
 		to_chat(admin, span_warning("[src] has no key to return to the lobby."))
 	if(delete_character)

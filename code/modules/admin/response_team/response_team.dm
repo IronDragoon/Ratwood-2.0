@@ -8,7 +8,6 @@
 
 #define RESPONSE_ROLE_MAX 5
 #define RESPONSE_OFFER_TIMEOUT (2 MINUTES)
-#define RESPONSE_SCOM_COLOR "#d4af37"
 
 GLOBAL_DATUM_INIT(response_team, /datum/response_team, new)
 GLOBAL_LIST_EMPTY(response_team_spawns)
@@ -38,30 +37,23 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	var/role
 	var/ready = FALSE
 	var/removed = FALSE
+	/// Character name, kept so it can be freed even if the body is destroyed
+	var/name
 	var/datum/weakref/body
 	var/datum/weakref/stone
-	/// Gold "A knight of Kingsfield." line others see when examining the body
-	var/examine_line
 
-/// Deletes the body, its stone and everything on it, and sends the player back to the lobby if they're still attached to it
+/// Deletes the body, its stone and everything on it, and sends the player back to the lobby if they're still the responder or its ghost
 /datum/response_member/proc/despawn()
-	var/obj/item/scomstone/response_team/team_stone = stone?.resolve()
-	if(team_stone)
-		qdel(team_stone)
+	qdel(stone?.resolve())
 	var/mob/living/carbon/human/H = body?.resolve()
-	if(!H)
-		return
-	var/mob/player = H.client ? H : H.get_ghost(TRUE, TRUE)
-	H.forget_identity()
-	if(player?.client)
-		SSdroning.kill_droning(player.client)
-		SSdroning.kill_loop(player.client)
-		SSdroning.kill_rain(player.client)
-		var/mob/dead/new_player/NP = new()
-		NP.key = player.key
+	H?.forget_identity()
+	GLOB.chosen_names -= name
+	var/mob/player = get_mob_by_ckey(ckey)
+	if(player?.client && (player == H || isobserver(player)))
+		player.return_to_lobby()
 		if(player != H)
 			qdel(player)
-	for(var/obj/item/I as anything in H.get_all_gear())
+	for(var/obj/item/I as anything in H?.get_all_gear())
 		qdel(I)
 	qdel(H)
 
@@ -74,6 +66,7 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	messagereceivedsound = 'sound/misc/garrisonscom.ogg'
 	hearrange = 0
 	sellprice = 0
+	cooldown = 5 SECONDS
 	/// The responder this stone was issued to
 	var/datum/weakref/owner
 
@@ -102,18 +95,19 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	if(user.restrained() || user.incapacitated())
 		to_chat(user, span_warning("I cannot use this while restrained or incapacitated!"))
 		return
+	if(on_cooldown)
+		to_chat(user, span_warning("[src] is still humming from my last message."))
+		return
 	user.changeNext_move(CLICK_CD_INTENTCAP)
 	visible_message(span_notice("[user] presses their ring against their mouth."))
 	var/input_text = input(user, "Enter your message:", "Message")
 	if(!input_text || QDELETED(src))
 		return
 	user.whisper(input_text)
-	var/usedcolor = user.voicecolor_override || user.voice_color
-	GLOB.response_team.relay("<big><span style='color: [RESPONSE_SCOM_COLOR]'>[input_text]</span></big>", src, usedcolor)
-
-/// Admin message, styled so it stands out from the team's own chatter
-/obj/item/scomstone/response_team/proc/receive_admin(message)
-	repeat_message("<big><b><span style='color: [RESPONSE_SCOM_COLOR]'>[message]</span></b></big>")
+	user.log_talk(input_text, LOG_SAY, tag = "response stone")
+	on_cooldown = TRUE
+	addtimer(VARSET_CALLBACK(src, on_cooldown, FALSE), cooldown)
+	GLOB.response_team.relay(html_encode(input_text), src, user.voicecolor_override || user.voice_color)
 
 /datum/ui_state/response_team_state/can_use_topic(src_object, mob/user)
 	if(check_rights_for(user.client, R_ADMIN))
@@ -250,7 +244,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		)
 		if(is_admin && stage == RESPONSE_STAGE_ACTIVE)
 			var/mob/living/carbon/human/H = member.body?.resolve()
-			entry["name"] = H?.real_name
+			entry["name"] = member.name
 			entry["removed"] = member.removed
 			if(member.removed)
 				entry["status"] = "Removed"
@@ -360,10 +354,12 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 					if(!M)
 						return
 					var/client/C = user.client
-					if(!isobserver(user) && !C.admin_ghost())
-						return
+					if(!isobserver(user))
+						C.admin_ghost()
+					// admin_ghost() can be declined from the lobby
 					var/mob/dead/observer/ghost = C.mob
-					ghost.ManualFollow(M)
+					if(isobserver(ghost))
+						ghost.ManualFollow(M)
 					return
 				if("message")
 					return message_member(user, target)
@@ -442,12 +438,20 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		return
 	if(stage != RESPONSE_STAGE_GATHERING || !can_control(user))
 		return
+	call_off(user, "cancelled the [team_type.name] response team.")
+
+/// Sends everyone waiting away and resets the panel
+/datum/response_team/proc/call_off(mob/user, log_message)
 	for(var/member_ckey in members)
 		to_chat(get_mob_by_ckey(member_ckey), span_warning("The emergency response has been called off."))
-	log_response(user, "cancelled the [team_type.name] response team.")
+	log_response(user, log_message)
 	reset()
 
 /datum/response_team/proc/dispatch(mob/user)
+	if(!length(GLOB.response_team_spawns))
+		to_chat(user, span_warning("This map has no ERT response spawn landmark, so the team has been called off."))
+		call_off(user, "tried to dispatch the [team_type.name] response team, but the map has no response spawn so it was called off.")
+		return
 	var/list/deployed = list()
 	for(var/member_ckey in members)
 		var/datum/response_member/member = members[member_ckey]
@@ -457,8 +461,6 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	if(!length(deployed))
 		to_chat(user, span_warning("Nobody is ready to deploy."))
 		return
-	if(!length(GLOB.response_team_spawns))
-		to_chat(user, span_warning("There is no ERT response spawn landmark, the team will arrive at your location."))
 	stage = RESPONSE_STAGE_ACTIVE
 	var/list/roster = list()
 	for(var/member_ckey in members.Copy())
@@ -468,8 +470,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 			members -= member_ckey
 			to_chat(M, span_warning("The emergency response has been dispatched without you."))
 			continue
-		var/turf/T = length(GLOB.response_team_spawns) ? pick(GLOB.response_team_spawns) : get_turf(user)
-		spawn_member(member, M, T)
+		spawn_member(member, M, pick(GLOB.response_team_spawns))
 		var/datum/advclass/role = member.role
 		roster += "[member.ckey] as [initial(role.name)]"
 	log_response(user, "dispatched the [team_type.name] response team: [english_list(roster)].")
@@ -485,9 +486,9 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	// Same pool new arrivals fall back to when their chosen name is taken
 	H.fully_replace_character_name(null, H.dna.species.random_name(H.gender, TRUE))
 	GLOB.chosen_names += H.real_name
+	member.name = H.real_name
 	var/datum/advclass/role = SSrole_class_handler.classes_by_type[member.role]
 	role.equipme(H)
-	ADD_TRAIT(H, TRAIT_RESPONSE_TEAM, TRAIT_GENERIC)
 	var/obj/item/scomstone/response_team/stone = new(H)
 	stone.name = "[team_type.name] stone"
 	// Bound before equipping, or the stone crumbles on its own wearer
@@ -496,18 +497,19 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		H.put_in_hands(stone)
 	member.body = WEAKREF(H)
 	member.stone = WEAKREF(stone)
-	member.examine_line = team_type.examine_line(role)
 	to_chat(H, span_boldannounce("I am [H.real_name], a [role.name] of the [team_type.name]."))
 	if(mission)
 		to_chat(H, span_notice("<b>Mission:</b> [html_encode(mission)]"))
 	to_chat(H, span_notice("Right click my [stone.name] to speak with the rest of the team. It will crumble in anyone else's hands."))
 
-/// Sends a team scomstone message to every deployed member
-/datum/response_team/proc/relay(message, atom/source, tcolor)
+/// Sends a team stone message in the team colour to every deployed member, or only the one given
+/datum/response_team/proc/relay(message, atom/source, tcolor, datum/response_member/only)
+	message = "<big><span style='color: [team_type.team_color]'>[message]</span></big>"
 	for(var/member_ckey in members)
 		var/datum/response_member/member = members[member_ckey]
-		var/obj/item/scomstone/response_team/stone = member.stone?.resolve()
-		stone?.repeat_message(message, source, tcolor)
+		if(!only || member == only)
+			var/obj/item/scomstone/response_team/stone = member.stone?.resolve()
+			stone?.repeat_message(message, source, tcolor)
 
 /datum/response_team/proc/message_member(mob/user, datum/response_member/member)
 	var/obj/item/scomstone/response_team/stone = member?.stone?.resolve()
@@ -517,17 +519,14 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	var/message = tgui_input_text(user, "Message to the stone of [member.key]", "Direct Message")
 	if(!message || QDELETED(stone))
 		return
-	stone.receive_admin(message)
+	relay("<b>[message]</b>", only = member)
 	log_response(user, "messaged response team member [member.key]: [message]")
 
 /datum/response_team/proc/broadcast(mob/user)
 	var/message = tgui_input_text(user, "Message for the whole team", "Broadcast to Team")
 	if(!message || stage != RESPONSE_STAGE_ACTIVE)
 		return
-	for(var/member_ckey in members)
-		var/datum/response_member/member = members[member_ckey]
-		var/obj/item/scomstone/response_team/stone = member.stone?.resolve()
-		stone?.receive_admin(message)
+	relay("<b>[message]</b>")
 	log_response(user, "broadcast to the [team_type.name] response team: [message]")
 
 /datum/response_team/proc/remove_member(mob/user, datum/response_member/member)
@@ -552,20 +551,15 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	log_response(user, "ended the deployment of the [team_type.name] response team.")
 	reset()
 
-/// The team's gold examine line for this responder, if they are one
+/// The team's "A knight of Kingsfield." examine line, if this is a deployed responder
 /mob/living/carbon/human/proc/get_response_team_examine()
-	if(!HAS_TRAIT(src, TRAIT_RESPONSE_TEAM))
+	var/datum/response_team/team = GLOB.response_team
+	if(team.stage != RESPONSE_STAGE_ACTIVE)
 		return
-	for(var/member_ckey in GLOB.response_team.members)
-		var/datum/response_member/member = GLOB.response_team.members[member_ckey]
+	for(var/member_ckey in team.members)
+		var/datum/response_member/member = team.members[member_ckey]
 		if(member.body?.resolve() == src)
-			return member.examine_line
-
-/// Responders have no job, so they examine as their role instead
-/mob/living/carbon/human/get_role_title()
-	. = ..()
-	if(!. && HAS_TRAIT(src, TRAIT_RESPONSE_TEAM))
-		return advjob
+			return team.team_type.examine_line(member.role)
 
 #undef RESPONSE_STAGE_SETUP
 #undef RESPONSE_STAGE_LOCKED
@@ -573,4 +567,3 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 #undef RESPONSE_STAGE_ACTIVE
 #undef RESPONSE_ROLE_MAX
 #undef RESPONSE_OFFER_TIMEOUT
-#undef RESPONSE_SCOM_COLOR

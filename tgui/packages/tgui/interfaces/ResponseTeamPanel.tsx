@@ -198,56 +198,67 @@ const SetupStage = () => {
   );
 };
 
+/** Roles the team was given at least one slot for */
+const fieldedRoles = (roles: Role[]) => roles.filter((role) => role.total > 0);
+
+type Action = { label: string; icon: string; action: string };
+
+/** Full-width cancel (red) and go (green) buttons along the bottom of a stage */
+const ActionPair = (props: {
+  cancel: Action;
+  go: Action;
+  disabled?: boolean;
+}) => {
+  const { act } = useBackend<Data>();
+  return (
+    <Stack>
+      {[props.cancel, props.go].map((item, index) => (
+        <Stack.Item grow key={item.action}>
+          <Button
+            fluid
+            color={index ? 'good' : 'bad'}
+            icon={item.icon}
+            textAlign="center"
+            disabled={props.disabled}
+            onClick={() => act(item.action)}
+          >
+            {item.label}
+          </Button>
+        </Stack.Item>
+      ))}
+    </Stack>
+  );
+};
+
 const RoleTotals = () => {
   const { data } = useBackend<Data>();
   return (
     <Section title="Roles">
       <LabeledList>
-        {data.roles
-          .filter((role) => role.total > 0)
-          .map((role) => (
-            <LabeledList.Item key={role.id} label={role.name}>
-              {role.total - role.taken} open of {role.total}
-            </LabeledList.Item>
-          ))}
+        {fieldedRoles(data.roles).map((role) => (
+          <LabeledList.Item key={role.id} label={role.name}>
+            {role.total - role.taken} open of {role.total}
+          </LabeledList.Item>
+        ))}
       </LabeledList>
     </Section>
   );
 };
 
-const LockedStage = () => {
-  const { act } = useBackend<Data>();
-  return (
-    <>
-      <TeamSummary />
-      <RoleTotals />
-      <Stack>
-        <Stack.Item grow>
-          <Button
-            fluid
-            color="bad"
-            icon="times"
-            textAlign="center"
-            onClick={() => act('cancel_call')}
-          >
-            Cancel Response
-          </Button>
-        </Stack.Item>
-        <Stack.Item grow>
-          <Button
-            fluid
-            color="good"
-            icon="bullhorn"
-            textAlign="center"
-            onClick={() => act('call')}
-          >
-            Call for Response
-          </Button>
-        </Stack.Item>
-      </Stack>
-    </>
-  );
-};
+const LockedStage = () => (
+  <>
+    <TeamSummary />
+    <RoleTotals />
+    <ActionPair
+      cancel={{
+        label: 'Cancel Response',
+        icon: 'times',
+        action: 'cancel_call',
+      }}
+      go={{ label: 'Call for Response', icon: 'bullhorn', action: 'call' }}
+    />
+  </>
+);
 
 const AdminTag = (props: { admin: BooleanLike }) =>
   props.admin ? (
@@ -262,25 +273,23 @@ const VolunteerControls = (props: { self: Member }) => {
   return (
     <Section title="Choose Your Role">
       <Stack vertical>
-        {data.roles
-          .filter((role) => role.total > 0)
-          .map((role) => {
-            const mine = self.role === role.id;
-            return (
-              <Stack.Item key={role.id}>
-                <Button
-                  fluid
-                  selected={mine}
-                  disabled={!mine && role.taken >= role.total}
-                  tooltip={role.desc}
-                  onClick={() => act('pick_role', { role: role.id })}
-                >
-                  {role.name} ({role.total - role.taken}/{role.total} open)
-                  {mine && ' (Selected)'}
-                </Button>
-              </Stack.Item>
-            );
-          })}
+        {fieldedRoles(data.roles).map((role) => {
+          const mine = self.role === role.id;
+          return (
+            <Stack.Item key={role.id}>
+              <Button
+                fluid
+                selected={mine}
+                disabled={!mine && role.taken >= role.total}
+                tooltip={role.desc}
+                onClick={() => act('pick_role', { role: role.id })}
+              >
+                {role.name} ({role.total - role.taken}/{role.total} open)
+                {mine && ' (Selected)'}
+              </Button>
+            </Stack.Item>
+          );
+        })}
         <Stack.Item mt={1}>
           <Stack align="center">
             <Stack.Item grow color="label">
@@ -353,32 +362,15 @@ const GatheringStage = () => {
         </Table>
       </Section>
       {!!data.is_admin && (
-        <Stack>
-          <Stack.Item grow>
-            <Button
-              fluid
-              color="bad"
-              icon="times"
-              textAlign="center"
-              disabled={!data.can_control}
-              onClick={() => act('cancel_team')}
-            >
-              Cancel Team
-            </Button>
-          </Stack.Item>
-          <Stack.Item grow>
-            <Button
-              fluid
-              color="good"
-              icon="flag"
-              textAlign="center"
-              disabled={!data.can_control}
-              onClick={() => act('dispatch')}
-            >
-              Dispatch Team
-            </Button>
-          </Stack.Item>
-        </Stack>
+        <ActionPair
+          disabled={!data.can_control}
+          cancel={{
+            label: 'Cancel Team',
+            icon: 'times',
+            action: 'cancel_team',
+          }}
+          go={{ label: 'Dispatch Team', icon: 'flag', action: 'dispatch' }}
+        />
       )}
     </>
   );

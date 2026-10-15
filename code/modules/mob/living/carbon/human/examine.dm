@@ -929,20 +929,14 @@
 		else
 			. += "ø ------------ ø"
 
-	// Response teams wear their colours openly, so this shows masked or not
-	var/response_team_line = get_response_team_examine()
 	if(name in unknown_names)
 		. += span_info("This is <EM>[name]</EM>.")
-		if(response_team_line)
-			. += response_team_line
 		if(HAS_TRAIT(user, TRAIT_HERETIC_SEER))
 			var/heretic_text = get_heretic_text(user)
 			if(heretic_text)
 				. += span_notice(heretic_text)
 	else if(obscure_name)
 		. += span_info("This is an unknown <EM>[name]</EM>.")
-		if(response_team_line)
-			. += response_team_line
 		if(HAS_TRAIT(user, TRAIT_HERETIC_SEER))
 			var/heretic_text = get_heretic_text(user)
 			if(heretic_text)
@@ -1011,8 +1005,6 @@
 		else
 			display1 = span_info("This is the <EM>[used_name]</EM>, the [race_name].")
 		. += "[display1] [display2]"
-		if(response_team_line)
-			. += response_team_line
 
 		if(HAS_TRAIT(src, TRAIT_WITCH))
 			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_WITCH))
@@ -1280,6 +1272,11 @@
 				. += span_danger("They extrude a pale aura. Their soul [stat == DEAD ? "was not" : "is not"] clean. This is it for them.")
 			else if(stat == DEAD)
 				. += span_danger("This was their only chance at lyfe.")
+
+	// Response teams wear their colours openly, so this shows masked or not
+	var/response_team_line = get_response_team_examine()
+	if(response_team_line)
+		. += response_team_line
 
 	// Real medical role can tell at a glance it is a waste of time, but only if the Necra message don't come first.
 

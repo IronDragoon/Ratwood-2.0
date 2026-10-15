@@ -13,7 +13,7 @@
 // /datum/advclass/response_team/my_role
 // 	name = "My Role"
 // 	tutorial = "Shown to volunteers picking a role."
-// 	examine_title = "guard"             // defaults to "member"
+// 	examine_title = "guard"             // lowercase, defaults to "member"
 // 	outfit = /datum/outfit/job/roguetown/response_team/my_role
 
 /datum/response_team_type
@@ -21,16 +21,14 @@
 	var/desc
 	/// Who the team answers to, shown on examine as "A <role title> of <affiliation>."
 	var/affiliation
-	/// Colour of that examine line
-	var/examine_color = "#d4af37"
+	/// Colour of that examine line and of the team's stone messages
+	var/team_color = "#d4af37"
 	/// Advclass typepaths of the roles this team can field
 	var/list/roles
 
 /// The examine line for a member of this team in the given role
 /datum/response_team_type/proc/examine_line(datum/advclass/response_team/role)
-	var/title = role?.examine_title || "member"
-	var/article = (lowertext(copytext(title, 1, 2)) in list("a", "e", "i", "o", "u")) ? "An" : "A"
-	return "<span class='info'><font color='[examine_color]'><b>[article] [title] of [affiliation || name].</b></font></span>"
+	return span_info("<font color='[team_color]'><b>\A [initial(role.examine_title)] of [affiliation].</b></font>")
 
 /datum/response_team_type/kingsfield
 	name = "Kingsfield Knights"

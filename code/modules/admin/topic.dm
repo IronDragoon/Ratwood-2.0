@@ -786,11 +786,7 @@
 				delete_character = TRUE
 			H.admin_send_back_to_lobby(usr, delete_character)
 		else
-			SSdroning.kill_droning(M.client)
-			SSdroning.kill_loop(M.client)
-			SSdroning.kill_rain(M.client)
-			var/mob/dead/new_player/NP = new()
-			NP.ckey = M.ckey
+			M.return_to_lobby()
 			qdel(M)
 
 	else if(href_list["ssd_sendbacktolobby"])
