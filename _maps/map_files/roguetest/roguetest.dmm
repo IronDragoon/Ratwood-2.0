@@ -58,19 +58,6 @@
 /obj/item/paper/inqslip/confession,
 /turf/open/floor/rogue/grass,
 /area/rogue/indoors)
-"ca" = (
-/obj/structure/table/wood{
-	dir = 1;
-	icon_state = "longtable_mid"
-	},
-/obj/item/candle/candlestick/gold/lit{
-	pixel_y = 15
-	},
-/turf/open/floor/rogue/grass,
-/area)
-"cd" = (
-/turf/closed/mineral/rogue/bedrock,
-/area)
 "ce" = (
 /obj/effect/decal/mossy{
 	dir = 1
@@ -188,9 +175,10 @@
 /obj/structure/flora/roguegrass/bush,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/bog/north)
-"fE" = (
-/turf/closed/wall/mineral/rogue/decowood/vert,
-/area)
+"fp" = (
+/obj/effect/landmark/response_team,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors)
 "gP" = (
 /obj/structure/table/cooling,
 /obj/item/storage/roguebag,
@@ -213,10 +201,6 @@
 /obj/effect/landmark/quest_spawner/medium,
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/bog/north)
-"hZ" = (
-/obj/effect/landmark/response_team,
-/turf/open/floor/rogue/dirt/road,
-/area/rogue/outdoors)
 "ia" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -268,10 +252,6 @@
 /obj/machinery/light/rogue/hearth,
 /obj/item/cooking/pan,
 /turf/open/floor/rogue/churchrough,
-/area/rogue/indoors)
-"iI" = (
-/obj/effect/landmark/response_team,
-/turf/open/floor/rogue/grass,
 /area/rogue/indoors)
 "jr" = (
 /obj/structure/table/wood{
@@ -344,14 +324,6 @@
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors)
-"mm" = (
-/obj/structure/table/wood{
-	icon_state = "longtable"
-	},
-/obj/item/rogueweapon/surgery/scalpel,
-/obj/item/needle,
-/turf/open/floor/rogue/dirt/road,
-/area)
 "mq" = (
 /obj/machinery/light/rogue/firebowl/stump,
 /turf/open/floor/rogue/grass,
@@ -780,6 +752,10 @@
 /obj/machinery/light/rogue/smelter/great,
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/indoors)
+"vL" = (
+/obj/item/roguemachine/mastermail,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors)
 "wd" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -910,6 +886,10 @@
 /area/rogue/indoors)
 "zb" = (
 /obj/structure/fluff/railing/corner/south_east,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors)
+"ze" = (
+/obj/machinery/light/rogue/candle/r,
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
 "zf" = (
@@ -1107,9 +1087,10 @@
 /obj/structure/table/wood,
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors)
-"DO" = (
+"DR" = (
+/obj/structure/roguemachine/ministry_bureau,
 /turf/open/floor/rogue/tile/harem,
-/area)
+/area/rogue/indoors)
 "Ef" = (
 /obj/effect/decal/mossy{
 	dir = 8
@@ -1124,6 +1105,10 @@
 /obj/item/storage/roguebag,
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors)
+"En" = (
+/obj/effect/landmark/response_team,
+/turf/open/floor/rogue/grass,
+/area/rogue/indoors)
 "Eu" = (
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cave)
@@ -1220,10 +1205,6 @@
 /obj/item/rogueweapon/thresher,
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors)
-"Jc" = (
-/obj/machinery/light/rogue/candle/l,
-/turf/open/floor/rogue/tile/harem,
-/area)
 "JD" = (
 /obj/item/rogueweapon/pick/blacksteel,
 /turf/open/floor/rogue/ruinedwood,
@@ -1241,6 +1222,10 @@
 /obj/structure/flora/roguegrass,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/bog/north)
+"KF" = (
+/obj/effect/landmark/response_team,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/indoors)
 "KJ" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -1402,6 +1387,14 @@
 	},
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors)
+"MW" = (
+/obj/structure/table/wood{
+	icon_state = "longtable"
+	},
+/obj/item/rogueweapon/surgery/scalpel,
+/obj/item/needle,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/indoors)
 "MX" = (
 /obj/structure/flora/roguegrass,
 /turf/open/floor/rogue/dirt/road,
@@ -1534,6 +1527,16 @@
 "Rk" = (
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/rtfield)
+"Rl" = (
+/obj/structure/table/wood{
+	dir = 1;
+	icon_state = "longtable_mid"
+	},
+/obj/item/candle/candlestick/gold/lit{
+	pixel_y = 15
+	},
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors)
 "Rz" = (
 /obj/machinery/tanningrack,
 /turf/open/floor/rogue/blocks/newstone/alt,
@@ -1760,10 +1763,6 @@
 "YX" = (
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors)
-"Zf" = (
-/obj/effect/landmark/response_team,
-/turf/open/floor/rogue/dirt/road,
-/area/rogue/indoors)
 "Zu" = (
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/warehouse)
@@ -1793,15 +1792,15 @@ AO
 AO
 AO
 AO
-cd
-cd
-cd
-cd
-dB
-dB
-dB
-dB
-dB
+AO
+AO
+AO
+AO
+AO
+AO
+AO
+AO
+AO
 dB
 dB
 dB
@@ -1848,12 +1847,12 @@ zo
 zo
 zo
 zo
-fE
-fE
-fE
-dB
-dB
-dB
+zo
+zo
+zo
+zo
+zo
+AO
 dB
 dB
 dB
@@ -1900,12 +1899,12 @@ Ey
 tc
 Ey
 Ey
-Jc
-DO
-fE
-dB
-dB
-dB
+tc
+Ey
+tc
+Ey
+zo
+AO
 dB
 dB
 dB
@@ -1952,12 +1951,12 @@ Ey
 zo
 Br
 Ey
-mm
-DO
-fE
-dB
-dB
-dB
+MW
+Ey
+Ey
+Ey
+zo
+AO
 dB
 dB
 dB
@@ -2004,12 +2003,12 @@ Ey
 zo
 BX
 Ey
-ca
-DO
-fE
-dB
-dB
-dB
+Rl
+Ey
+Ey
+Ey
+zo
+AO
 dB
 dB
 dB
@@ -2052,15 +2051,15 @@ zo
 DG
 zo
 zo
-Ey
+vL
 zo
 KJ
 Ey
 bm
 Ey
+ze
+DR
 zo
-AO
-AO
 AO
 AO
 AO
@@ -3559,11 +3558,11 @@ CZ
 CZ
 SE
 CZ
-Zf
-Zf
-iI
-hZ
-hZ
+KF
+KF
+En
+fp
+fp
 rT
 rT
 rT
@@ -3663,11 +3662,11 @@ CZ
 AX
 xY
 CZ
-Zf
-Zf
-Zf
-iI
-iI
+KF
+KF
+KF
+En
+En
 eg
 rT
 rT
