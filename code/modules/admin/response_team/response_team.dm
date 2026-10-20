@@ -8,6 +8,8 @@
 
 #define RESPONSE_ROLE_MAX 5
 #define RESPONSE_OFFER_TIMEOUT (2 MINUTES)
+/// Oldest stone messages drop out of the panel's log past this many
+#define RESPONSE_LOG_MAX 200
 
 GLOBAL_DATUM_INIT(response_team, /datum/response_team, new)
 GLOBAL_LIST_EMPTY(response_team_spawns)
@@ -135,6 +137,7 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	on_cooldown = TRUE
 	addtimer(VARSET_CALLBACK(src, on_cooldown, FALSE), cooldown)
 	GLOB.response_team.relay(html_encode(input_text), src, user.voicecolor_override || user.voice_color)
+	GLOB.response_team.log_chat(user.real_name, user.ckey, "Team", input_text)
 
 /// Jupon every responder wears, named and coloured for their role so the team is easy to pick out.
 /// The design is fixed, set from the role's tabard vars when it is issued.
@@ -176,6 +179,8 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	var/list/pending_offers = list()
 	/// ckeys kicked from this call, who aren't offered it again
 	var/list/kicked = list()
+	/// Every stone message of the deployment in the order sent, for the admin panel. Messages are raw text.
+	var/list/chat_log = list()
 
 /datum/response_team/New()
 	for(var/path in subtypesof(/datum/response_team_type))
@@ -192,6 +197,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	caller_ckey = null
 	members = list()
 	kicked = list()
+	chat_log = list()
 	SStgui.update_uis(src)
 
 /// The caller runs the call until it deploys, unless they disconnect. Any admin can manage an active team.
@@ -298,6 +304,8 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		data["offer_ghosts"] = offer_ghosts
 		data["caller"] = caller_ckey
 		data["reason"] = reason
+		if(stage == RESPONSE_STAGE_ACTIVE)
+			data["chat_log"] = chat_log
 	return data
 
 /datum/response_team/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -610,18 +618,34 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	if(!stone || member.removed)
 		to_chat(user, span_warning("That responder no longer has their stone."))
 		return
-	var/message = tgui_input_text(user, "Message to the stone of [member.key]", "Direct Message", max_length = MAX_MESSAGE_LEN)
+	var/message = tgui_input_text(user, "Message to the stone of [member.key]", "Direct Message", max_length = MAX_MESSAGE_LEN, encode = FALSE)
 	if(!message || QDELETED(stone))
 		return
-	relay("<b>[message]</b>", only = member)
-	log_response(user, "messaged response team member [member.key]: [message]")
+	relay("<b>[html_encode(message)]</b>", only = member)
+	log_chat(user.key, user.ckey, member.name, message, from_admin = TRUE)
+	log_response(user, "messaged response team member [member.key]: [html_encode(message)]")
 
 /datum/response_team/proc/broadcast(mob/user)
-	var/message = tgui_input_text(user, "Message for the whole team", "Broadcast to Team", max_length = MAX_MESSAGE_LEN)
+	var/message = tgui_input_text(user, "Message for the whole team", "Broadcast to Team", max_length = MAX_MESSAGE_LEN, encode = FALSE)
 	if(!message || stage != RESPONSE_STAGE_ACTIVE)
 		return
-	relay("<b>[message]</b>")
-	log_response(user, "broadcast to the [team_type.name] response team: [message]")
+	relay("<b>[html_encode(message)]</b>")
+	log_chat(user.key, user.ckey, "Team", message, from_admin = TRUE)
+	log_response(user, "broadcast to the [team_type.name] response team: [html_encode(message)]")
+
+/// Adds a stone message to the panel's log. Sender is the character's name, or the admin's key for admin messages.
+/datum/response_team/proc/log_chat(sender, sender_ckey, recipient, message, from_admin = FALSE)
+	chat_log += list(list(
+		"time" = gameTimestamp(),
+		"sender" = sender,
+		"ckey" = sender_ckey,
+		"to" = recipient,
+		"admin" = from_admin,
+		"message" = message,
+	))
+	if(length(chat_log) > RESPONSE_LOG_MAX)
+		chat_log.Cut(1, 2)
+	SStgui.update_uis(src)
 
 /datum/response_team/proc/remove_member(mob/user, datum/response_member/member)
 	if(!member || member.removed)
@@ -681,3 +705,4 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 #undef RESPONSE_STAGE_ACTIVE
 #undef RESPONSE_ROLE_MAX
 #undef RESPONSE_OFFER_TIMEOUT
+#undef RESPONSE_LOG_MAX

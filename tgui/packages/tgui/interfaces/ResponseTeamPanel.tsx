@@ -39,6 +39,15 @@ type Member = {
   removed?: BooleanLike;
 };
 
+type ChatEntry = {
+  time: string;
+  sender: string;
+  ckey: string;
+  to: string;
+  admin: BooleanLike;
+  message: string;
+};
+
 type Data = {
   types: TeamType[];
   role_max: number;
@@ -55,6 +64,7 @@ type Data = {
   offer_ghosts?: BooleanLike;
   caller?: string | null;
   reason?: string | null;
+  chat_log?: ChatEntry[];
 };
 
 export const ResponseTeamPanel = (props) => {
@@ -401,6 +411,47 @@ const statusColor = (status?: string) => {
   }
 };
 
+const TOP = { verticalAlign: 'top' } as const;
+
+/** Every stone message of the deployment, newest first */
+const StoneLog = () => {
+  const { data } = useBackend<Data>();
+  const log = [...(data.chat_log || [])].reverse();
+  return (
+    <Section title="Stone Log">
+      {log.length === 0 && <NoticeBox>No stone messages yet.</NoticeBox>}
+      <Box style={{ maxHeight: '220px', overflowY: 'auto' }}>
+        <Table>
+          {log.map((entry, index) => (
+            <Table.Row key={index} className="candystripe">
+              <Table.Cell collapsing color="label" style={TOP}>
+                {entry.time}
+              </Table.Cell>
+              <Table.Cell collapsing style={TOP}>
+                <Box bold>
+                  {entry.sender}
+                  <AdminTag admin={entry.admin} />
+                </Box>
+                {!entry.admin && (
+                  <Box color="label" fontSize="0.9em">
+                    {entry.ckey}
+                  </Box>
+                )}
+              </Table.Cell>
+              <Table.Cell collapsing color="label" style={TOP}>
+                to {entry.to}
+              </Table.Cell>
+              <Table.Cell style={TOP}>
+                <Box preserveWhitespace>{entry.message}</Box>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table>
+      </Box>
+    </Section>
+  );
+};
+
 const ActiveStage = () => {
   const { act, data } = useBackend<Data>();
   return (
@@ -465,6 +516,7 @@ const ActiveStage = () => {
           ))}
         </Table>
       </Section>
+      <StoneLog />
       <Button.Confirm
         fluid
         color="bad"
