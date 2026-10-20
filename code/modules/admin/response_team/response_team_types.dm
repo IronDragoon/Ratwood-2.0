@@ -8,13 +8,19 @@
 // 	name = "My Team"                    // shown in the admin panel and on the team's stones
 // 	desc = "Who they are."              // panel tooltip
 // 	affiliation = "the Somewhere"       // examines as "A <role examine_title> of the Somewhere."
+// 	patron = /datum/patron/divine/noc   // or a list to roll from for each responder, like ALL_DIVINE_PATRONS
 // 	roles = list(/datum/advclass/response_team/my_role)
 //
 // /datum/advclass/response_team/my_role
 // 	name = "My Role"
 // 	tutorial = "Shown to volunteers picking a role."
 // 	examine_title = "guard"             // lowercase, defaults to "member"
+// 	tabard_identifier = "My Role"       // jupon reads "<first name>, My Role", defaults to the role name
+// 	tabard_color = CLOTHING_RED         // any hex colour, defaults to the team colour
+// 	tabard_desc = "What it looks like." // optional, replaces the jupon's default description
 // 	outfit = /datum/outfit/job/roguetown/response_team/my_role
+//
+// Every role is issued a jupon in the cloak slot, so outfits shouldn't set a cloak.
 
 /datum/response_team_type
 	var/name
@@ -25,6 +31,13 @@
 	var/team_color = "#d4af37"
 	/// Advclass typepaths of the roles this team can field
 	var/list/roles
+	/// Patron typepath every responder is given, or a list of them to roll from for each responder. Null leaves the body's default.
+	var/patron
+
+/// Gives a new responder the team's patron, before their outfit so any miracles come from it
+/datum/response_team_type/proc/apply_patron(mob/living/carbon/human/H)
+	if(patron)
+		H.set_patron(islist(patron) ? pick(patron) : patron)
 
 /// The examine line for a member of this team in the given role
 /datum/response_team_type/proc/examine_line(datum/advclass/response_team/role)
@@ -34,6 +47,7 @@
 	name = "Kingsfield Knights"
 	desc = "Sworn swords of the Crown, sent from Kingsfield to restore order."
 	affiliation = "Kingsfield"
+	patron = ALL_DIVINE_PATRONS
 	roles = list(
 		/datum/advclass/response_team/kingsfield_knight,
 		/datum/advclass/response_team/kingsfield_squire,
@@ -43,6 +57,7 @@
 	name = "Holy See Crusaders"
 	desc = "Faithful of the Holy See, dispatched to defend the Ten and their flock."
 	affiliation = "the Holy See"
+	patron = /datum/patron/divine/astrata
 	roles = list(
 		/datum/advclass/response_team/holy_see_paladin,
 		/datum/advclass/response_team/holy_see_acolyte,
@@ -53,6 +68,12 @@
 	applies_post_equipment = FALSE
 	/// What this role calls itself on examine, as in "A knight of Kingsfield."
 	var/examine_title = "member"
+	/// Follows the responder's first name on their jupon, as in "Aldous, Kingsfield Knight". Defaults to the role name.
+	var/tabard_identifier
+	/// Colour of this role's jupon. Defaults to the team colour.
+	var/tabard_color
+	/// Description of this role's jupon. Defaults to the jupon's own.
+	var/tabard_desc
 
 /// Responders are blank characters, so none of the player's own extras come with them
 /datum/outfit/job/roguetown/response_team
@@ -68,6 +89,9 @@
 	name = "Kingsfield Knight"
 	tutorial = "A knight of Kingsfield, answering the call of the Crown."
 	examine_title = "knight"
+	tabard_identifier = "Kingsfield Knight"
+	tabard_color = CLOTHING_BLUE
+	tabard_desc = "A jupon in the deep blue of Kingsfield, worn by the Crown's sworn knights."
 	outfit = /datum/outfit/job/roguetown/response_team/kingsfield_knight
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED)
 	subclass_stats = list(
@@ -93,7 +117,6 @@
 	..()
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/knight
 	neck = /obj/item/clothing/neck/roguetown/bevor
-	cloak = /obj/item/clothing/cloak/tabard/knight
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/full
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail
 	gloves = /obj/item/clothing/gloves/roguetown/plate
@@ -116,6 +139,9 @@
 	name = "Kingsfield Squire"
 	tutorial = "A squire of Kingsfield, following your knights into the fray."
 	examine_title = "squire"
+	tabard_identifier = "Kingsfield Squire"
+	tabard_color = CLOTHING_AZURE
+	tabard_desc = "A jupon in the lighter blue of Kingsfield, worn by squires in the knights' service."
 	outfit = /datum/outfit/job/roguetown/response_team/kingsfield_squire
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_SQUIRE_REPAIR)
 	subclass_stats = list(
@@ -169,9 +195,8 @@
 	var/devotion_limit = CLERIC_REQ_1
 
 /datum/outfit/job/roguetown/response_team/holy_see/pre_equip(mob/living/carbon/human/H)
-	H.set_patron(/datum/patron/divine/astrata)
 	..()
-	wrists = /obj/item/clothing/neck/roguetown/psicross/astrata
+	wrists = /obj/item/clothing/neck/roguetown/psicross/undivided
 	if(cleric_tier)
 		var/datum/devotion/C = new /datum/devotion(H, H.patron)
 		C.grant_miracles(H, cleric_tier = cleric_tier, passive_gain = devotion_regen, devotion_limit = devotion_limit)
@@ -180,6 +205,9 @@
 	name = "Holy See Paladin"
 	tutorial = "A paladin of the Holy See, the sword and shield of the faith."
 	examine_title = "paladin"
+	tabard_identifier = "Holy See Paladin"
+	tabard_color = CLOTHING_YELLOW
+	tabard_desc = "A jupon in Astrata's gold, worn by the paladins of the Holy See."
 	outfit = /datum/outfit/job/roguetown/response_team/holy_see/paladin
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED)
 	subclass_stats = list(
@@ -210,7 +238,6 @@
 	..()
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/crusader
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/full
-	cloak = /obj/item/clothing/cloak/tabard/crusader/astrata
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/full/fluted
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 	gloves = /obj/item/clothing/gloves/roguetown/chain
@@ -230,6 +257,9 @@
 	name = "Holy See Acolyte"
 	tutorial = "An acolyte of the Holy See, tending to the wounded and the faithful."
 	examine_title = "acolyte"
+	tabard_identifier = "Holy See Acolyte"
+	tabard_color = CLOTHING_WHITE
+	tabard_desc = "A plain white jupon, worn by the acolytes of the Holy See."
 	outfit = /datum/outfit/job/roguetown/response_team/holy_see/acolyte
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -266,12 +296,16 @@
 	backpack_contents = list(
 		/obj/item/book/rogue/bibble = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
+		/obj/item/reagent_containers/lux = 1,
 	)
 
 /datum/advclass/response_team/holy_see_neophyte
 	name = "Holy See Neophyte"
 	tutorial = "A neophyte of the Holy See, a holy warrior in training with much to prove."
 	examine_title = "neophyte"
+	tabard_identifier = "Holy See Neophyte"
+	tabard_color = CLOTHING_ORANGE
+	tabard_desc = "A jupon in a duller gold, worn by the neophytes of the Holy See."
 	outfit = /datum/outfit/job/roguetown/response_team/holy_see/neophyte
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_SQUIRE_REPAIR)
 	subclass_stats = list(
@@ -298,7 +332,6 @@
 	..()
 	head = /obj/item/clothing/head/roguetown/helmet/leather/armorhood
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/iron
-	cloak = /obj/item/clothing/cloak/templar/astrata
 	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 	gloves = /obj/item/clothing/gloves/roguetown/chain/iron

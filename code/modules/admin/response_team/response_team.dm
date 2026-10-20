@@ -131,6 +131,13 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	addtimer(VARSET_CALLBACK(src, on_cooldown, FALSE), cooldown)
 	GLOB.response_team.relay(html_encode(input_text), src, user.voicecolor_override || user.voice_color)
 
+/// Jupon every responder wears, named and coloured for their role so the team is easy to pick out.
+/// The design is fixed, set from the role's tabard vars when it is issued.
+/obj/item/clothing/cloak/stabard/surcoat/response_team
+	desc = "A jupon in the colours of a sworn company."
+	sellprice = 0
+	picked = TRUE
+
 /datum/ui_state/response_team_state/can_use_topic(src_object, mob/user)
 	if(check_rights_for(user.client, R_ADMIN))
 		return UI_INTERACTIVE
@@ -531,8 +538,19 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	H.charflaw = new /datum/charflaw/eznoflaw()
 	H.vices += H.charflaw
 	H.charflaw.on_mob_creation(H)
-	var/datum/advclass/role = SSrole_class_handler.classes_by_type[member.role]
+	team_type.apply_patron(H)
+	var/datum/advclass/response_team/role = SSrole_class_handler.classes_by_type[member.role]
 	role.equipme(H)
+	// The jupon always takes the cloak slot, over anything the outfit gave
+	qdel(H.cloak)
+	var/obj/item/clothing/cloak/stabard/surcoat/response_team/jupon = new(H)
+	jupon.name = "[H.first_name()], [role.tabard_identifier || role.name]"
+	jupon.color = role.tabard_color || team_type.team_color
+	if(role.tabard_desc)
+		jupon.desc = role.tabard_desc
+	jupon.update_icon()
+	if(!H.equip_to_slot_if_possible(jupon, SLOT_CLOAK, disable_warning = TRUE))
+		H.put_in_hands(jupon)
 	var/obj/item/scomstone/response_team/stone = new(H)
 	stone.name = "[team_type.name] stone"
 	// Bound before equipping, or the stone crumbles on its own wearer
