@@ -43,6 +43,8 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	var/datum/weakref/stone
 	/// Weakrefs to every item the responder spawned with, stone included
 	var/list/issued = list()
+	/// Whether issued has been filled in, which waits until they've made any choices their outfit asks for
+	var/kit_recorded = FALSE
 
 /// Deletes the body and its issued kit, and sends the player back to the lobby if they're still the responder or its ghost
 /datum/response_member/proc/despawn()
@@ -60,6 +62,9 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 /// Deletes the issued kit wherever it ended up. Anything picked up in the round, stowed in the kit or still on the body, is left on the floor.
 /datum/response_member/proc/clear_gear(mob/living/carbon/human/H)
 	var/list/kit = list()
+	// Still choosing their gear, so nothing on them can be loot yet
+	if(H && !kit_recorded)
+		kit = H.get_all_carried_items()
 	for(var/datum/weakref/ref as anything in issued)
 		var/obj/item/I = ref.resolve()
 		if(I)
@@ -523,13 +528,16 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	log_response(user, "dispatched the [team_type.name] response team: [english_list(roster)].")
 	return TRUE
 
+/// Puts the responder in a fresh body and equips them. Sleeps while they answer any choices their role's outfit asks for.
 /datum/response_team/proc/spawn_member(datum/response_member/member, mob/M, turf/T)
+	set waitfor = FALSE
 	SStgui.close_user_uis(M, src)
 	if(isnewplayer(M))
 		var/mob/dead/new_player/N = M
 		N.close_spawn_windows()
 	var/mob/living/carbon/human/species/human/northern/H = new(T)
 	H.key = M.key
+	member.body = WEAKREF(H)
 	// Same pool new arrivals fall back to when their chosen name is taken
 	H.fully_replace_character_name(null, H.dna.species.random_name(H.gender, TRUE))
 	GLOB.chosen_names += H.real_name
@@ -538,37 +546,55 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	H.charflaw = new /datum/charflaw/eznoflaw()
 	H.vices += H.charflaw
 	H.charflaw.on_mob_creation(H)
-	team_type.apply_patron(H)
+	var/datum/response_team_type/spawning_type = team_type
+	spawning_type.apply_patron(H)
 	var/datum/advclass/response_team/role = SSrole_class_handler.classes_by_type[member.role]
-	role.equipme(H)
-	// The jupon always takes the cloak slot, over anything the outfit gave
-	qdel(H.cloak)
-	var/obj/item/clothing/cloak/stabard/surcoat/response_team/jupon = new(H)
-	jupon.name = "[H.first_name()], [role.tabard_identifier || role.name]"
-	jupon.color = role.tabard_color || team_type.team_color
-	if(role.tabard_desc)
-		jupon.desc = role.tabard_desc
-	jupon.update_icon()
-	if(!H.equip_to_slot_if_possible(jupon, SLOT_CLOAK, disable_warning = TRUE))
-		H.put_in_hands(jupon)
+	role.equip_responder(H)
+	// Removed, or the deployment ended, while they were choosing
+	if(QDELETED(H) || member.removed)
+		return
+	spawning_type.remove_withheld(H)
+	if(spawning_type.give_jupon)
+		issue_jupon(H, role, spawning_type)
 	var/obj/item/scomstone/response_team/stone = new(H)
-	stone.name = "[team_type.name] stone"
+	stone.name = "[spawning_type.name] stone"
 	// Bound before equipping, or the stone crumbles on its own wearer
 	stone.owner = WEAKREF(H)
-	if(!H.equip_to_slot_if_possible(stone, SLOT_RING, disable_warning = TRUE))
-		H.put_in_hands(stone)
-	member.body = WEAKREF(H)
+	issue_item(H, stone, SLOT_RING)
 	member.stone = WEAKREF(stone)
 	// Remembered so ending the deployment deletes the kit but not anything picked up along the way
-	var/list/kit = list(stone)
-	for(var/obj/item/gear as anything in H.get_all_gear())
-		kit |= gear.GetAllContents(/obj/item)
-	for(var/obj/item/I as anything in kit)
+	for(var/obj/item/I as anything in H.get_all_carried_items())
 		member.issued += WEAKREF(I)
-	to_chat(H, span_boldannounce("I am [H.real_name], a [role.name] of the [team_type.name]."))
+	member.kit_recorded = TRUE
+	to_chat(H, span_boldannounce("I am [H.real_name], a [role.name] of the [spawning_type.name]."))
 	if(mission)
 		to_chat(H, span_notice("<b>Mission:</b> [html_encode(mission)]"))
 	to_chat(H, span_notice("Right click my [stone.name] to speak with the rest of the team. It will crumble in anyone else's hands."))
+
+/// Puts a named jupon in the role's colours in the cloak slot. Any cloak there is replaced, unless it's a bag, which is moved elsewhere.
+/datum/response_team/proc/issue_jupon(mob/living/carbon/human/H, datum/advclass/response_team/role, datum/response_team_type/spawning_type)
+	var/obj/item/old_cloak = H.cloak
+	if(old_cloak?.GetComponent(/datum/component/storage))
+		H.dropItemToGround(old_cloak, force = TRUE)
+	else
+		qdel(old_cloak)
+		old_cloak = null
+	var/obj/item/clothing/cloak/stabard/surcoat/response_team/jupon = new(H)
+	jupon.name = "[H.first_name()], [role.tabard_identifier || role.name]"
+	jupon.color = role.tabard_color || spawning_type.team_color
+	if(role.tabard_desc)
+		jupon.desc = role.tabard_desc
+	jupon.update_icon()
+	issue_item(H, jupon, SLOT_CLOAK)
+	if(old_cloak && !H.equip_to_appropriate_slot(old_cloak))
+		H.put_in_hands(old_cloak)
+
+/// Puts an item on the responder in the given slot if it's free, otherwise in a hand, otherwise at their feet
+/datum/response_team/proc/issue_item(mob/living/carbon/human/H, obj/item/I, slot)
+	if(H.equip_to_slot_if_possible(I, slot, disable_warning = TRUE))
+		return
+	if(!H.put_in_hands(I))
+		I.forceMove(H.drop_location())
 
 /// Sends a team stone message in the team colour to every deployed member, or only the one given
 /datum/response_team/proc/relay(message, atom/source, tcolor, datum/response_member/only)
@@ -619,15 +645,35 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	log_response(user, "ended the deployment of the [team_type.name] response team.")
 	reset()
 
-/// The team's "A knight of Kingsfield." examine line, if this is a deployed responder
-/mob/living/carbon/human/proc/get_response_team_examine()
+/// The deployed responder this mob is, if any
+/mob/living/carbon/human/proc/get_response_member()
 	var/datum/response_team/team = GLOB.response_team
 	if(team.stage != RESPONSE_STAGE_ACTIVE)
 		return
 	for(var/member_ckey in team.members)
 		var/datum/response_member/member = team.members[member_ckey]
 		if(member.body?.resolve() == src)
-			return team.team_type.examine_line(member.role)
+			return member
+
+/// Examine lines for a deployed responder: the team's "A knight of Kingsfield.", then the faithful's line if the examiner shares the team's faith
+/mob/living/carbon/human/proc/get_response_team_examine(mob/user)
+	var/datum/response_member/member = get_response_member()
+	if(!member)
+		return
+	var/datum/response_team_type/team_type = GLOB.response_team.team_type
+	. = list(team_type.examine_line(member.role))
+	if(team_type.is_faithful(user))
+		. += team_type.faithful_line()
+
+/// Whether the examiner shares this responder's team's faith, and so sees its line in place of the Inquisition's
+/mob/living/carbon/human/proc/is_known_responder(mob/user)
+	return get_response_member() && GLOB.response_team.team_type.is_faithful(user)
+
+/// Every item on this mob, including ones inside other items
+/mob/living/carbon/human/proc/get_all_carried_items()
+	. = list()
+	for(var/obj/item/gear as anything in get_all_gear())
+		. |= gear.GetAllContents(/obj/item)
 
 #undef RESPONSE_STAGE_SETUP
 #undef RESPONSE_STAGE_LOCKED

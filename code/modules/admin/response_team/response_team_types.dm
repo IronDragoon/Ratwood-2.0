@@ -20,7 +20,24 @@
 // 	tabard_desc = "What it looks like." // optional, replaces the jupon's default description
 // 	outfit = /datum/outfit/job/roguetown/response_team/my_role
 //
-// Every role is issued a jupon in the cloak slot, so outfits shouldn't set a cloak.
+// Unless the team sets give_jupon = FALSE, every role is issued a jupon in the cloak slot, so outfits shouldn't set a cloak.
+//
+// A role can instead be built on an existing class, taking its outfit, stats, skills, traits and languages:
+//
+// /datum/advclass/response_team/my_inquisitor
+// 	name = "My Inquisitor"
+// 	based_on = /datum/advclass/puritan/arbiter
+// 	traits_applied = list(TRAIT_INQUISITION) // added to the class's own, for traits its job gives rather than the class
+//
+// Borrowed outfits often hand out things only a local posting should have, like keys or money. List those in the
+// team's withheld_items and they're taken away once the responder is equipped. Override after_equip() on the role
+// for anything else the class's job would have given, like spells.
+//
+// Optional team extras:
+// 	give_jupon = FALSE                                // responders keep their outfit's own cloak instead of a named jupon
+// 	withheld_items = list(/obj/item/roguekey)          // item types (and subtypes) taken off responders after equipping
+// 	faithful_patron = /datum/patron/old_god           // followers of this patron see faithful_examine on responders,
+// 	faithful_examine = "One of ours, sent from afar." // in place of the Inquisition's own examine line
 
 /datum/response_team_type
 	var/name
@@ -33,15 +50,37 @@
 	var/list/roles
 	/// Patron typepath every responder is given, or a list of them to roll from for each responder. Null leaves the body's default.
 	var/patron
+	/// Item types, subtypes included, taken off responders once equipped. For outfits borrowed from jobs that hand out local keys, comms, money or paperwork.
+	var/list/withheld_items
+	/// Followers of this patron see faithful_examine on the team's responders, in place of the Inquisition's examine line
+	var/faithful_patron
+	var/faithful_examine
+	/// Whether responders are issued a named jupon in their role's colours. Without it they keep whatever cloak their outfit gives.
+	var/give_jupon = TRUE
 
 /// Gives a new responder the team's patron, before their outfit so any miracles come from it
 /datum/response_team_type/proc/apply_patron(mob/living/carbon/human/H)
 	if(patron)
 		H.set_patron(islist(patron) ? pick(patron) : patron)
 
+/// Takes away anything in withheld_items the responder's outfit gave them
+/datum/response_team_type/proc/remove_withheld(mob/living/carbon/human/H)
+	if(!length(withheld_items))
+		return
+	for(var/obj/item/I as anything in H.get_all_carried_items())
+		if(!QDELETED(I) && is_type_in_list(I, withheld_items))
+			qdel(I)
+
 /// The examine line for a member of this team in the given role
 /datum/response_team_type/proc/examine_line(datum/advclass/response_team/role)
 	return span_info("<font color='[team_color]'><b>\A [initial(role.examine_title)] of [affiliation].</b></font>")
+
+/// Whether this examiner follows the faith that knows this team on sight
+/datum/response_team_type/proc/is_faithful(mob/living/examiner)
+	return faithful_examine && istype(examiner) && istype(examiner.patron, faithful_patron)
+
+/datum/response_team_type/proc/faithful_line()
+	return span_info("<font color='[team_color]'><b>[faithful_examine]</b></font>")
 
 /datum/response_team_type/kingsfield
 	name = "Kingsfield Knights"
@@ -64,6 +103,36 @@
 		/datum/advclass/response_team/holy_see_neophyte,
 	)
 
+/datum/response_team_type/ordo_otavanus
+	name = "Ordo Otavanus"
+	desc = "The Orthodoxy's own hunters, sent from Otava when the local Inquisition cannot be trusted to suffice."
+	affiliation = "the Ordo Otavanus"
+	team_color = "#c0c0c0"
+	patron = /datum/patron/old_god
+	give_jupon = FALSE
+	faithful_patron = /datum/patron/old_god
+	faithful_examine = "A Member of the Orthodoxy's Ordo Otavanus! It must be something serious..."
+	// The Inquisition's outfits are built for the local sect. The signet ring is its comms, and its slot is needed for the team's stone.
+	withheld_items = list(
+		/obj/item/roguekey,
+		/obj/item/storage/keyring,
+		/obj/item/storage/belt/rogue/pouch/coins,
+		/obj/item/paper/inqslip,
+		/obj/item/clothing/ring/signet/silver/inqscomm,
+	)
+	roles = list(
+		/datum/advclass/response_team/ordo/arbiter,
+		/datum/advclass/response_team/ordo/inspector,
+		/datum/advclass/response_team/ordo/ordinator,
+		/datum/advclass/response_team/ordo/orthodoxist/adjudicator,
+		/datum/advclass/response_team/ordo/orthodoxist/arbalist,
+		/datum/advclass/response_team/ordo/orthodoxist/confessor,
+		/datum/advclass/response_team/ordo/orthodoxist/disciple,
+		/datum/advclass/response_team/ordo/orthodoxist/psyaltrist,
+		/datum/advclass/response_team/ordo/orthodoxist/sojourner,
+		/datum/advclass/response_team/ordo/absolver,
+	)
+
 /datum/advclass/response_team
 	applies_post_equipment = FALSE
 	/// What this role calls itself on examine, as in "A knight of Kingsfield."
@@ -74,10 +143,60 @@
 	var/tabard_color
 	/// Description of this role's jupon. Defaults to the jupon's own.
 	var/tabard_desc
+	/// An existing advclass this role is built on. Its outfit, stats, skills, languages and music are used unless the role sets its own,
+	/// and its traits are added to the role's. Its tutorial is used if the role doesn't give one.
+	var/based_on
 
-/// Responders are blank characters, so none of the player's own extras come with them
-/datum/outfit/job/roguetown/response_team
-	applies_player_extras = FALSE
+/datum/advclass/response_team/New()
+	. = ..()
+	if(!based_on)
+		return
+	var/datum/advclass/base = new based_on
+	if(tutorial == initial(tutorial))
+		tutorial = base.tutorial
+	for(var/var_name in list("outfit", "subclass_stats", "subclass_skills", "subclass_languages", "subclass_virtues", "subclass_social_rank", "cmode_music"))
+		if(isnull(vars[var_name]))
+			vars[var_name] = base.vars[var_name]
+	if(!subclass_spellpoints)
+		subclass_spellpoints = base.subclass_spellpoints
+	traits_applied = base.traits_applied | traits_applied
+	qdel(base)
+
+/// Equips a responder as a blank character, with nothing from the player's own character.
+/// Unlike equipme() this waits for any choices the outfit asks for, loadout included, so the kit is complete when it returns.
+/datum/advclass/response_team/proc/equip_responder(mob/living/carbon/human/H)
+	var/datum/outfit/job/roguetown/kit = new outfit
+	kit.applies_player_extras = FALSE
+	// They're already in the body, so the loadout can be asked for now rather than after the usual delay
+	kit.loadout_now = TRUE
+	H.equipOutfit(kit)
+	if(QDELETED(H))
+		return
+	H.advjob = name
+	if(cmode_music)
+		H.cmode_music = cmode_music
+	for(var/trait in traits_applied)
+		if(!(trait in H.dna.species.banned_traits))
+			ADD_TRAIT(H, trait, ADVENTURER_TRAIT)
+	if(HAS_TRAIT(H, TRAIT_MEDIUMARMOR) || HAS_TRAIT(H, TRAIT_HEAVYARMOR))
+		H.def_intent_change(INTENT_PARRY)
+	for(var/language in subclass_languages)
+		H.grant_language(language)
+	for(var/stat in subclass_stats)
+		H.change_stat(stat, subclass_stats[stat])
+	for(var/skill in subclass_skills)
+		H.adjust_skillrank_up_to(skill, subclass_skills[skill], TRUE)
+	if(subclass_spellpoints > 0)
+		H.mind?.adjust_spellpoints(subclass_spellpoints)
+	if(subclass_social_rank)
+		H.social_rank = subclass_social_rank
+	for(var/virtue in subclass_virtues)
+		apply_virtue(H, new virtue)
+	after_equip(H)
+
+/// For anything else the role needs once equipped, like spells a borrowed class's job would have given
+/datum/advclass/response_team/proc/after_equip(mob/living/carbon/human/H)
+	return
 
 /datum/outfit/job/roguetown/response_team/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -345,3 +464,86 @@
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
 		/obj/item/repair_kit/metal = 1,
 	)
+
+// ORDO OTAVANUS
+// Built on the Inquisition's own classes, so they stay in step with them.
+
+/datum/advclass/response_team/ordo
+
+/datum/advclass/response_team/ordo/arbiter
+	name = "Ordo Arbiter"
+	examine_title = "arbiter"
+	based_on = /datum/advclass/puritan/arbiter
+
+/datum/advclass/response_team/ordo/inspector
+	name = "Ordo Inspector"
+	examine_title = "inspector"
+	based_on = /datum/advclass/puritan/inspector
+
+/datum/advclass/response_team/ordo/ordinator
+	name = "Ordo Ordinator"
+	examine_title = "ordinator"
+	based_on = /datum/advclass/puritan/ordinator
+
+/// The Orthodoxist job gives these to all its classes, rather than the classes themselves
+/datum/advclass/response_team/ordo/orthodoxist
+	traits_applied = list(TRAIT_OUTLANDER, TRAIT_STEELHEARTED, TRAIT_INQUISITION)
+
+/datum/advclass/response_team/ordo/orthodoxist/adjudicator
+	name = "Ordo Adjudicator"
+	examine_title = "adjudicator"
+	based_on = /datum/advclass/psydoniantemplar
+
+/datum/advclass/response_team/ordo/orthodoxist/arbalist
+	name = "Ordo Arbalist"
+	examine_title = "arbalist"
+	based_on = /datum/advclass/arbalist
+
+/datum/advclass/response_team/ordo/orthodoxist/confessor
+	name = "Ordo Confessor"
+	examine_title = "confessor"
+	based_on = /datum/advclass/confessor
+
+/datum/advclass/response_team/ordo/orthodoxist/disciple
+	name = "Ordo Disciple"
+	examine_title = "disciple"
+	based_on = /datum/advclass/disciple
+
+/datum/advclass/response_team/ordo/orthodoxist/psyaltrist
+	name = "Ordo Psyaltrist"
+	examine_title = "psyaltrist"
+	based_on = /datum/advclass/psyaltrist
+
+/datum/advclass/response_team/ordo/orthodoxist/sojourner
+	name = "Ordo Sojourner"
+	examine_title = "sojourner"
+	based_on = /datum/advclass/sojourner
+
+/datum/advclass/response_team/ordo/absolver
+	name = "Ordo Absolver"
+	examine_title = "absolver"
+	based_on = /datum/advclass/absolver
+	// The Absolver job gives these rather than its class
+	traits_applied = list(
+		TRAIT_NOPAINSTUN,
+		TRAIT_PACIFISM,
+		TRAIT_LUX_FREAK,
+		TRAIT_EMPATH,
+		TRAIT_CRITICAL_RESISTANCE,
+		TRAIT_BLOOD_RESISTANCE,
+		TRAIT_SILVER_BLESSED,
+		TRAIT_STEELHEARTED,
+		TRAIT_INQUISITION,
+		TRAIT_RITUALIST,
+		TRAIT_SELF_AWARE,
+	)
+
+/// The Absolver job grants these on spawn rather than its class
+/datum/advclass/response_team/ordo/absolver/after_equip(mob/living/carbon/human/H)
+	if(!H.mind)
+		return
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/psydonpersist)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonabsolve)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
+	H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/qsabsolution)

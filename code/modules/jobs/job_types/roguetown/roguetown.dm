@@ -50,6 +50,8 @@
 	var/has_loadout = FALSE
 	/// Set to FALSE to skip the player's special items and the round's triumph post-equip effects
 	var/applies_player_extras = TRUE
+	/// Set on an outfit worn by someone already in their body, to ask for the loadout during post_equip rather than after a delay
+	var/loadout_now = FALSE
 
 ///Asks for a plain or snouted cut of an otherwise fixed helmet.
 /datum/outfit/job/roguetown/proc/snouthelm_pick(mob/living/carbon/human/H, plain_path, snouted_path)
@@ -110,7 +112,10 @@
 			var/datum/triumph_buy/thing = SStriumphs.post_equip_calls[list_key]
 			thing.on_activate(H)
 	if(has_loadout && H.mind)
-		addtimer(CALLBACK(src, PROC_REF(choose_loadout), H), 50)
+		if(loadout_now)
+			choose_loadout(H)
+		else
+			addtimer(CALLBACK(src, PROC_REF(choose_loadout), H), 50)
 	return
 
 /datum/outfit/job/roguetown/proc/choose_loadout(mob/living/carbon/human/H)

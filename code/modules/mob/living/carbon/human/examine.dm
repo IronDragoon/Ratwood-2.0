@@ -1199,7 +1199,8 @@
 		if(heretic_text)
 			. += span_notice(heretic_text)
 		var/inquisition_text = get_inquisition_text(user)
-		if(inquisition_text)
+		// Response teams with a faith of their own show their own line to its followers instead
+		if(inquisition_text && !is_known_responder(user))
 			. +=span_notice(inquisition_text)
 
 		if (HAS_TRAIT(src, TRAIT_LEPROSY))
@@ -1277,9 +1278,9 @@
 				. += span_danger("This was their only chance at lyfe.")
 
 	// Response teams wear their colours openly, so this shows masked or not
-	var/response_team_line = get_response_team_examine()
-	if(response_team_line)
-		. += response_team_line
+	var/list/response_team_lines = get_response_team_examine(user)
+	if(length(response_team_lines))
+		. += response_team_lines
 
 	// Real medical role can tell at a glance it is a waste of time, but only if the Necra message don't come first.
 
