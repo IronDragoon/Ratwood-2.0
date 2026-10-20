@@ -160,6 +160,8 @@
 	if(!subclass_spellpoints)
 		subclass_spellpoints = base.subclass_spellpoints
 	traits_applied = base.traits_applied | traits_applied
+	// Responders answer to their team, not the local sect, so they don't lead it or spend its marques
+	traits_applied -= TRAIT_PURITAN
 	qdel(base)
 
 /// Equips a responder as a blank character, with nothing from the player's own character.

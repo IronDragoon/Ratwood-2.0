@@ -175,7 +175,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	var/call_id = 0
 	/// ckey -> /datum/response_member, the waiting room and then the deployed team
 	var/list/members = list()
-	/// ckeys with an offer prompt still open, so offering again doesn't stack a second one
+	/// ckey -> call_id of an offer prompt still open, so offering the same call again doesn't stack a second one
 	var/list/pending_offers = list()
 	/// ckeys kicked from this call, who aren't offered it again
 	var/list/kicked = list()
@@ -198,7 +198,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	members = list()
 	kicked = list()
 	chat_log = list()
-	SStgui.update_uis(src)
+	update_static_data_for_all_viewers()
 
 /// The caller runs the call until it deploys, unless they disconnect. Any admin can manage an active team.
 /datum/response_team/proc/can_control(mob/user)
@@ -229,7 +229,8 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 /datum/response_team/proc/is_banned(mob/M)
 	return is_banned_from(M.ckey, ROLE_RESPONSE_TEAM)
 
-/datum/response_team/proc/log_response(mob/user, message)
+/// User can be a mob or a client
+/datum/response_team/proc/log_response(user, message)
 	log_admin("[key_name(user)] [message]")
 	message_admins(span_danger("[key_name_admin(user)] [message]"))
 
@@ -255,6 +256,9 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	data["types"] = types
 	data["role_max"] = RESPONSE_ROLE_MAX
 	data["mission_max"] = MAX_MESSAGE_LEN
+	// Static so the whole log is only resent when a message is added, not on every update
+	if(check_rights_for(user.client, R_ADMIN))
+		data["chat_log"] = chat_log
 	return data
 
 /datum/response_team/ui_data(mob/user)
@@ -304,8 +308,6 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		data["offer_ghosts"] = offer_ghosts
 		data["caller"] = caller_ckey
 		data["reason"] = reason
-		if(stage == RESPONSE_STAGE_ACTIVE)
-			data["chat_log"] = chat_log
 	return data
 
 /datum/response_team/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -440,7 +442,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	reason = new_reason
 	caller_ckey = user.ckey
 	stage = RESPONSE_STAGE_LOCKED
-	log_response(user, "prepared a [team_type.name] response team ([slot_summary()]). Reason: [html_encode(reason)]")
+	log_response(user, "prepared a [team_type.name] response team ([slot_summary()]). Reason: [html_encode(reason)]. Mission: [mission ? html_encode(mission) : "none"]")
 	return TRUE
 
 /// Offers the call to everyone eligible who isn't already queued, being asked, or kicked. Returns how many were asked.
@@ -451,7 +453,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 			continue
 		if(check_rights_for(M.client, R_ADMIN) ? !offer_admins : !offer_ghosts)
 			continue
-		if(members[M.ckey] || (M.ckey in pending_offers) || (M.ckey in kicked))
+		if(members[M.ckey] || pending_offers[M.ckey] == call_id || (M.ckey in kicked))
 			continue
 		if(M.ckey in GLOB.poll_ignore[POLL_IGNORE_RESPONSE_TEAM])
 			continue
@@ -462,13 +464,16 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 
 /datum/response_team/proc/offer(mob/M, id)
 	set waitfor = FALSE
+	// Kept rather than read from M later, which may be gone by the time they answer
 	var/offered_ckey = M.ckey
-	pending_offers |= offered_ckey
+	pending_offers[offered_ckey] = id
 	window_flash(M.client)
 	var/answer = askuser(M, "An emergency response has been called, will you answer?", "Emergency Response", "Yes", "No", "Never for this round", StealFocus = FALSE, Timeout = RESPONSE_OFFER_TIMEOUT)
-	pending_offers -= offered_ckey
+	// A newer call may have offered again while this prompt was open
+	if(pending_offers[offered_ckey] == id)
+		pending_offers -= offered_ckey
 	if(answer == 3)
-		GLOB.poll_ignore[POLL_IGNORE_RESPONSE_TEAM] |= M.ckey
+		GLOB.poll_ignore[POLL_IGNORE_RESPONSE_TEAM] |= offered_ckey
 		return
 	if(answer != 1 || QDELETED(M) || members[M.ckey])
 		return
@@ -508,6 +513,8 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	reset()
 
 /datum/response_team/proc/dispatch(mob/user)
+	// The dispatcher may be deploying too, and their key leaves this mob as they spawn
+	var/client/dispatcher = user.client
 	if(!length(GLOB.response_team_spawns))
 		to_chat(user, span_warning("This map has no ERT response spawn landmark, so the team has been called off."))
 		call_off(user, "tried to dispatch the [team_type.name] response team, but the map has no response spawn so it was called off.")
@@ -532,8 +539,8 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 			continue
 		spawn_member(member, M, pick(GLOB.response_team_spawns))
 		var/datum/advclass/role = member.role
-		roster += "[member.ckey] as [initial(role.name)]"
-	log_response(user, "dispatched the [team_type.name] response team: [english_list(roster)].")
+		roster += "[member.ckey] as [member.name], [initial(role.name)]"
+	log_response(dispatcher, "dispatched the [team_type.name] response team: [english_list(roster)].")
 	return TRUE
 
 /// Puts the responder in a fresh body and equips them. Sleeps while they answer any choices their role's outfit asks for.
@@ -544,12 +551,13 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		var/mob/dead/new_player/N = M
 		N.close_spawn_windows()
 	var/mob/living/carbon/human/species/human/northern/H = new(T)
-	H.key = M.key
 	member.body = WEAKREF(H)
-	// Same pool new arrivals fall back to when their chosen name is taken
+	// Same pool new arrivals fall back to when their chosen name is taken.
+	// Named before the key moves in, so dispatch() can log the name without waiting on login.
 	H.fully_replace_character_name(null, H.dna.species.random_name(H.gender, TRUE))
 	GLOB.chosen_names += H.real_name
 	member.name = H.real_name
+	H.key = M.key
 	// A blank character with no vice. This is the free "No Flaw", not the one from character setup that costs triumphs.
 	H.charflaw = new /datum/charflaw/eznoflaw()
 	H.vices += H.charflaw
@@ -645,7 +653,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	))
 	if(length(chat_log) > RESPONSE_LOG_MAX)
 		chat_log.Cut(1, 2)
-	SStgui.update_uis(src)
+	update_static_data_for_all_viewers()
 
 /datum/response_team/proc/remove_member(mob/user, datum/response_member/member)
 	if(!member || member.removed)
@@ -696,8 +704,9 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 /// Every item on this mob, including ones inside other items
 /mob/living/carbon/human/proc/get_all_carried_items()
 	. = list()
-	for(var/obj/item/gear as anything in get_all_gear())
-		. |= gear.GetAllContents(/obj/item)
+	// Each of these is the top of its own tree, so nothing is counted twice
+	for(var/obj/item/gear in get_equipped_items(TRUE) + held_items)
+		. += gear.GetAllContents(/obj/item)
 
 #undef RESPONSE_STAGE_SETUP
 #undef RESPONSE_STAGE_LOCKED
