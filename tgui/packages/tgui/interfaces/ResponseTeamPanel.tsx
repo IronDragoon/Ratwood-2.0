@@ -330,7 +330,21 @@ const GatheringStage = () => {
       <TeamSummary />
       {!!self && <VolunteerControls self={self} />}
       {!self && <RoleTotals />}
-      <Section title={`Queued Responders (${data.members.length})`}>
+      <Section
+        title={`Queued Responders (${data.members.length})`}
+        buttons={
+          !!data.is_admin && (
+            <Button
+              icon="redo"
+              disabled={!data.can_control}
+              tooltip="Ask everyone eligible who isn't queued, kicked or already being asked."
+              onClick={() => act('reoffer')}
+            >
+              Offer Again
+            </Button>
+          )
+        }
+      >
         {data.members.length === 0 && (
           <NoticeBox>Nobody has answered the call yet.</NoticeBox>
         )}

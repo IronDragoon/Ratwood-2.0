@@ -41,11 +41,13 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 	var/name
 	var/datum/weakref/body
 	var/datum/weakref/stone
+	/// Weakrefs to every item the responder spawned with, stone included
+	var/list/issued = list()
 
-/// Deletes the body, its stone and everything on it, and sends the player back to the lobby if they're still the responder or its ghost
+/// Deletes the body and its issued kit, and sends the player back to the lobby if they're still the responder or its ghost
 /datum/response_member/proc/despawn()
-	qdel(stone?.resolve())
 	var/mob/living/carbon/human/H = body?.resolve()
+	clear_gear(H)
 	H?.forget_identity()
 	GLOB.chosen_names -= name
 	var/mob/player = get_mob_by_ckey(ckey)
@@ -53,9 +55,26 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 		player.return_to_lobby()
 		if(player != H)
 			qdel(player)
-	for(var/obj/item/I as anything in H?.get_all_gear())
-		qdel(I)
 	qdel(H)
+
+/// Deletes the issued kit wherever it ended up. Anything picked up in the round, stowed in the kit or still on the body, is left on the floor.
+/datum/response_member/proc/clear_gear(mob/living/carbon/human/H)
+	var/list/kit = list()
+	for(var/datum/weakref/ref as anything in issued)
+		var/obj/item/I = ref.resolve()
+		if(I)
+			kit += I
+	for(var/obj/item/I as anything in kit)
+		for(var/obj/item/stowed in I.contents)
+			if(!(stowed in kit))
+				stowed.forceMove(get_turf(I))
+	if(H)
+		for(var/obj/item/I in H.get_equipped_items(TRUE) + H.held_items)
+			if(!(I in kit))
+				H.dropItemToGround(I, force = TRUE)
+	for(var/obj/item/I as anything in kit)
+		if(!QDELETED(I))
+			qdel(I)
 
 /// Personal scomstone that only talks to the rest of the team, and receives admin messages.
 /// It is bound to the responder it was issued to and crumbles if anyone else takes it.
@@ -100,8 +119,11 @@ GLOBAL_LIST_EMPTY(response_team_spawns)
 		return
 	user.changeNext_move(CLICK_CD_INTENTCAP)
 	visible_message(span_notice("[user] presses their ring against their mouth."))
-	var/input_text = input(user, "Enter your message:", "Message")
-	if(!input_text || QDELETED(src))
+	var/input_text = trim(input(user, "Enter your message:", "Message"), MAX_MESSAGE_LEN)
+	// Anything could have happened while they were typing
+	if(!input_text || QDELETED(src) || on_cooldown || loc != user || !is_owner(user))
+		return
+	if(user.stat != CONSCIOUS || user.restrained() || user.incapacitated())
 		return
 	user.whisper(input_text)
 	user.log_talk(input_text, LOG_SAY, tag = "response stone")
@@ -138,6 +160,10 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	var/call_id = 0
 	/// ckey -> /datum/response_member, the waiting room and then the deployed team
 	var/list/members = list()
+	/// ckeys with an offer prompt still open, so offering again doesn't stack a second one
+	var/list/pending_offers = list()
+	/// ckeys kicked from this call, who aren't offered it again
+	var/list/kicked = list()
 
 /datum/response_team/New()
 	for(var/path in subtypesof(/datum/response_team_type))
@@ -153,6 +179,7 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	reason = ""
 	caller_ckey = null
 	members = list()
+	kicked = list()
 	SStgui.update_uis(src)
 
 /// The caller runs the call until it deploys, unless they disconnect. Any admin can manage an active team.
@@ -335,8 +362,13 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 					if(!target)
 						return
 					members -= target.ckey
+					kicked |= target.ckey
 					to_chat(get_mob_by_ckey(target.ckey), span_warning("You have been removed from the emergency response."))
 					log_response(user, "kicked [target.key] from the [team_type.name] response team waiting room.")
+					return TRUE
+				if("reoffer")
+					var/sent = send_offers()
+					log_response(user, "offered the [team_type.name] response team again, to [sent] player\s.")
 					return TRUE
 				if("dispatch")
 					return dispatch(user)
@@ -391,22 +423,30 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	log_response(user, "prepared a [team_type.name] response team ([slot_summary()]). Reason: [html_encode(reason)]")
 	return TRUE
 
+/// Offers the call to everyone eligible who isn't already queued, being asked, or kicked. Returns how many were asked.
 /datum/response_team/proc/send_offers()
+	. = 0
 	for(var/mob/M as anything in GLOB.player_list)
 		if(!is_available(M))
 			continue
 		if(check_rights_for(M.client, R_ADMIN) ? !offer_admins : !offer_ghosts)
+			continue
+		if(members[M.ckey] || (M.ckey in pending_offers) || (M.ckey in kicked))
 			continue
 		if(M.ckey in GLOB.poll_ignore[POLL_IGNORE_RESPONSE_TEAM])
 			continue
 		if(is_banned(M))
 			continue
 		offer(M, call_id)
+		.++
 
 /datum/response_team/proc/offer(mob/M, id)
 	set waitfor = FALSE
+	var/offered_ckey = M.ckey
+	pending_offers |= offered_ckey
 	window_flash(M.client)
 	var/answer = askuser(M, "An emergency response has been called, will you answer?", "Emergency Response", "Yes", "No", "Never for this round", StealFocus = FALSE, Timeout = RESPONSE_OFFER_TIMEOUT)
+	pending_offers -= offered_ckey
 	if(answer == 3)
 		GLOB.poll_ignore[POLL_IGNORE_RESPONSE_TEAM] |= M.ckey
 		return
@@ -487,6 +527,10 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	H.fully_replace_character_name(null, H.dna.species.random_name(H.gender, TRUE))
 	GLOB.chosen_names += H.real_name
 	member.name = H.real_name
+	// A blank character with no vice. This is the free "No Flaw", not the one from character setup that costs triumphs.
+	H.charflaw = new /datum/charflaw/eznoflaw()
+	H.vices += H.charflaw
+	H.charflaw.on_mob_creation(H)
 	var/datum/advclass/role = SSrole_class_handler.classes_by_type[member.role]
 	role.equipme(H)
 	var/obj/item/scomstone/response_team/stone = new(H)
@@ -497,6 +541,12 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 		H.put_in_hands(stone)
 	member.body = WEAKREF(H)
 	member.stone = WEAKREF(stone)
+	// Remembered so ending the deployment deletes the kit but not anything picked up along the way
+	var/list/kit = list(stone)
+	for(var/obj/item/gear as anything in H.get_all_gear())
+		kit |= gear.GetAllContents(/obj/item)
+	for(var/obj/item/I as anything in kit)
+		member.issued += WEAKREF(I)
 	to_chat(H, span_boldannounce("I am [H.real_name], a [role.name] of the [team_type.name]."))
 	if(mission)
 		to_chat(H, span_notice("<b>Mission:</b> [html_encode(mission)]"))
@@ -516,14 +566,14 @@ GLOBAL_DATUM_INIT(response_team_state, /datum/ui_state/response_team_state, new)
 	if(!stone || member.removed)
 		to_chat(user, span_warning("That responder no longer has their stone."))
 		return
-	var/message = tgui_input_text(user, "Message to the stone of [member.key]", "Direct Message")
+	var/message = tgui_input_text(user, "Message to the stone of [member.key]", "Direct Message", max_length = MAX_MESSAGE_LEN)
 	if(!message || QDELETED(stone))
 		return
 	relay("<b>[message]</b>", only = member)
 	log_response(user, "messaged response team member [member.key]: [message]")
 
 /datum/response_team/proc/broadcast(mob/user)
-	var/message = tgui_input_text(user, "Message for the whole team", "Broadcast to Team")
+	var/message = tgui_input_text(user, "Message for the whole team", "Broadcast to Team", max_length = MAX_MESSAGE_LEN)
 	if(!message || stage != RESPONSE_STAGE_ACTIVE)
 		return
 	relay("<b>[message]</b>")

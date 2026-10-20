@@ -54,6 +54,10 @@
 	/// What this role calls itself on examine, as in "A knight of Kingsfield."
 	var/examine_title = "member"
 
+/// Responders are blank characters, so none of the player's own extras come with them
+/datum/outfit/job/roguetown/response_team
+	applies_player_extras = FALSE
+
 /datum/outfit/job/roguetown/response_team/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
