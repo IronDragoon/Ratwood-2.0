@@ -1,0 +1,74 @@
+// Hypnosis text styles. Loaded by both the chat panel and the Hypnosis window,
+// so styles look the same in chat and in the panel preview.
+// Each class matches a /datum/hypnosis_style css_class.
+
+.hypno-hypnotic {
+  color: hsl(0, 0%, 12.5%);
+  font-weight: bold;
+  animation: hypno-hypnotic 1500ms infinite;
+  animation-direction: alternate;
+}
+
+@keyframes hypno-hypnotic {
+  0% {
+    color: hsl(0, 0%, 12.5%);
+  }
+
+  25% {
+    color: hsl(265.8, 97.7%, 34.1%);
+  }
+
+  50% {
+    color: hsl(272, 86.3%, 60%);
+  }
+
+  75% {
+    color: hsl(266.2, 69.6%, 36.1%);
+  }
+
+  100% {
+    color: hsl(191.9, 83.4%, 71.6%);
+  }
+}
+
+.hypno-lustful {
+  color: hsl(330, 80%, 45%);
+  font-weight: bold;
+  animation: hypno-lustful 1800ms infinite;
+  animation-direction: alternate;
+}
+
+@keyframes hypno-lustful {
+  0% {
+    color: hsl(330, 80%, 45%);
+    text-shadow: none;
+  }
+
+  50% {
+    color: hsl(310, 90%, 65%);
+    text-shadow: 0 0 4px hsl(320, 100%, 60%);
+  }
+
+  100% {
+    color: hsl(345, 100%, 75%);
+    text-shadow: 0 0 6px hsl(330, 100%, 70%);
+  }
+}
+
+.hypno-whisper {
+  color: hsl(270, 30%, 80%);
+  font-size: 85%;
+  font-style: italic;
+  animation: hypno-whisper 3000ms infinite;
+  animation-direction: alternate;
+}
+
+@keyframes hypno-whisper {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.35;
+  }
+}

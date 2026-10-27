@@ -136,6 +136,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/cursed_collarable = FALSE
 	/// If we are lactating, can others milk us via reagent containers (not for sex actions, but the stuff in milking.dm)
 	var/milkable = FALSE
+	/// If we can use the hypnosis panel to send hypnotic messages
+	var/hypno_sender = FALSE
+	/// If we can receive hypnotic messages from others
+	var/hypno_receiver = FALSE
 	var/voting_popup = TRUE
 	var/compliance_notifs = TRUE
 	var/skillcap_notifs = TRUE

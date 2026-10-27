@@ -191,6 +191,7 @@
 		SScity_assembly.demote_alderman("Alderman's mob was deleted")
 		SScity_assembly.notify_alderman_lost_ref(departing_name, departing_job, "disconnected")
 	QDEL_NULL(sexcon)
+	QDEL_NULL(hypnosis_panel)
 	STOP_PROCESSING(SShumannpc, src)
 	QDEL_NULL(physiology)
 	QDEL_NULL(sunder_light_obj)

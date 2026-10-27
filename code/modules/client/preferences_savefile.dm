@@ -280,6 +280,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["descriptor_color"]	>> descriptor_color
 	S["cursed_collarable"] 	>> cursed_collarable
 	S["milkable"]			>> milkable
+	S["hypno_sender"]		>> hypno_sender
+	S["hypno_receiver"]		>> hypno_receiver
 	S["shake"]				>> shake
 	S["no_redflash"] 		>> no_redflash
 	S["mastervol"]			>> mastervol
@@ -466,6 +468,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["descriptor_color"], descriptor_color)
 	WRITE_FILE(S["cursed_collarable"], cursed_collarable)
 	WRITE_FILE(S["milkable"], milkable)
+	WRITE_FILE(S["hypno_sender"], hypno_sender)
+	WRITE_FILE(S["hypno_receiver"], hypno_receiver)
 	WRITE_FILE(S["shake"], shake)
 	WRITE_FILE(S["no_redflash"], no_redflash)
 	WRITE_FILE(S["lastclass"], lastclass)

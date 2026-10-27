@@ -32,6 +32,7 @@
 
 // tgchat styles
 @include meta.load-css('./tgchat/chat-dark.scss');
+@include meta.load-css('~tgui/styles/interfaces/Hypnosis.scss');
 
 :root {
   --chat-text-color: #c9c1ba;

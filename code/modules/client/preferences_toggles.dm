@@ -152,6 +152,8 @@
 		list("id" = "descriptor_color", "label" = "Enable Colored Descriptors", "enabled" = !!owner.prefs.descriptor_color, "desc" = "Color genital descriptors based on arousal and body hair descriptors based on hair color."),
 		list("id" = "cursed_collars", "label" = "Enable Cursed Collars", "enabled" = !!owner.prefs.cursed_collarable, "desc" = "Allow others to equip a cursed collar on you."),
 		list("id" = "milkable", "label" = "Enable Breast Milking", "enabled" = !!owner.prefs.milkable, "desc" = "Allow other players to milk your breasts if lactating. You can still milk yourself when disabled. Only applies to clicking chest with a reagent container, NOT lactation during sex actions."),
+		list("id" = "hypno_sender", "label" = "Enable Hypnotizing Others", "enabled" = !!owner.prefs.hypno_sender, "desc" = "Gain the Hypnotize emote and send hypnotic messages to receptive players. Does not let you receive them."),
+		list("id" = "hypno_receiver", "label" = "Enable Being Hypnotized", "enabled" = !!owner.prefs.hypno_receiver, "desc" = "Receive hypnotic messages from other players and view them in the Hypnotize panel. Does not let you send them."),
 	)
 
 	data["categories"] = list(
@@ -273,6 +275,10 @@
 				owner.toggle_cursed_collars()
 			if("milkable")
 				owner.toggle_milkable()
+			if("hypno_sender")
+				owner.toggle_hypno_sender()
+			if("hypno_receiver")
+				owner.toggle_hypno_receiver()
 			if("voting_popup")
 				owner.toggle_voting_popup()
 		SStgui.update_uis(src)
@@ -689,6 +695,38 @@
 		to_chat(src, "You can now be milked by other players.")
 		return
 	to_chat(src, "Other players can no longer milk you.")
+
+/client/verb/toggle_hypno_sender() // toggles access to the Hypnotize panel's sending side
+	set category = "Options"
+	set name = "Toggle Hypnotizing Others"
+	set hidden = 1
+	if(!prefs)
+		return
+	prefs.hypno_sender = !prefs.hypno_sender
+	prefs.save_preferences()
+	if(prefs.hypno_sender)
+		to_chat(src, "You can now send hypnotic messages to receptive players.")
+	else
+		to_chat(src, "You can no longer send hypnotic messages.")
+	if(ishuman(mob))
+		var/mob/living/carbon/human/H = mob
+		H.on_hypnosis_prefs_changed()
+
+/client/verb/toggle_hypno_receiver() // toggles receiving hypnotic messages from others
+	set category = "Options"
+	set name = "Toggle Being Hypnotized"
+	set hidden = 1
+	if(!prefs)
+		return
+	prefs.hypno_receiver = !prefs.hypno_receiver
+	prefs.save_preferences()
+	if(prefs.hypno_receiver)
+		to_chat(src, "You are now receptive to hypnotic messages.")
+	else
+		to_chat(src, "You are no longer receptive to hypnotic messages.")
+	if(ishuman(mob))
+		var/mob/living/carbon/human/H = mob
+		H.on_hypnosis_prefs_changed()
 
 /client/verb/toggle_compliance_notifs() // The messages need to be on-by-default while this is in its early stages.
 	set category = "Options"
