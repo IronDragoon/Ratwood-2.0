@@ -585,29 +585,44 @@
 	if(owner && ((owner.status_flags & GODMODE) || HAS_TRAIT(owner, TRAIT_PIERCEIMMUNE)))
 		return FALSE
 	if(istype(embedder, /obj/item/natural/worms/leech))
+		if(!is_organic_limb()) // no blood in a prosthetic to latch onto
+			return FALSE
 		record_round_statistic(STATS_LEECHES_EMBEDDED)
 	LAZYADD(embedded_objects, embedder)
 	embedder.is_embedded = TRUE
 	embedder.forceMove(src)
 	if(owner)
-		embedder.add_mob_blood(owner)
+		if(is_organic_limb())
+			embedder.add_mob_blood(owner)
 		if (!silent)
 			playsound(owner, 'sound/combat/newstuck.ogg', 100, vary = TRUE)
-			if (owner.has_status_effect(/datum/status_effect/buff/ozium))
-				owner.emote ("exhales")
-			if (owner.has_status_effect(/datum/status_effect/buff/drunk) && !owner.has_status_effect(/datum/status_effect/buff/ozium))
-				owner.emote("pain")
-			if (!owner.has_status_effect(/datum/status_effect/buff/drunk) && !owner.has_status_effect(/datum/status_effect/buff/ozium))
-				owner.emote("embed")
+			if(is_organic_limb())
+				if (owner.has_status_effect(/datum/status_effect/buff/ozium))
+					owner.emote ("exhales")
+				if (owner.has_status_effect(/datum/status_effect/buff/drunk) && !owner.has_status_effect(/datum/status_effect/buff/ozium))
+					owner.emote("pain")
+				if (!owner.has_status_effect(/datum/status_effect/buff/drunk) && !owner.has_status_effect(/datum/status_effect/buff/ozium))
+					owner.emote("embed")
+			else
+				to_chat(owner, span_warning("[embedder] sticks in my [name]. I feel nothing."))
 		if(crit_message)
 			owner.next_attack_msg += " <span class='userdanger'>[embedder] runs through [owner]'s [src]!</span>"
 		update_disabled()
 		if(embedder.is_silver && HAS_TRAIT(owner, TRAIT_SILVER_WEAK) && !owner.has_status_effect(STATUS_EFFECT_ANTIMAGIC))
 			var/datum/component/silverbless/psyblessed = embedder.GetComponent(/datum/component/silverbless)
 			owner.adjust_fire_stacks(1, psyblessed?.is_blessed ? /datum/status_effect/fire_handler/fire_stacks/sunder/blessed : /datum/status_effect/fire_handler/fire_stacks/sunder)
-			to_chat(owner, span_danger("the [embedder] in your body painfully jostles!"))
+			if(is_organic_limb())
+				to_chat(owner, span_danger("the [embedder] in your body painfully jostles!"))
+			else
+				to_chat(owner, span_danger("the [embedder] in your [name] jostles, and its silver sears you through the fitting!"))
 		owner.mark_zone_selector_hud_dirty()
 	return TRUE
+
+/// Returns the message shown when something embedded in this bodypart acts up
+/obj/item/bodypart/proc/get_embed_ache_message(obj/item/embedded)
+	if(is_organic_limb())
+		return "[embedded] in my [name] hurts!"
+	return "[embedded] grinds against my [name]. I can't feel it, but I can hear it."
 
 /// Removes an embedded object from this bodypart
 /obj/item/bodypart/proc/remove_embedded_object(obj/item/embedder)
