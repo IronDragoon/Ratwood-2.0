@@ -102174,7 +102174,7 @@
 /obj/structure/mineral_door/wood{
 	locked = 1;
 	lockid = "crafterguild";
-	name = "Engineer's Enchantment Room"
+	name = "Windmill Workshop"
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/dwarfin/rockhill)
