@@ -4,7 +4,7 @@ GLOBAL_LIST_INIT(virtues, init_subtypes_assoc(/datum/virtue))
 	parent_type = /datum/customization_trait
 
 /proc/apply_virtue(mob/living/carbon/human/recipient, datum/virtue/virtue_type)
-	if(!virtue_type.check_prosthetic_fit(recipient))
+	if(!virtue_type.prosthetics_fit_or_warn(recipient))
 		return
 	if (!virtue_type.check_triumphs(recipient))
 		return

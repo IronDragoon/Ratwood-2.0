@@ -23,7 +23,7 @@
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
-	var/obj/item/bodypart/r_arm/prosthetic/woodright/L = new()
+	var/obj/item/bodypart/r_arm/prosthetic/woodright/fitted/L = new()
 	L.attach_limb(H)
 
 /datum/charflaw/limbloss/arm_l
@@ -37,5 +37,5 @@
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
-	var/obj/item/bodypart/l_arm/prosthetic/woodleft/L = new()
+	var/obj/item/bodypart/l_arm/prosthetic/woodleft/fitted/L = new()
 	L.attach_limb(H)

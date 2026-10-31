@@ -388,6 +388,7 @@
 	resistance_flags = FIRE_PROOF
 	obj_flags = CAN_BE_HIT
 	status = BODYPART_ROBOTIC
+	static_icon = TRUE			//returns icon to initial icon state after removal under get_limb_icon
 	max_damage = 150
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
@@ -408,6 +409,7 @@
 	resistance_flags = FIRE_PROOF
 	obj_flags = CAN_BE_HIT
 	status = BODYPART_ROBOTIC
+	static_icon = TRUE			//returns icon to initial icon state after removal under get_limb_icon
 	max_damage = 200
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
@@ -428,6 +430,7 @@
 	resistance_flags = FIRE_PROOF
 	obj_flags = CAN_BE_HIT
 	status = BODYPART_ROBOTIC
+	static_icon = TRUE			//returns icon to initial icon state after removal under get_limb_icon
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 220
@@ -447,6 +450,7 @@
 	resistance_flags = FIRE_PROOF
 	obj_flags = CAN_BE_HIT
 	status = BODYPART_ROBOTIC
+	static_icon = TRUE			//returns icon to initial icon state after removal under get_limb_icon
 	max_damage = 150
 	w_class = WEIGHT_CLASS_BULKY
 	max_integrity = 300
@@ -563,8 +567,16 @@
 
 /////     FITTED LIMBS     /////
 
-// Given by the Bronze Arm and Bronze Leg quirks and the Bronze Golem virtue.
+// Given by the Bronze Arm and Bronze Leg quirks, the Bronze Golem virtue and the Wood Arm vices.
 // They are worthless once removed so a free limb can't become coin or ingots.
+
+/obj/item/bodypart/l_arm/prosthetic/woodleft/fitted
+	sellprice = 0
+	smeltresult = null
+
+/obj/item/bodypart/r_arm/prosthetic/woodright/fitted
+	sellprice = 0
+	smeltresult = null
 
 /obj/item/bodypart/l_arm/prosthetic/bronzeleft/fitted
 	sellprice = 0

@@ -44,7 +44,7 @@
 	return FALSE
 
 /// Whether the recipient's body can take our fitted prosthetics, telling them if it can't. Check this before charging for them.
-/datum/customization_trait/proc/check_prosthetic_fit(mob/living/carbon/human/recipient)
+/datum/customization_trait/proc/prosthetics_fit_or_warn(mob/living/carbon/human/recipient)
 	if(!LAZYLEN(fitted_prosthetics))
 		return TRUE
 	var/datum/job/job = SSjob.GetJob(recipient.job)

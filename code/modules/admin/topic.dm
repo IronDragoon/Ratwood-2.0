@@ -310,7 +310,7 @@
 		var/obj/item/bodypart/BP = locate(href_list["bodypart"])
 		if(M && BP && ishuman(M))
 			var/list/wound_types
-			if(BP.status == BODYPART_ROBOTIC) // prosthetics refuse every other wound
+			if(!BP.is_organic_limb()) // prosthetics refuse every other wound
 				wound_types = list("Jam" = /datum/wound/jammed)
 			else
 				wound_types = list(

@@ -37,15 +37,10 @@
 		if(!BP)
 			return FALSE
 		if(C.badluck(5))
-			if(BP.is_organic_limb())
-				add_mob_blood(C)
-			if(!BP.is_object_embedded(src))
-				BP.add_embedded_object(src)
+			bite_limb(C, BP)
 			close_trap()
 			C.visible_message(span_boldwarning("[C] triggers \the [src]."), \
 					span_userdanger("I trigger \the [src]!"))
-			if(BP.is_organic_limb())
-				C.emote("agony")
 			C.Stun(80)
 			BP.add_wound(/datum/wound/fracture)
 			BP.update_disabled()
@@ -62,15 +57,10 @@
 						span_notice("I disarm \the [src]."))
 				return FALSE
 			else
-				if(BP.is_organic_limb())
-					add_mob_blood(C)
-				if(!BP.is_object_embedded(src))
-					BP.add_embedded_object(src)
+				bite_limb(C, BP)
 				close_trap()
 				C.visible_message(span_boldwarning("[C] triggers \the [src]."), \
 						span_userdanger("I trigger \the [src]!"))
-				if(BP.is_organic_limb())
-					C.emote("agony")
 				BP.add_wound(/datum/wound/fracture)
 				BP.update_disabled()
 				C.apply_damage(trap_damage, BRUTE, def_zone)
@@ -178,12 +168,7 @@
 					def_zone = pick(BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_PRECISE_R_FOOT)
 					var/obj/item/bodypart/BP = C.get_bodypart(def_zone)
 					if(BP)
-						if(BP.is_organic_limb())
-							add_mob_blood(C)
-						if(!BP.is_object_embedded(src))
-							BP.add_embedded_object(src)
-						if(BP.is_organic_limb())
-							C.emote("agony")
+						bite_limb(C, BP)
 				//BP.set_disabled(BODYPART_DISABLED_WOUND)
 				// BP.add_wound(/datum/wound/fracture)
 			else if(snap && isanimal(L))
@@ -197,6 +182,14 @@
 				if(L.apply_damage(trap_damage, BRUTE, def_zone, L.run_armor_check(def_zone, "stab", armor_penetration = PEN_NONE, damage = trap_damage)))
 					L.Stun(80)
 	..()
+
+/// Embeds us in the limb we caught, with blood and screaming if that limb can manage either
+/obj/item/restraints/legcuffs/beartrap/proc/bite_limb(mob/living/carbon/victim, obj/item/bodypart/limb)
+	if(limb.is_organic_limb())
+		add_mob_blood(victim)
+		victim.emote("agony")
+	if(!limb.is_object_embedded(src))
+		limb.add_embedded_object(src)
 
 /obj/item/restraints/legcuffs/beartrap/dropped(mob/living/carbon/human/user)
 	..()
