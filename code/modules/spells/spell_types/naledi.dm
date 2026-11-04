@@ -204,6 +204,10 @@
 	var/mob/living/carbon/target = targets[1]
 	// Reverse a recently departed soul. Must be done within 1 minute.
 	if(target?.stat == DEAD)
+		if(get_horde_alpha_datum(target))
+			to_chat(user, span_warning("There is no soul to rewind. Only rot."))
+			revert_cast()
+			return FALSE
 		if(!self.has_status_effect(/datum/status_effect/debuff/devitalised))
 			if(target.timeofdeath && (world.time - target.timeofdeath) <= 1 MINUTES)
 				if(alert(user, "[target] has very recently departed. Sacrifice your Lux to rewind their soul back?", "Origin Restoration", "Restore Them", "Leave Them") == "Restore Them")

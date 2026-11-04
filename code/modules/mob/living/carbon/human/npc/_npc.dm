@@ -105,6 +105,10 @@
 		if(!ai_when_client)
 			walk_to(src,0)
 			return TRUE //remove us from processing
+	// Commanded minions (summoned skeletons, horde deadites) run their orders first
+	var/datum/component/commandable_minion/orders = GetComponent(/datum/component/commandable_minion)
+	if(orders?.process_command())
+		return
 	cmode = 1
 	update_cone_show()
 	steps_moved_this_turn = 0

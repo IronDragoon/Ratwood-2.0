@@ -308,10 +308,10 @@ GLOBAL_LIST_EMPTY(mass_direct_intercepts)
 		if(M.stat == DEAD)
 			continue // Skip dead mobs
 		
-		// Handle carbon skeletons (summoned type only)
-		if(istype(M, /mob/living/carbon/human/species/skeleton/npc/summoned))
-			var/mob/living/carbon/human/species/skeleton/npc/summoned/skel = M
-			skel.set_command("move", T)
+		// Handle commandable carbon minions (summoned skeletons, horde deadites)
+		if(M.GetComponent(/datum/component/commandable_minion))
+			var/datum/component/commandable_minion/orders = M.GetComponent(/datum/component/commandable_minion)
+			orders.set_command("move", T)
 			count++
 		// Handle simple mobs with AI controller
 		else if(M.ai_controller && !istype(M, /mob/living/simple_animal/hostile))
@@ -399,10 +399,10 @@ GLOBAL_LIST_EMPTY(mass_direct_intercepts)
 		if(M == target)
 			continue
 		
-		// Handle carbon skeletons
-		if(istype(M, /mob/living/carbon/human/species/skeleton/npc/summoned))
-			var/mob/living/carbon/human/species/skeleton/npc/summoned/skel = M
-			skel.set_command("attack", target)
+		// Handle commandable carbon minions
+		if(M.GetComponent(/datum/component/commandable_minion))
+			var/datum/component/commandable_minion/orders = M.GetComponent(/datum/component/commandable_minion)
+			orders.set_command("attack", target)
 			count++
 		// Handle simple mobs with AI controller
 		else if(M.ai_controller)
@@ -482,11 +482,11 @@ GLOBAL_LIST_EMPTY(mass_direct_intercepts)
 				continue
 			if(M.stat == DEAD)
 				continue // Skip dead mobs
-			// Handle carbon skeletons with commanded behavior
-			if(istype(M, /mob/living/carbon/human/species/skeleton/npc/summoned))
-				var/mob/living/carbon/human/species/skeleton/npc/summoned/skel = M
-				skel.set_command("idle", null)
-				walk(skel, 0)
+			// Handle commandable carbon minions
+			if(M.GetComponent(/datum/component/commandable_minion))
+				var/datum/component/commandable_minion/orders = M.GetComponent(/datum/component/commandable_minion)
+				orders.set_command("idle", null)
+				walk(M, 0)
 				stopped++
 			// Handle simple mobs with AI controller
 			else if(M.ai_controller)
@@ -544,10 +544,10 @@ GLOBAL_LIST_EMPTY(mass_direct_intercepts)
 		if(M == follow_target)
 			continue
 		
-		// Handle carbon skeletons
-		if(istype(M, /mob/living/carbon/human/species/skeleton/npc/summoned))
-			var/mob/living/carbon/human/species/skeleton/npc/summoned/skel = M
-			skel.set_command("follow", follow_target)
+		// Handle commandable carbon minions
+		if(M.GetComponent(/datum/component/commandable_minion))
+			var/datum/component/commandable_minion/orders = M.GetComponent(/datum/component/commandable_minion)
+			orders.set_command("follow", follow_target)
 			count++
 		// Handle simple mobs with AI controller
 		else if(M.ai_controller)
@@ -666,17 +666,18 @@ GLOBAL_LIST_EMPTY(mass_direct_intercepts)
 		if(M.stat == DEAD)
 			continue // Skip dead mobs
 		
-		// Handle carbon skeletons
-		if(istype(M, /mob/living/carbon/human/species/skeleton/npc/summoned))
-			var/mob/living/carbon/human/species/skeleton/npc/summoned/skel = M
+		// Handle commandable carbon minions
+		if(M.GetComponent(/datum/component/commandable_minion))
+			var/mob/living/carbon/human/skel = M
+			var/datum/component/commandable_minion/orders = M.GetComponent(/datum/component/commandable_minion)
 			if(make_active)
-				// Make skeleton active/aggressive
+				// Make minion active/aggressive
 				skel.aggressive = 1
 				made_active++
 			else
-				// Make skeleton passive
+				// Make minion passive
 				skel.aggressive = 0
-				skel.set_command("idle", null)
+				orders.set_command("idle", null)
 				made_passive++
 			count++
 		// Handle simple mobs with AI controller

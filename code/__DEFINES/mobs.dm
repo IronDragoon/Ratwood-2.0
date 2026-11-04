@@ -260,6 +260,12 @@
 #define NPC_AI_FLEE		5
 #define NPC_AI_SLEEP    6
 
+// Orders for /datum/component/commandable_minion
+#define MINION_COMMAND_FOLLOW	"follow"
+#define MINION_COMMAND_MOVE		"move"
+#define MINION_COMMAND_ATTACK	"attack"
+#define MINION_COMMAND_IDLE		"idle"
+
 //determines if a mob can smash through it
 #define ENVIRONMENT_SMASH_NONE			0
 #define ENVIRONMENT_SMASH_STRUCTURES	(1<<0) 	//crates, lockers, ect

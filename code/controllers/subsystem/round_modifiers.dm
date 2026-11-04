@@ -42,6 +42,8 @@
 		var/datum/round_modifier/M = new T
 		if(level < M.min_chaos || level > M.max_chaos)
 			continue
+		if(!M.can_roll())
+			continue
 		pool[M] = M.weight
 
 	while(budget > 0 && length(pool))

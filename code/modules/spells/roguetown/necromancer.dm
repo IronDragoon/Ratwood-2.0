@@ -137,13 +137,13 @@
 	var/mob/living/carbon/human/species/skeleton/npc/summoned/S = new /mob/living/carbon/human/species/skeleton/npc/summoned(T)
 
 	qdel(sacrifice)
-	S.caster = user
+	var/datum/component/commandable_minion/orders = S.bind_to_caster(user)
 	if(user.faction)
 		S.faction |= list("[user.mind.current.real_name]_faction")
-	S.set_command("follow", user)
+	orders?.set_command(MINION_COMMAND_FOLLOW, user)
 
 	T.visible_message(span_notice("<b>[user]</b> raises a skeleton from the ground!"))
-	S.receive_command_text("rises and bows to its master.")
+	orders?.receive_command_text("rises and bows to its master.")
 	return TRUE
 
 
@@ -245,6 +245,12 @@
 
 	if(!(target.mob_biotypes & MOB_UNDEAD))
 		to_chat(user, span_warning("[target]'s soul is not Hers, yet. I cannot do anything."))
+		revert_cast()
+		return FALSE
+
+	var/datum/component/commandable_minion/bound_orders = target.GetComponent(/datum/component/commandable_minion)
+	if(bound_orders?.master)
+		to_chat(user, span_warning("[target] already heeds another master. It will not turn."))
 		revert_cast()
 		return FALSE
 
@@ -366,7 +372,9 @@
 	var/list/simple_minions = list()
 	for(var/mob/living/carbon/human/species/skeleton/npc/summoned/M in view(15, user))
 		if(M.caster == user)
-			carbon_minions += M
+			var/datum/component/commandable_minion/orders = M.GetComponent(/datum/component/commandable_minion)
+			if(orders)
+				carbon_minions += orders
 
 	for(var/mob/living/simple_animal/M in view(15, user))
 		for(var/type in commandable_simple_mobs)
@@ -393,15 +401,15 @@
 		return
 
 	// Issue command
-	for(var/mob/living/carbon/human/species/skeleton/npc/summoned/M in carbon_minions)
-		M.set_command(command_type, target)
+	for(var/datum/component/commandable_minion/orders as anything in carbon_minions)
+		orders.set_command(command_type, target)
 		switch(command_type)
-			if("follow")
-				M.receive_command_text("begins following [target] faithfully.")
-			if("move")
-				M.receive_command_text("shambles toward an indicated location.")
-			if("attack")
-				M.receive_command_text("snarls and moves to attack [target].")
+			if(MINION_COMMAND_FOLLOW)
+				orders.receive_command_text("begins following [target] faithfully.")
+			if(MINION_COMMAND_MOVE)
+				orders.receive_command_text("shambles toward an indicated location.")
+			if(MINION_COMMAND_ATTACK)
+				orders.receive_command_text("snarls and moves to attack [target].")
 
 
 	// -----------------------------------------------------------------

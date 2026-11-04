@@ -78,6 +78,18 @@
 	min_chaos = 3
 	villain_events = list(/datum/round_event_control/antagonist/solo/vampires)
 
+/datum/round_modifier/deadite_horde
+	name = "Deadite Horde"
+	desc = "Something in the Terrorbog thinks, and the dead follow it."
+	cost = 4
+	min_chaos = 2
+	incompatible = list(/datum/round_modifier/vampirelord)
+	villain_events = list(/datum/round_event_control/antagonist/solo/horde_alpha)
+
+/// Needs a Terrorbog for the Alpha to rise in
+/datum/round_modifier/deadite_horde/can_roll()
+	return length(get_horde_bog_areas()) > 0
+
 /datum/round_modifier/assassin
 	name = "Assassins"
 	desc = "Ware! Knives in the dark!"

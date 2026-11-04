@@ -1,3 +1,15 @@
+/// Species a deadite body can be, shared by NPC deadites and the Horde Alpha
+GLOBAL_LIST_INIT(deadite_species, list(
+	/datum/species/human/northern,
+	/datum/species/dwarf/mountain,
+	/datum/species/elf/dark,
+	/datum/species/elf/wood,
+	/datum/species/goblinp,
+	/datum/species/aasimar,
+	/datum/species/human/halfelf,
+	/datum/species/halforc,
+))
+
 /mob/living/carbon/human/species/npc/deadite
 	aggressive = TRUE
 	mode = NPC_AI_IDLE
@@ -12,18 +24,7 @@
 
 /mob/living/carbon/human/species/npc/deadite/Initialize(mapload)
 	. = ..()
-	var/species = list(
-		/datum/species/human/northern,
-		/datum/species/dwarf/mountain,
-		/datum/species/elf/dark,
-		/datum/species/elf/wood,
-		/datum/species/goblinp,
-		/datum/species/aasimar,
-		/datum/species/human/halfelf,
-		/datum/species/halforc,
-	)
-
-	set_species(pick(species))
+	set_species(pick(GLOB.deadite_species))
 	gender = pick(MALE, FEMALE)
 
 	var/obj/item/organ/ears/organ_ears = getorgan(/obj/item/organ/ears)
@@ -177,7 +178,8 @@
  * This occurs when one zombie infects a living human, going into instadeath from here is kind of shit and confusing
  * We instead just transform at the end
  */
-/mob/living/carbon/human/proc/zombie_infect_attempt()
+/// Source is the biting deadite, which sets the infection chance
+/mob/living/carbon/human/proc/zombie_infect_attempt(mob/living/carbon/human/source)
 	if(stat >= DEAD) //do shit the natural way i guess
 		return
 	var/datum/status_effect/zombie_infection/infection = has_status_effect(/datum/status_effect/zombie_infection)
@@ -185,7 +187,7 @@
 		var/time_remaining = infection.transformation_time - world.time
 		infection.transformation_time = world.time + (time_remaining * 0.8)
 		return
-	if(!prob(ZOMBIE_INFECTION_PROBABILITY))	//Failed the probability of infection
+	if(!prob(get_zombie_infection_chance(source)))	//Failed the probability of infection
 		return
 	var/datum/antagonist/zombie/zombie_antag = zombie_check()	//Only grant the antag datum once the infection roll actually succeeds.
 	if(!zombie_antag)

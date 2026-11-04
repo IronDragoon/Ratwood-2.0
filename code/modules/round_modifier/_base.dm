@@ -12,6 +12,10 @@
 	var/list/job_slots
 	var/list/weather_weights
 
+/// Whether this modifier can roll this round, checked when the pool is built. Use for map requirements.
+/datum/round_modifier/proc/can_roll()
+	return TRUE
+
 /datum/round_modifier/adventure
 	name = "Adventure"
 	desc = "Wanderers flock to these lands."

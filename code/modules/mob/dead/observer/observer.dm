@@ -1688,5 +1688,22 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 				entry["health_percent"] = round(clamp((L.health / L.maxHealth) * 100, 0, 100))
 		if(istype(M, /mob/living/carbon/human/species/npc/deadite))
 			entry["role"] = "Deadite NPC"
+		// Player deadites, the Alpha's horde or not, all group under the Undead Horde
+		var/horde_role = get_orbit_horde_role(M)
+		if(horde_role)
+			entry["role"] = horde_role
+			entry["department"] = "Undead Horde"
+			entry -= list("antag_group", "antag_role", "selection_color", "subclass")
 
 	return entry
+
+/// "Deadite Alpha" or "Deadite" for a player who has risen as a deadite, otherwise null
+/datum/orbit_menu/proc/get_orbit_horde_role(mob/M)
+	if(!M.mind || !(M.ckey || M.mind.key))
+		return null
+	var/datum/antagonist/zombie/deadite = M.mind.has_antag_datum(/datum/antagonist/zombie)
+	if(!deadite?.has_turned)
+		return null
+	if(istype(deadite, /datum/antagonist/zombie/alpha))
+		return "Deadite Alpha"
+	return "Deadite"

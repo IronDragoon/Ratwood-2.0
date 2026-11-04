@@ -11,6 +11,11 @@
 	var/has_rot = FALSE
 	var/datum/antagonist/zombie/was_zombie = get_deadite_antag_for_body(target)
 
+	// The Horde Alpha's rot runs too deep to burn out
+	if(istype(was_zombie, /datum/antagonist/zombie/alpha))
+		to_chat(user, span_warning("The rot in [target] runs too deep. It will not be burned out."))
+		return FALSE
+
 	if (was_zombie || target.infected || target.has_status_effect(/datum/status_effect/zombie_infection))
 		has_rot = TRUE
 	else

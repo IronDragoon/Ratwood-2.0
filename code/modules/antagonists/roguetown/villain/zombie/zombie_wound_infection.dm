@@ -1,5 +1,12 @@
 #define ZOMBIE_INFECTION_PROBABILITY 20 	/// Zombie infection probability for bites on a wound
 #define ZOMBIE_INFECTION_TIME 2 MINUTES	/// Time taken until zombie infection kicks in (unit wakes up as a zombie)
+#define HORDE_ALPHA_INFECTION_PROBABILITY 40	/// The Horde Alpha's bites and chews take hold more easily
+
+/// Chance a bite or chew from this deadite infects. Null source gets the normal chance.
+/proc/get_zombie_infection_chance(mob/living/carbon/human/source)
+	if(source && get_horde_alpha_datum(source))
+		return HORDE_ALPHA_INFECTION_PROBABILITY
+	return ZOMBIE_INFECTION_PROBABILITY
 
 /*
 	ZOMBIFICATION
@@ -13,7 +20,7 @@
 		return
 	if (werewolf_infection_timer || !ishuman(owner)) // Already turning into something else
 		return
-	if(!prob(ZOMBIE_INFECTION_PROBABILITY))	//Failed the probability of infection
+	if(!prob(get_zombie_infection_chance(source)))	//Failed the probability of infection
 		return
 
 	var/mob/living/carbon/human/wound_owner = owner

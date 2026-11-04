@@ -319,6 +319,9 @@
 	has_turned = TRUE
 	// Only on rising, so the infected who haven't turned stay hidden from deadites
 	add_antag_hud(antag_hud_type, antag_hud_name, zombie)
+	// A player rising, NPC deadite minds have no key. Counted for the Horde Alpha's objective
+	if(owner?.key && !istype(src, /datum/antagonist/zombie/alpha))
+		GLOB.deadite_players_turned++
 	// Drop your helm and gorgies boy you won't need it anymore!!!
 	var/static/list/removed_slots = list(
 		SLOT_HEAD,
