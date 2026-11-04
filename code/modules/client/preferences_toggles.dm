@@ -154,6 +154,7 @@
 		list("id" = "milkable", "label" = "Enable Breast Milking", "enabled" = !!owner.prefs.milkable, "desc" = "Allow other players to milk your breasts if lactating. You can still milk yourself when disabled. Only applies to clicking chest with a reagent container, NOT lactation during sex actions."),
 		list("id" = "hypno_sender", "label" = "Enable Hypnotizing Others", "enabled" = !!owner.prefs.hypno_sender, "desc" = "Gain the Hypnotize emote and send hypnotic messages to receptive players. Does not let you receive them."),
 		list("id" = "hypno_receiver", "label" = "Enable Being Hypnotized", "enabled" = !!owner.prefs.hypno_receiver, "desc" = "Receive hypnotic messages from other players and view them in the Hypnotize panel. Does not let you send them."),
+		list("id" = "manticore_tail_messages", "label" = "Tailmaws", "enabled" = !!owner.prefs.manticore_tail_messages, "desc" = "Show flavor messages from your manticore tail when moving or during intimate actions, and see tail maw descriptions when examining others."),
 	)
 
 	data["categories"] = list(
@@ -279,6 +280,8 @@
 				owner.toggle_hypno_sender()
 			if("hypno_receiver")
 				owner.toggle_hypno_receiver()
+			if("manticore_tail_messages")
+				owner.toggle_manticore_tail_messages_pref()
 			if("voting_popup")
 				owner.toggle_voting_popup()
 		SStgui.update_uis(src)
@@ -727,6 +730,16 @@
 	if(ishuman(mob))
 		var/mob/living/carbon/human/H = mob
 		H.on_hypnosis_prefs_changed()
+
+/client/verb/toggle_manticore_tail_messages_pref()
+	set category = "Options"
+	set name = "Toggle Tailmaws"
+	set hidden = 1
+	if(!prefs)
+		return
+	prefs.manticore_tail_messages = !prefs.manticore_tail_messages
+	prefs.save_preferences()
+	to_chat(src, "You will [prefs.manticore_tail_messages ? "now" : "no longer"] see tailmaw content.")
 
 /client/verb/toggle_compliance_notifs() // The messages need to be on-by-default while this is in its early stages.
 	set category = "Options"
@@ -1415,3 +1428,14 @@ GLOBAL_LIST_INIT(ghost_orbits, list(GHOST_ORBIT_CIRCLE,GHOST_ORBIT_TRIANGLE,GHOS
 	prefs.admin_chat_toggles ^= CHAT_ADMINSPAWN
 	prefs.save_preferences()
 	to_chat(src, "You will [prefs.admin_chat_toggles & CHAT_ADMINSPAWN ? "see" : "not see any"] spawn logs.")
+
+/client/verb/full_examine()
+	set category = "Options"
+	set name = "Toggle Full Examine"
+	if(prefs)
+		prefs.full_examine = !prefs.full_examine
+		prefs.save_preferences()
+		if(prefs.full_examine)
+			to_chat(src, "Examines will be fully shown.")
+		else
+			to_chat(src, "Examines will have some information behind dropdowns.")
