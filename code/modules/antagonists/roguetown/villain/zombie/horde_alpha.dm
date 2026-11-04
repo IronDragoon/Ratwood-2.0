@@ -24,6 +24,8 @@ GLOBAL_VAR_INIT(deadite_players_turned, 0)
 	job_rank = ROLE_HORDE_ALPHA
 	show_in_roundend = TRUE
 	antag_flags = NONE
+	// Same hud as deadites so the horde and the Alpha see each other, but the Alpha stands out
+	antag_hud_name = "horde_alpha_hud"
 	confess_lines = list(
 		"THE HORDE HUNGERS!",
 		"ALL FLESH ROTS IN THE END!",
@@ -82,6 +84,10 @@ GLOBAL_VAR_INIT(deadite_players_turned, 0)
 	for(var/trait in traits_alpha)
 		ADD_TRAIT(alpha, trait, "[type]")
 	alpha.remove_client_colour(/datum/client_colour/monochrome)
+	// Player deadites see in monochrome, so the Alpha's hud icon skips client colour to stand out
+	var/image/hud_icon = alpha.hud_list?[ANTAG_HUD]
+	if(hud_icon)
+		hud_icon.appearance_flags |= NO_CLIENT_COLOR
 
 	alpha.STASTR = 14
 	alpha.STACON = 14
@@ -108,6 +114,10 @@ GLOBAL_VAR_INIT(deadite_players_turned, 0)
 		UnregisterSignal(alpha, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_EXAMINE))
 		for(var/trait in traits_alpha)
 			REMOVE_TRAIT(alpha, trait, "[type]")
+		// The hud image stays on the body, so later antag icons on it go back to normal
+		var/image/hud_icon = alpha.hud_list?[ANTAG_HUD]
+		if(hud_icon)
+			hud_icon.appearance_flags &= ~NO_CLIENT_COLOR
 	for(var/spell_type in alpha_spells)
 		owner?.RemoveSpell(spell_type)
 	return ..()
