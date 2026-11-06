@@ -39754,6 +39754,18 @@
 /obj/structure/bars/cemetery,
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/mountains/decap)
+"hhe" = (
+/obj/effect/decal/cobbleedge{
+	dir = 8;
+	icon_state = "borderfall";
+	pixel_x = -8
+	},
+/obj/structure/roguemachine/lottery_roguetown{
+	pixel_y = 0;
+	pixel_x = -32
+	},
+/turf/open/floor/rogue/churchbrick,
+/area/rogue/indoors/town/bath)
 "hhk" = (
 /obj/machinery/light/rogue/firebowl/stump,
 /turf/open/floor/rogue/grassyel,
@@ -63745,18 +63757,6 @@
 	},
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/mountains/decap/gunduzirak)
-"lzu" = (
-/obj/structure/roguemachine/atm{
-	pixel_y = 0;
-	pixel_x = -32
-	},
-/obj/effect/decal/cobbleedge{
-	dir = 8;
-	icon_state = "borderfall";
-	pixel_x = -8
-	},
-/turf/open/floor/rogue/churchbrick,
-/area/rogue/indoors/town/bath)
 "lzy" = (
 /obj/item/grown/log/tree/stake{
 	pixel_x = 9;
@@ -205992,9 +205992,9 @@ scu
 osF
 wtO
 hSr
-lzu
-mmK
-hSr
+hhe
+hhe
+hhe
 wtO
 scu
 moe
