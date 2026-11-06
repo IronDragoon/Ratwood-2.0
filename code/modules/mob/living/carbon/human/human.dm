@@ -121,6 +121,7 @@
 	GLOB.human_list += src
 	update_tongue_noise_verbs()
 	update_keen_ears_verb()
+	update_hypnosis_verb()
 
 /mob/living/carbon/human/proc/on_keen_ears_trait_changed(datum/source, trait)
 	SIGNAL_HANDLER

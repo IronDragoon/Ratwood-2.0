@@ -26,6 +26,7 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 		"receptive_count" = panel.receptive_count,
 		"allowed_styles" = allowed,
 		"style" = current.id,
+		"preview_html" = panel.preview_html,
 	)
 
 /datum/hypnosis_module/emote/execute(mob/living/carbon/human/user, datum/hypnosis_panel/panel, op, list/params)
@@ -35,10 +36,25 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 			if(style && allows_style(style))
 				panel.selected_style_id = style.id
 			return TRUE
+		if("preview")
+			var/message = clean_message(user, params["message"])
+			panel.preview_html = message ? format_message(user, message, panel.get_style_for(src), list()) : null
+			return TRUE
 		if("send")
 			send(user, panel, params)
 			return TRUE
 	return FALSE
+
+/// Cleans raw input the same way as Subtle(big). Returns null if nothing is left.
+/datum/hypnosis_module/emote/proc/clean_message(mob/living/carbon/human/user, message)
+	if(!istext(message) || !length(message))
+		return null
+	message = replacetext(message, regex("\\r", "g"), "")
+	message = trim(copytext_char(html_encode(message), 1, MAX_MESSAGE_LEN))
+	message = accent_emote_quotes(message, user)
+	message = parsemarkdown_basic(message, limited = TRUE, barebones = TRUE)
+	message = replacetext(message, regex("\\n", "g"), "<br>")
+	return length(message) ? message : null
 
 /datum/hypnosis_module/emote/proc/send(mob/living/carbon/human/user, datum/hypnosis_panel/panel, list/params)
 	if(!user.can_send_hypnosis())
@@ -49,17 +65,8 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 	var/mode = params["mode"]
 	if(mode != HYPNO_EMOTE_SUBTLE && mode != HYPNO_EMOTE_OPEN)
 		return
-	var/message = params["message"]
-	if(!istext(message) || !length(message))
-		return
-
-	// Same cleaning as Subtle(big)
-	message = replacetext(message, regex("\\r", "g"), "")
-	message = trim(copytext_char(html_encode(message), 1, MAX_MESSAGE_LEN))
-	message = accent_emote_quotes(message, user)
-	message = parsemarkdown_basic(message, limited = TRUE, barebones = TRUE)
-	message = replacetext(message, regex("\\n", "g"), "<br>")
-	if(!length(message))
+	var/message = clean_message(user, params["message"])
+	if(!message)
 		return
 
 	var/list/recipients
@@ -74,9 +81,10 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 	var/html = format_message(user, message, panel.get_style_for(src), list())
 	user.log_message("HYPNOSIS ([uppertext(mode)]) - [message]", LOG_EMOTE)
 	to_chat(user, html)
+	panel.preview_html = null
 	var/delivered = 0
 	for(var/mob/living/carbon/human/receiver as anything in recipients)
-		if(receiver.receive_hypnosis(user, html, sound))
+		if(receiver.receive_hypnosis(html, sound))
 			delivered++
 	if(!delivered)
 		to_chat(user, span_warning("No receptive minds nearby."))

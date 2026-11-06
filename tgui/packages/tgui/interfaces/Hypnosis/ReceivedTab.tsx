@@ -3,7 +3,6 @@ import { Box, Button, NoticeBox, Section } from 'tgui-core/components';
 import type { ModuleTabProps } from './types';
 
 type LogEntry = {
-  sender: string;
   time: string;
   /** Rendered and sanitized server-side */
   html: string;

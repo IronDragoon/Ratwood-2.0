@@ -29,4 +29,4 @@
 
 /// Builds the final message HTML. Override to change how a module's messages look.
 /datum/hypnosis_module/proc/format_message(mob/living/carbon/human/user, text, datum/hypnosis_style/style, list/options)
-	return "<b>[user]</b> " + style.render(text, options)
+	return "<b>[html_encode(user.name)]</b> " + style.render(text, options)

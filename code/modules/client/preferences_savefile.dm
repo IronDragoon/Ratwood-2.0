@@ -381,6 +381,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	mastervol = sanitize_integer(mastervol, 0, 100, initial(mastervol))
 	hide_unavailable_emotes = sanitize_integer(hide_unavailable_emotes, 0, 1, initial(hide_unavailable_emotes))
 	full_examine = sanitize_integer(full_examine, 0, 1, initial(full_examine))
+	hypno_sender = sanitize_integer(hypno_sender, FALSE, TRUE, initial(hypno_sender))
+	hypno_receiver = sanitize_integer(hypno_receiver, FALSE, TRUE, initial(hypno_receiver))
 
 	//ROGUETOWN
 	parallax = PARALLAX_INSANE

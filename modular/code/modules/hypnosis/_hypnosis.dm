@@ -103,11 +103,11 @@ GLOBAL_LIST_INIT(hypnosis_styles, init_subtypes_assoc(/datum/hypnosis_style))
 	get_hypnosis_panel().ui_interact(src)
 
 /// Delivers an already-rendered hypnotic message to us if we're receptive. Returns TRUE if delivered.
-/mob/living/carbon/human/proc/receive_hypnosis(mob/sender, html, sound)
+/mob/living/carbon/human/proc/receive_hypnosis(html, sound)
 	if(!is_hypno_receptive())
 		return FALSE
 	to_chat(src, html)
 	if(sound)
 		playsound_local(src, sound, 100)
-	get_hypnosis_panel().add_log_entry(sender, html)
+	get_hypnosis_panel().add_log_entry(html)
 	return TRUE

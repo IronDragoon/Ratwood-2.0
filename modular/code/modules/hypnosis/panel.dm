@@ -6,10 +6,12 @@
  */
 /datum/hypnosis_panel
 	var/mob/living/carbon/human/owner
-	/// Newest last. Each entry is list("sender", "time", "html").
+	/// Newest last. Each entry is list("time", "html").
 	var/list/received_log = list()
 	/// Style id the sender picked this round, or null for the module default
 	var/selected_style_id
+	/// Server-rendered preview of the sender's draft, exactly as it would be sent
+	var/preview_html
 	/// Pickable subtle targets, as list("ref", "name") entries. Rebuilt on open and on refresh only.
 	var/list/target_entries = list()
 	/// Receptive mobs in open range at the last refresh
@@ -99,9 +101,8 @@
 		return style
 	return GLOB.hypnosis_styles[module.default_style]
 
-/datum/hypnosis_panel/proc/add_log_entry(mob/sender, html)
+/datum/hypnosis_panel/proc/add_log_entry(html)
 	received_log += list(list(
-		"sender" = "[sender]",
 		"time" = station_time_timestamp("hh:mm"),
 		"html" = html,
 	))

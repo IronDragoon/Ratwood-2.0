@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -22,9 +22,14 @@ type EmoteData = {
   receptive_count: number;
   allowed_styles: string[];
   style: string;
+  /** Rendered and sanitized server-side, exactly as it would be sent */
+  preview_html: string | null;
 };
 
 type Mode = 'subtle' | 'open';
+
+/** How long typing must pause before asking the server for a preview */
+const PREVIEW_DELAY_MS = 300;
 
 const AREA_TARGETS = [
   { value: 'area_all', displayText: 'Everyone receptive nearby' },
@@ -35,10 +40,23 @@ const AREA_TARGETS = [
 export const EmoteTab = (props: ModuleTabProps<EmoteData>) => {
   const { module, styles, moduleAct } = props;
   const { act } = useBackend();
-  const { targets, receptive_count, allowed_styles, style } = module.data;
+  const { targets, receptive_count, allowed_styles, style, preview_html } =
+    module.data;
   const [message, setMessage] = useState('');
   const [mode, setMode] = useState<Mode>('subtle');
   const [target, setTarget] = useState('area_all');
+
+  // Re-render the preview server-side once typing pauses or the style changes
+  useEffect(() => {
+    if (!message.trim()) {
+      return;
+    }
+    const timer = setTimeout(
+      () => moduleAct('preview', { message }),
+      PREVIEW_DELAY_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [message, style]);
 
   const styleOptions = styles
     .filter((s) => allowed_styles.includes(s.id))
@@ -128,9 +146,14 @@ export const EmoteTab = (props: ModuleTabProps<EmoteData>) => {
                 Preview
               </Box>
               <Box>
-                <span className={currentStyle?.css_class}>
-                  {message || 'Your words, as they will appear.'}
-                </span>
+                {message.trim() && preview_html ? (
+                  // eslint-disable-next-line react/no-danger -- html is encoded and rendered server-side
+                  <span dangerouslySetInnerHTML={{ __html: preview_html }} />
+                ) : (
+                  <span className={currentStyle?.css_class}>
+                    Your words, as they will appear.
+                  </span>
+                )}
               </Box>
             </Stack.Item>
             <Stack.Item>
