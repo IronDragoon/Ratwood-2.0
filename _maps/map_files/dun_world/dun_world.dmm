@@ -13897,6 +13897,11 @@
 /obj/structure/stairs/stone,
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/inq/basement)
+"cyP" = (
+/obj/structure/flora/roguegrass/herb/rosa,
+/obj/machinery/light/rogue/torchholder/l,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/exposed/town/keep)
 "cyY" = (
 /turf/closed/wall/mineral/rogue/stonebrick,
 /area/rogue/indoors/inq/basement)
@@ -25133,10 +25138,9 @@
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors)
 "ezs" = (
-/obj/machinery/light/rogue/candle/l{
+/obj/structure/fluff/statue/gargoyle{
 	pixel_x = 32
 	},
-/obj/structure/fluff/statue/gargoyle,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/manor)
 "ezL" = (
@@ -43453,10 +43457,9 @@
 /turf/open/floor/rogue/wood,
 /area/rogue/under/cave/orcdungeon)
 "hPf" = (
-/obj/machinery/light/rogue/candle/l{
+/obj/structure/fluff/statue/gargoyle{
 	pixel_x = 32
 	},
-/obj/structure/fluff/statue/gargoyle,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/manor)
 "hPo" = (
@@ -47276,6 +47279,10 @@
 /obj/machinery/gear_painter,
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/mountains)
+"izt" = (
+/obj/machinery/light/rogue/candle/r,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town/manor)
 "izx" = (
 /obj/structure/chair/bench/couchamagenta/r{
 	pixel_y = 4
@@ -56751,6 +56758,10 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/church/chapel)
+"kmx" = (
+/obj/structure/fluff/walldeco/vinez,
+/turf/closed/wall/mineral/rogue/stone/moss,
+/area/rogue/outdoors/exposed/town/keep)
 "kmA" = (
 /obj/structure/fluff/walldeco/customflag{
 	pixel_y = 32
@@ -114968,6 +114979,10 @@
 /mob/living/carbon/human/species/skeleton/npc/hardspread,
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/under/cave/licharena)
+"uzG" = (
+/obj/structure/flora/roguegrass/herb/rosa,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/exposed/town/keep)
 "uzI" = (
 /obj/effect/decal/cobbleedge{
 	dir = 4
@@ -126440,6 +126455,14 @@
 /obj/item/natural/bone,
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/shelter/mountains/decap)
+"wEO" = (
+/obj/structure/fluff/statue/gargoyle{
+	pixel_y = 32
+	},
+/turf/open/floor/rogue/cobblerock{
+	smooth = 0
+	},
+/area/rogue/outdoors/exposed/town/keep)
 "wEP" = (
 /obj/effect/decal/cobbleedge{
 	dir = 10
@@ -133643,6 +133666,10 @@
 /obj/machinery/light/rogue/candle/blue,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/church/basement)
+"xWb" = (
+/obj/effect/landmark/start/chaplain,
+/turf/open/floor/rogue/church,
+/area/rogue/indoors/town/manor)
 "xWe" = (
 /obj/structure/fluff/railing/border/north,
 /turf/open/floor/rogue/naturalstone,
@@ -469633,7 +469660,7 @@ ggu
 cHh
 vxe
 veN
-tRB
+xWb
 tVu
 fAA
 rBb
@@ -470076,7 +470103,7 @@ lSh
 fAA
 fAA
 ezs
-uQS
+izt
 uQS
 hPf
 uQS
@@ -470990,9 +471017,9 @@ ebZ
 kdS
 ugj
 ugj
-eeO
-rMf
-afY
+kmx
+uzG
+cyP
 afY
 weQ
 upS
@@ -471443,7 +471470,7 @@ kdS
 ugj
 aWL
 uQf
-afY
+wEO
 afY
 afY
 weQ
