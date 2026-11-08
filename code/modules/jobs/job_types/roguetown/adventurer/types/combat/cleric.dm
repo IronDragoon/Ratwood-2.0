@@ -141,7 +141,7 @@
 	H.cmode_music = 'sound/music/combat_holy.ogg'
 
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 			cloak = /obj/item/clothing/cloak/psydontabard
 			mask = /obj/item/clothing/head/roguetown/roguehood/psydon
 			neck = /obj/item/clothing/neck/roguetown/psicross
@@ -263,7 +263,7 @@
 			backpack_contents[/obj/item/clothing/neck/roguetown/psicross/inhumen/baotha] = 1
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 			wrists = /obj/item/clothing/neck/roguetown/psicross
 			cloak = /obj/item/clothing/cloak/psydontabard
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute // Added for Sublass Prewiew.
@@ -506,7 +506,7 @@
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/mockery)
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 			neck = /obj/item/clothing/neck/roguetown/psicross
 			cloak = /obj/item/clothing/cloak/templar/psydon
 		if(/datum/patron/divine/astrata)
@@ -655,7 +655,7 @@
 		ADD_TRAIT(H, TRAIT_RITUALIST, TRAIT_GENERIC)
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 	switch(H.patron?.type)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 			neck = /obj/item/clothing/neck/roguetown/psicross
 			cloak = /obj/item/clothing/cloak/psydontabard
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon
@@ -788,7 +788,7 @@
 	extra_context = "This is a psydonite only subclass, it will force you to be one if it is not set. You will be a pacifist and are able to draw upon a weaker version of the abilities known by a Psydonic Absolver."
 
 /datum/outfit/job/roguetown/adventurer/stigmata
-	allowed_patrons = list(/datum/patron/old_god)
+	allowed_patrons = list(/datum/patron/old_god, /datum/patron/old_god/reformist)
 
 /datum/outfit/job/roguetown/adventurer/stigmata/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..()

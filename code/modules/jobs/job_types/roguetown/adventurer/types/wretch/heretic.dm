@@ -256,7 +256,7 @@
 			H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/labor/lumberjacking, 2, TRUE)
 			ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 			H.change_stat(STATKEY_WIL, 2) //ENDVRE. You give up useful miracles, rites and miracle-healing from other Heretics, so you'll need this.
 			H.change_stat(STATKEY_CON, 2)
 			if(H.mind)
@@ -520,7 +520,7 @@
 			H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/labor/lumberjacking, 2, TRUE)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 			H.change_stat(STATKEY_WIL, 2) //ENDVRE. You give up useful miracles, rites and miracle-healing from other Heretics, so you'll need this.
 			var/lightpsyfashion = list("Traditionalist", "Orthodoxist", "Reformist")
 			var/lightpsyfashion_choice = input(H, "What is your faith in HIM like?", "HE LYVES, HE ENDURES, HE DIES") as anything in lightpsyfashion
@@ -825,7 +825,7 @@
 			H.adjust_skillrank(/datum/skill/craft/weaponsmithing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/craft/smelting, 1, TRUE)
 			ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC)
-		if(/datum/patron/old_god)
+		if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 			H.change_stat(STATKEY_WIL, 2) //ENDVRE. You give up useful miracles, rites and miracle-healing from other Heretics, so you'll need this.
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/silver, SLOT_RING, TRUE)
 

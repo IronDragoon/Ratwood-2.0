@@ -252,7 +252,7 @@
 		// Patron Section
 		body += "<div id='patron-section'>"
 		body += "<h3>Patron</h3>"
-		body += "<p>Current: [initial(living.patron.name)]</p>"
+		body += "<p>Current: [living.patron?.display_name]</p>"
 		body += "<ul>"
 		for(var/patron_type in GLOB.patronlist)
 			// Skip Science patrons
@@ -262,7 +262,7 @@
 			// Skip if patron is null or has no name
 			if(!P || !initial(P.name))
 				continue
-			body += "<li>[initial(P.name)] "
+			body += "<li>[P.display_name] "
 			body += "<a class='skill-btn' href='?_src_=holder;[HrefToken()];set_patron=[REF(M)];patron=[patron_type]'>Set</a></li>"
 		body += "</ul></div>"
 		

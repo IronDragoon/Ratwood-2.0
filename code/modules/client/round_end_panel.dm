@@ -914,11 +914,14 @@
 			if(istype(living_user_mob.patron, /datum/patron/old_god))
 				psydonite_user = TRUE
 
-	var/psydon_followers = GLOB.patron_follower_counts["Psydon"] || 0
+	// Otavans and Reformists are counted separately but both follow Psydon.
+	var/otavan_followers = GLOB.patron_follower_counts["Psydon"] || 0
+	var/reformist_followers = GLOB.patron_follower_counts["Reformism"] || 0
+	var/psydon_followers = otavan_followers + reformist_followers
 	var/largest_religion = (psydon_followers > 0)
 	if(largest_religion)
 		for(var/patron in GLOB.patron_follower_counts)
-			if(patron == "Psydon")
+			if(patron == "Psydon" || patron == "Reformism")
 				continue
 			if(GLOB.patron_follower_counts[patron] >= psydon_followers)
 				largest_religion = FALSE
@@ -934,7 +937,7 @@
 	data += "<div style='display: flex;'>"
 
 	data += "<div style='flex: 1; padding-right: 10px;'>"
-	data += "Number of followers: [psydon_followers] ([get_colored_influence_value(psydon_followers * 20)])<br>"
+	data += "Number of followers: [psydon_followers] (Otavan [otavan_followers] / Reformist [reformist_followers]) ([get_colored_influence_value(psydon_followers * 20)])<br>"
 	data += "People wearing psycross: [GLOB.azure_round_stats[STATS_PSYCROSS_USERS]] ([get_colored_influence_value(GLOB.azure_round_stats[STATS_PSYCROSS_USERS] * 10)])<br>"
 	data += "Number of confessions: [GLOB.confessors.len] ([get_colored_influence_value(GLOB.confessors.len * 20)])<br>"
 	data += "Largest faith: [largest_religion ? "YES" : "NO"] ([get_colored_influence_value(largest_religion ? 500 : -250)])<br>"
@@ -1034,7 +1037,7 @@
 		return
 
 	var/dynamic_content = ""
-	var/followers = GLOB.patron_follower_counts[initialized_storyteller.name] || 0
+	var/followers = get_god_follower_count(initialized_storyteller.name)
 
 	if(!debug)
 		dynamic_content += "Number of followers: [followers] ([get_colored_influence_value(SSgamemode.get_follower_influence(storyteller))])<br>"

@@ -60,10 +60,10 @@ GLOBAL_LIST_EMPTY(outfit_allowed_patrons_cache)
 			var/list/names = list()
 			if(default_patron)
 				var/datum/patron/default_datum = GLOB.patronlist[default_patron]
-				names += default_datum?.name
+				names += default_datum?.display_name
 			else
 				for(var/datum/patron/candidate as anything in get_patron_switch_candidates(patron, allowed))
-					names += candidate.name
+					names += candidate.display_name
 			return "This will force your patron to [english_list(names, and_text = " or ")]."
 		if(PATRON_LOCK_LOCKED)
 			return "Locked to [describe_allowed_patrons(allowed)]."
@@ -91,7 +91,7 @@ GLOBAL_LIST_EMPTY(outfit_allowed_patrons_cache)
 		remaining -= selectable
 	for(var/path in remaining)
 		var/datum/patron/patron = GLOB.patronlist[path]
-		parts += patron.name
+		parts += patron.display_name
 	if(!length(parts))
 		return "a faith you cannot follow"
 	return english_list(parts, and_text = ", ")
@@ -119,7 +119,7 @@ GLOBAL_LIST_EMPTY(outfit_allowed_patrons_cache)
 				return FALSE
 			new_patron = pick(possible)
 	target.set_patron(new_patron)
-	var/change_message = span_warning("[old_patron] had not endorsed my practices in my younger years. I've since grown accustomed to [target.patron].")
+	var/change_message = span_warning("[old_patron?.display_name] had not endorsed my practices in my younger years. I've since grown accustomed to [target.patron.display_name].")
 	if(target.client)
 		to_chat(target, change_message)
 	else

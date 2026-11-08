@@ -1194,7 +1194,7 @@ SUBSYSTEM_DEF(gamemode)
 
 	for(var/client/client in GLOB.clients)
 		if(roundstart)
-			GLOB.patron_follower_counts[client.prefs.selected_patron.name]++
+			GLOB.patron_follower_counts[client.prefs.selected_patron.stats_key]++
 		var/mob/living/living = client.mob
 		if(!istype(living))
 			continue
@@ -1204,7 +1204,7 @@ SUBSYSTEM_DEF(gamemode)
 			continue
 		if(!roundstart)
 			if(living.patron)
-				GLOB.patron_follower_counts[living.patron.name]++
+				GLOB.patron_follower_counts[living.patron.stats_key]++
 				if(living.job == "Grand Duke")
 					force_set_round_statistic(STATS_MONARCH_PATRON, living.patron.name)
 		if(living.mind.has_antag_datum(/datum/antagonist/bandit))
@@ -1356,7 +1356,7 @@ SUBSYSTEM_DEF(gamemode)
 	if(!initialized_storyteller)
 		return 0
 
-	var/follower_count = GLOB.patron_follower_counts[initialized_storyteller.name] || 0
+	var/follower_count = get_god_follower_count(initialized_storyteller.name)
 	var/base_mod = initialized_storyteller.follower_modifier
 	var/diminish_threshold = 4
 	var/second_diminish_threshold = 9

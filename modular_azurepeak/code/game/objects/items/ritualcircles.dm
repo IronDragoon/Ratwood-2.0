@@ -2120,7 +2120,7 @@
 	var/psydonrites = list("Conversion", "Admonishment", "Freedom")
 
 /obj/structure/ritualcircle/psydon/attack_hand(mob/living/user)
-	if((user.patron?.type) != /datum/patron/old_god)
+	if(!istype(user.patron, /datum/patron/old_god))
 		to_chat(user,span_smallred("I don't know the proper rites for this..."))
 		return
 	if(!HAS_TRAIT(user, TRAIT_RITUALIST))
@@ -2159,7 +2159,7 @@
 						else
 							loc.visible_message(span_cult("[user] weeps."))
 						if(do_after(user, 5 SECONDS))
-							psydonconversion(target, luxshield)
+							psydonconversion(target, luxshield, user.patron.type)
 		if("Admonishment")//Deconvert WWs/Vampires.
 			if(!HAS_TRAIT(user, TRAIT_LUX_FREAK))
 				to_chat(user, span_smallred("This isn't something I'm capable of. The conduction and manipulation of lux is beyond me."))
@@ -2215,7 +2215,8 @@
 							psydonstrip(target)
 							user.apply_status_effect(/datum/status_effect/debuff/ritesexpended_lesser)
 
-/obj/structure/ritualcircle/psydon/proc/psydonconversion(mob/living/carbon/human/target, luxshield = FALSE)
+/// convert_to is the ritualist's own patron type, so Reformists convert others to Reformism.
+/obj/structure/ritualcircle/psydon/proc/psydonconversion(mob/living/carbon/human/target, luxshield = FALSE, convert_to = /datum/patron/old_god)
 	if(!target || QDELETED(target) || target.loc != loc)
 		to_chat(usr, "Selected target is not on the rune! [target.p_they(TRUE)] must be directly on top of the rune to receive the One's will.")
 		return
@@ -2238,7 +2239,7 @@
 			target.emote("Agony")
 			target.apply_damage(100, BURN, BODY_ZONE_HEAD)
 			loc.visible_message(span_cult("[target] is violently thrashing atop the rune, writhing, as their former patron punishes their defiance."))
-		addtimer(CALLBACK(src, PROC_REF(psydonconversion_stage2), target), 20)
+		addtimer(CALLBACK(src, PROC_REF(psydonconversion_stage2), target, convert_to), 20)
 	if(prompt == "NAE")
 		to_chat(target, span_warning("You brace. Why do you brace? Nothing comes."))
 		loc.visible_message(span_cult("[target] stands untouched. They reject His will."))
@@ -2533,24 +2534,24 @@
 		ADD_TRAIT(target, TRAIT_OVERTHERETIC, TRAIT_MIRACLE)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(to_chat), target, span_purple("All will love you and despair.")), 40)
 
-/obj/structure/ritualcircle/psydon/proc/psydonconversion_stage2(mob/living/carbon/human/target)
+/obj/structure/ritualcircle/psydon/proc/psydonconversion_stage2(mob/living/carbon/human/target, convert_to = /datum/patron/old_god)
 	playsound(target, 'sound/magic/PSYDONE.ogg', 60)
 	to_chat(target, span_mind_control("..."))
-	addtimer(CALLBACK(src, PROC_REF(psydonconversion_stage3), target), 20)
+	addtimer(CALLBACK(src, PROC_REF(psydonconversion_stage3), target, convert_to), 20)
 
-/obj/structure/ritualcircle/psydon/proc/psydonconversion_stage3(mob/living/carbon/human/target)
+/obj/structure/ritualcircle/psydon/proc/psydonconversion_stage3(mob/living/carbon/human/target, convert_to = /datum/patron/old_god)
 	to_chat(target, span_warning("Has it always been this quiet? It's all so dim..."))
 	to_chat(target, span_mind_control("..."))
-	addtimer(CALLBACK(src, PROC_REF(psydonconversion_stage4), target), 40)
+	addtimer(CALLBACK(src, PROC_REF(psydonconversion_stage4), target, convert_to), 40)
 
-/obj/structure/ritualcircle/psydon/proc/psydonconversion_stage4(mob/living/carbon/human/target)
+/obj/structure/ritualcircle/psydon/proc/psydonconversion_stage4(mob/living/carbon/human/target, convert_to = /datum/patron/old_god)
 	to_chat(target, span_mind_control("..."))
 	if(target.devotion == null)
-		target.set_patron(new /datum/patron/old_god)
+		target.set_patron(convert_to)
 		return
 	else
 		var/previous_level = target.devotion.level //now you might ask why we get previous_level variable before switching le patron. reason is when swapping patrons it completely fucks up devotion data for people
-		target.set_patron(new /datum/patron/old_god)
+		target.set_patron(convert_to)
 		var/datum/devotion/C = new /datum/devotion(target, target.patron)
 		if(previous_level == 4)
 			target.mind?.RemoveAllMiracles()

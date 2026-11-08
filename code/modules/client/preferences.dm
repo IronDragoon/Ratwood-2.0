@@ -728,7 +728,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<b>Character Customization:</b> <a href='?_src_=prefs;preference=vices_menu;task=input'>Configure All</a><BR>"
 			var/datum/faith/selected_faith = GLOB.faithlist[selected_patron?.associated_faith]
 			dat += "<b>Faith:</b> <a href='?_src_=prefs;preference=faith;task=input'>[selected_faith?.name || "FUCK!"]</a><BR>"
-			dat += "<b>Patron:</b> <a href='?_src_=prefs;preference=patron;task=input'>[selected_patron?.name || "FUCK!"]</a><BR>"
+			dat += "<b>Patron:</b> <a href='?_src_=prefs;preference=patron;task=input'>[selected_patron?.display_name || "FUCK!"]</a><BR>"
 			dat += "<b>Dominance:</b> <a href='?_src_=prefs;preference=domhand'>[domhand == 1 ? "Left-handed" : "Right-handed"]</a><BR>"
 			dat += "<b>Food Preferences:</b> <a href='?_src_=prefs;preference=culinary;task=menu'>Change</a><BR>"
 
@@ -2049,11 +2049,11 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 							continue
 						if(patron.disabled_patron)
 							continue
-						patrons_named[patron.name] = patron
+						patrons_named[patron.display_name] = patron
 					var/god_input = tgui_input_list(user, "The first amongst many.", "PATRON", patrons_named)
 					if(god_input)
 						selected_patron = patrons_named[god_input]
-						to_chat(user, "<font color='yellow'>Patron: [selected_patron]</font>")
+						to_chat(user, "<font color='yellow'>Patron: [selected_patron.display_name]</font>")
 						to_chat(user, "<font color='#FFA500'>Domain: [selected_patron.domain]</font>")
 						to_chat(user, "Background: [selected_patron.desc]")
 						to_chat(user, "<font color='purple'>Likely Worshippers: [selected_patron.worshippers]</font>")

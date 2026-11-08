@@ -45,6 +45,30 @@ GLOBAL_LIST_EMPTY(prayers)
 	/// Common titles of the god - used for prayers
 	var/list/titles = list()
 
+	/// Name shown in menus. Set it when several patrons share a god's name, like the Psydonite branches. Defaults to name.
+	var/display_name
+	/// Overhead icon state in icons/mob/overhead_effects.dmi for the faith salute. Defaults to "sign_[name]".
+	var/salute_icon_state
+	/// Key for follower stats and round-end counts. Defaults to name.
+	var/stats_key
+
+/datum/patron/New()
+	. = ..()
+	if(!display_name)
+		display_name = name
+	if(!salute_icon_state)
+		salute_icon_state = "sign_[name]"
+	if(!stats_key)
+		stats_key = name
+
+/// Followers of a god across every patron that worships it, e.g. both Psydonite branches.
+/proc/get_god_follower_count(god_name)
+	. = 0
+	for(var/path in GLOB.patronlist)
+		var/datum/patron/patron = GLOB.patronlist[path]
+		if(patron.name == god_name)
+			. += GLOB.patron_follower_counts[patron.stats_key] || 0
+
 /datum/patron/proc/on_gain(mob/living/pious)
 	for(var/trait in mob_traits)
 		ADD_TRAIT(pious, trait, "[type]")

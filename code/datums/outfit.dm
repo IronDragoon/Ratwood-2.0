@@ -179,6 +179,9 @@
 	// Replace silver items with non-silver alternatives for characters with silver weakness
 	handle_silver_weakness(H)
 
+	// Reformists wear their own psycross and tabard
+	handle_reformist_symbols(H)
+
 	//Start with uniform,suit,backpack for additional slots
 	if(uniform)
 		H.equip_to_slot_or_del(new pants(H),SLOT_PANTS, TRUE)
@@ -293,6 +296,26 @@
 		
 		if(is_silver_belt)
 			belt = /obj/item/storage/belt/rogue/leather/black
+
+/// Swaps the standard Psydonite psycross and tabard for the Reformist ones when a Reformist is equipped.
+/datum/outfit/proc/handle_reformist_symbols(mob/living/carbon/human/H)
+	if(!H || !istype(H.patron, /datum/patron/old_god/reformist))
+		return
+	var/static/list/reformist_swaps = list(
+		/obj/item/clothing/neck/roguetown/psicross = /obj/item/clothing/neck/roguetown/psicross/reform,
+		/obj/item/clothing/cloak/psydontabard = /obj/item/clothing/cloak/reformtabard,
+	)
+	for(var/slot_var in list("neck", "wrists", "cloak", "armor", "shirt", "mask", "belt", "beltl", "beltr", "id", "l_pocket", "r_pocket", "r_hand", "l_hand"))
+		var/swap = reformist_swaps[vars[slot_var]]
+		if(swap)
+			vars[slot_var] = swap
+	for(var/item_path in backpack_contents?.Copy())
+		var/swap = reformist_swaps[item_path]
+		if(!swap)
+			continue
+		var/amount = backpack_contents[item_path]
+		backpack_contents -= item_path
+		backpack_contents[swap] = amount
 
 /datum/outfit/proc/move_storage(obj/item/new_item, turf/T)
 	if(new_item.forceMove(T))

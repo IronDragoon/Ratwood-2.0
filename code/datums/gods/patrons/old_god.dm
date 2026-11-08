@@ -1,5 +1,6 @@
 /datum/patron/old_god
 	name = "Psydon"
+	display_name = "Otavan Psydonism"
 	domain = "Life, Creation, Compassion and Perseverance"
 	desc = "The One arrived to PSYDONIA on the COMET SYON, reshaping the barren world in His image. He was struck down by the Necromantress Zizo; some believe Him dead, others slumbering. May we ENDURE in His name."
 	worshippers = "Ancient Dwarves and Elves, Zybantines, Otavans, Those Who Dream of Peace"
@@ -23,6 +24,18 @@
 		"FORGIVE THEM, ALLFATHER, FOR THEY KNOW-NOT WHAT THEY DO!",
 		"BARE WITNESS, MY GOD; THE SACRIFICE MADE MANIFEST!",
 	)
+
+/// Aavar Reformism. The same god as Otavan Psydonism (name stays "Psydon"), worshipped by a different branch. Shares everything with its parent for now.
+/datum/patron/old_god/reformist
+	display_name = "Aavar Reformism"
+	// PLACEHOLDER: reuses the Otavan sign until the Reformist salute sprite is added to icons/mob/overhead_effects.dmi.
+	salute_icon_state = "sign_Psydon"
+	stats_key = "Reformism"
+	// PLACEHOLDER lore, to be rewritten.
+	desc = "The One arrived to PSYDONIA on the COMET SYON, and was struck down by the Necromantress Zizo. The Reformists hold that whether He is dead or slumbering, He has left us - but not our ability to endure hardship. We mourn Him, and make something of this world before we pass onto the next. Ad pacem servandam."
+	worshippers = "Aavnic Freifechters, The Mourning, Those Who Would Mend the World"
+	virtues = "Endurance, Self-Reliance, Keeping the Peace"
+	sins = "Despair, Idolatry, Sadism"
 
 
 /obj/effect/proc_holder/spell/self/check_boot
@@ -183,7 +196,7 @@
 
 		// Bonuses! Flavour! SOVL!
 		for(var/obj/item/clothing/neck/current_item in target.get_equipped_items(TRUE))
-			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/decrepit, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/silver/sojourner,	/obj/item/clothing/neck/roguetown/psicross/g))
+			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/reform, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/decrepit, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/silver/sojourner,	/obj/item/clothing/neck/roguetown/psicross/g))
 				pp += 1
 				if(pp >= 12 & target == user) // A harmless easter-egg. Only applies on self-cast. You'd have to be pretty deliberate to wear 12 of them.
 					target.visible_message(span_danger("[target]'s many psycrosses reverberate with a strange, ephemeral sound..."), span_userdanger("HE must be waking up! I can hear it! I'm ENDURING so much!"))
@@ -206,7 +219,7 @@
 						psicross_bonus = 0.1
 					if(/obj/item/clothing/neck/roguetown/psicross/decrepit)
 						psicross_bonus = 0.2
-					if(/obj/item/clothing/neck/roguetown/psicross)
+					if(/obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/reform)
 						psicross_bonus = 0.3
 					if(/obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/silver/sojourner)
 						psicross_bonus = 0.4

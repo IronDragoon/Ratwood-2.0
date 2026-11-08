@@ -41,24 +41,28 @@
 				for(var/mob/living/carbon/human/H in viewers(world.view, src))
 					var/pass = FALSE
 					if(H.patron?.type == private || private == /datum/patron/divine/xylix)	//Xylixians will always flash the observer's religion to them.
-						vis_contents += new /obj/effect/temp_visual/stress_event/invisible(null, H, icon_path, "sign_[H.patron.name]", offset_list, y_offset, icon_plane)
+						vis_contents += new /obj/effect/temp_visual/stress_event/invisible(null, H, icon_path, H.patron.salute_icon_state, offset_list, y_offset, icon_plane)
 						pass = TRUE
 					else if(HAS_TRAIT(H, TRAIT_HERETIC_SEER) && istype(private,/datum/patron/inhumen))	//Seers should see all inhumen symbols.
-						vis_contents += new /obj/effect/temp_visual/stress_event/invisible(null, H, icon_path, "sign_[patron?.name]", offset_list, y_offset, icon_plane)
+						vis_contents += new /obj/effect/temp_visual/stress_event/invisible(null, H, icon_path, patron?.salute_icon_state, offset_list, y_offset, icon_plane)
 						pass = TRUE
 					if(soundin && pass)
 						var/turf/T = get_turf(src)
 						H.playsound_local(T, soundin, 100, FALSE)
 			else
+				// Otavans and Reformists see each other's salutes, as the saluter's sign.
+				var/datum/patron/saluter_patron = GLOB.patronlist[private]
 				for(var/mob/living/carbon/human/H in viewers(world.view, src))
-					if(H.patron?.type == private)
-						if(HAS_TRAIT(H, TRAIT_INQUISITION) && HAS_TRAIT(src, TRAIT_INQUISITION))	//Inquisition members will show a fancier symbol to one another.
-							vis_contents += new /obj/effect/temp_visual/stress_event/invisible(null, H, icon_path, "sign_[H.patron.name]inq", offset_list, y_offset, icon_plane)
-						else
-							vis_contents += new /obj/effect/temp_visual/stress_event/invisible(null, H, icon_path, "sign_[H.patron.name]", offset_list, y_offset, icon_plane)
-						if(soundin)
-							var/turf/T = get_turf(src)
-							H.playsound_local(T, soundin, 100, FALSE)
+					if(!istype(H.patron, /datum/patron/old_god))
+						continue
+					var/sign = saluter_patron.salute_icon_state
+					//Inquisition members will show a fancier symbol to one another. Only the Otavan sign has one.
+					if(private == /datum/patron/old_god && H.patron.type == /datum/patron/old_god && HAS_TRAIT(H, TRAIT_INQUISITION) && HAS_TRAIT(src, TRAIT_INQUISITION))
+						sign = "[sign]inq"
+					vis_contents += new /obj/effect/temp_visual/stress_event/invisible(null, H, icon_path, sign, offset_list, y_offset, icon_plane)
+					if(soundin)
+						var/turf/T = get_turf(src)
+						H.playsound_local(T, soundin, 100, FALSE)
 
 ///A simplified version of the proc that adds an overlay to the src and returns a reference to the appearance.
 ///Has no offset adjustment for bodies / sprite size. Make sure to account for that if using it on carbons!

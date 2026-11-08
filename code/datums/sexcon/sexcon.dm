@@ -999,7 +999,7 @@
 		if(prob(10))
 			var/list/lover_list = list("This feels so good!","I am in heaven!","This is too good to be possible!","I can't stop, too good!")
 			switch(action_target.patron?.type)
-				if(/datum/patron/old_god)
+				if(/datum/patron/old_god, /datum/patron/old_god/reformist)
 					lover_list += "By PSYDON!"
 				if(/datum/patron/inhumen/zizo)
 					lover_list += "By ZIZO!"
