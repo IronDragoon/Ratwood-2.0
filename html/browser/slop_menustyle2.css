@@ -60,7 +60,22 @@ a.vagrant:hover
 }
 
 a.vagrant:hover img.ninetysskull {
-	display: inline-block;  
+	display: inline-block;
+}
+
+/* A class the player's faith is locked out of. Shown, but not a link. Keep the colour in sync with PATRON_LOCKED_COLOR. */
+span.vagrant_locked
+{
+	font-family: "VT323", monospace;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 24px;
+
+	color: #a36c63;
+	text-align: center;
+	padding: 1px 4px 1px 4px;
+	margin: 0 2px 0 0;
+	cursor: not-allowed;
 }
 
 a.bottom_buttons, a.bottom_buttons:link, a.bottom_buttons:visited, a.bottom_buttons:active {

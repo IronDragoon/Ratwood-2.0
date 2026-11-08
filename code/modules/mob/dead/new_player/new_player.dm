@@ -493,8 +493,6 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 		return JOB_UNAVAILABLE_SEX
 	if(length(job.allowed_ages) && !(client.prefs.age in job.allowed_ages))
 		return JOB_UNAVAILABLE_AGE
-	if(length(job.allowed_patrons) && !(client.prefs.selected_patron.type in job.allowed_patrons))
-		return JOB_UNAVAILABLE_PATRON
 	if((client.prefs.lastclass == job.title) && !job.bypass_lastclass)
 		return JOB_UNAVAILABLE_LASTCLASS
 	// Check if the player is on cooldown for the hiv+ role
@@ -523,6 +521,10 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 //				return JOB_UNAVAILABLE_GENERIC //we can't play adventurer if there isn't 1 of every other job that we can play
 	if(latejoin && !job.special_check_latejoin(client))
 		return JOB_UNAVAILABLE_GENERIC
+	// Checked last, so this only reports patron locks on jobs that are otherwise open. The latejoin list shows these as locked rather than hiding them.
+	// A same-faith mismatch stays available, and the patron is switched on join.
+	if(get_patron_lock_status(client.prefs.selected_patron, job.get_allowed_patrons()) == PATRON_LOCK_LOCKED)
+		return JOB_UNAVAILABLE_PATRON
 	return JOB_AVAILABLE
 
 /mob/dead/new_player/proc/AttemptLateSpawn(rank)
@@ -665,16 +667,22 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 			continue
 
 		var/list/available_jobs = list()
+		/// Jobs shown but not selectable because the patron's faith is locked out
+		var/list/patron_locked_jobs = list()
 		for(var/job in category)
 			var/datum/job/job_datum = SSjob.name_occupations[job]
 			if(!job_datum)
 				continue
 			// Make sure hiv+ jobs always appear on list, even if unavailable
-			var/is_job_available = (IsJobUnavailable(job_datum.title, TRUE) == JOB_AVAILABLE)
+			var/job_unavailable = IsJobUnavailable(job_datum.title, TRUE)
+			var/is_job_available = (job_unavailable == JOB_AVAILABLE)
 			if(job_datum.always_show_on_latechoices)
 				is_job_available = TRUE
 			if(is_job_available)
 				available_jobs += job
+			else if(job_unavailable == JOB_UNAVAILABLE_PATRON)
+				available_jobs += job
+				patron_locked_jobs += job
 
 		if (length(available_jobs))
 			var/cat_color = SSjob.name_occupations[category[1]].selection_color //use the color of the first job in the category (the department head) as the category color
@@ -731,6 +739,14 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 					var/used_name = job_datum.display_title || job_datum.title
 					if(client.prefs.pronouns == SHE_HER && job_datum.f_title)
 						used_name = job_datum.f_title
+					var/list/allowed_patrons = job_datum.get_allowed_patrons()
+					var/patron_tooltip = get_patron_lock_tooltip(client.prefs.selected_patron, allowed_patrons)
+					if(job in patron_locked_jobs)
+						dat += "<font size = 3 color='[PATRON_LOCKED_COLOR]' title=\"[patron_tooltip]\">[command_bold ? "<b>" : ""][used_name] ([job_datum.current_positions]/[job_datum.total_positions])[command_bold ? "</b>" : ""]</font>"
+						dat += "<br>"
+						continue
+					if(patron_tooltip)
+						used_name = "<font color='[PATRON_SWITCH_COLOR]' title=\"[patron_tooltip]\">[used_name]</font>"
 					if(job_datum in SSjob.prioritized_jobs)
 						dat += "<a class='job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'><span class='priority'>[used_name] ([job_datum.current_positions])</span></a>"
 					else

@@ -1304,11 +1304,20 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				JOB_AVAILABLE,
 				JOB_UNAVAILABLE_SLOTFULL,
 			)
-			if(!(job_unavailable in acceptable_unavailables))
+			if(!(job_unavailable in acceptable_unavailables) && job_unavailable != JOB_UNAVAILABLE_PATRON)
 				HTML += "<font color=#a36c63>[used_name]</font></td> <td> </td></tr>"
+				continue
+			// Checked from the preferences directly, so it also works outside the lobby.
+			var/list/allowed_patrons = job.get_allowed_patrons()
+			var/patron_tooltip = get_patron_lock_tooltip(selected_patron, allowed_patrons)
+			var/patron_lock = get_patron_lock_status(selected_patron, allowed_patrons)
+			if(patron_lock == PATRON_LOCK_LOCKED)
+				HTML += "<font color='[PATRON_LOCKED_COLOR]' title=\"[patron_tooltip]\">[used_name]</font></td> <td> </td></tr>"
 				continue
 
 			var/job_display = used_name
+			if(patron_lock == PATRON_LOCK_SWITCH)
+				job_display = "<font color='[PATRON_SWITCH_COLOR]'>[used_name]</font>"
 			//job_display += " <a href='?src=[REF(job)];explainjob=1'>{?}</a></span>"
 //			if((job_preferences[SSjob.overflow_role] == JP_LOW) && (rank != SSjob.overflow_role) && !is_banned_from(user.ckey, SSjob.overflow_role))
 //				HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
@@ -1354,7 +1363,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 <div class="tutorialhover"> [job.class_setup_examine ? "<a href='?src=[REF(job)];explainjob=1'><font>[job_display]</font></a>" : "<font>[job_display]</font>"]</span>
 <span class="tutorial">[job.tutorial]<br>
-Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contrib_points]" : ""]</span>
+Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contrib_points]" : ""][patron_lock == PATRON_LOCK_SWITCH ? "<br><font color='[PATRON_SWITCH_COLOR]'>[patron_tooltip]</font>" : ""]</span>
 </div>
 
 			"}

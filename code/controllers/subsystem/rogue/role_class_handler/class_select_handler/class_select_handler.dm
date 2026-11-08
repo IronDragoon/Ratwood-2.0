@@ -59,6 +59,9 @@
 	//classes we rolled, basically you get a datum followed by a number in here on how many times you rerolled it.
 	var/list/rolled_classes = list()
 
+	/// Classes shown greyed out because the player's faith is locked out of them. They can't be picked.
+	var/list/patron_locked_classes = list()
+
 	// The register id we use
 	var/register_id = null
 
@@ -86,6 +89,7 @@
 	// Cleanup anything holding references, aka these lists holding refs to class datums and the other two
 	linked_client = null
 	cur_picked_class = null
+	patron_locked_classes = null
 	class_cat_alloc_attempts = null
 	forced_class_additions = null
 	. = ..()
@@ -115,6 +119,8 @@
 					if(CUR_AZZ.check_requirements(H))
 						testing("adding [CUR_AZZ] to sortlist")
 						local_insert_sortlist += CUR_AZZ
+					else
+						note_patron_locked_class(CUR_AZZ, H)
 
 			// Time to do some picking, make sure we got things in the list we dealin with
 			if(local_insert_sortlist.len)
@@ -152,6 +158,8 @@
 					continue
 				if(FORCE_IT_IN.check_requirements(H))
 					rolled_classes[FORCE_IT_IN] = 0
+				else
+					note_patron_locked_class(FORCE_IT_IN, H)
 
 		if(forced_class_plusboost)
 			for(var/i in 1 to forced_class_plusboost)
@@ -159,6 +167,7 @@
 				if(boostclass.type in forced_class_additions)
 					rolled_classes[boostclass] += 1
 
+	patron_locked_classes -= rolled_classes
 	testing("assemble_the_CLASSES completed")
 	if(!rolled_classes.len)
 		linked_client.mob.returntolobby()
@@ -171,6 +180,26 @@
 		return FALSE
 
 	return TRUE
+
+/// Remembers a class that failed its requirements only because of a patron lock, so the menu can show it greyed out.
+/datum/class_select_handler/proc/note_patron_locked_class(datum/advclass/advclass, mob/living/carbon/human/H)
+	if(advclass in patron_locked_classes)
+		return
+	if(get_patron_lock_status(H.patron, advclass.get_allowed_patrons()) != PATRON_LOCK_LOCKED)
+		return
+	if(!advclass.check_requirements(H, ignore_patron_lock = TRUE))
+		return
+	patron_locked_classes += advclass
+
+/// The menu entry for one class: a link, amber if picking it switches the patron, or greyed out if the patron's faith is locked out.
+/datum/class_select_handler/proc/class_entry_html(datum/advclass/advclass)
+	var/mob/living/carbon/human/H = linked_client?.mob
+	var/tooltip = istype(H) ? get_patron_lock_tooltip(H.patron, advclass.get_allowed_patrons()) : null
+	var/title_attr = tooltip ? " title=\"[tooltip]\"" : ""
+	if(advclass in patron_locked_classes)
+		return "<div class='class_bar_div'[title_attr]><span class='vagrant_locked'>[advclass.name]</span></div>\n"
+	var/switch_style = tooltip ? " style='color: [PATRON_SWITCH_COLOR];'" : ""
+	return "<div class='class_bar_div'[title_attr]><a class='vagrant'[switch_style] href='?src=\ref[src];class_selected=1;selected_class=\ref[advclass];'><img class='ninetysskull' src='gragstar.gif' width=32 height=32>[advclass.name]<span id='green_plussa'></span><img class='ninetysskull' src='gragstar.gif' width=32 height=32></a></div>\n"
 
 // Something is calling to tell this datum a class it rolled is currently maxed out.
 // More shitcode!
@@ -231,57 +260,43 @@
 	var/mob/living/carbon/human/H = linked_client.mob
 	if(!H.job)
 		return
+	// Locked classes are listed after the pickable ones in each section.
+	var/list/shown_classes = rolled_classes + patron_locked_classes
 	if(H.job == "Drifter" && !showing_combat_classes)
-		for(var/datum/advclass/datums in rolled_classes)
+		for(var/datum/advclass/datums in shown_classes)
 			if(!(CTAG_ADVENTURER in datums.category_tags))
 				continue
-			var/plus_str = ""
-/*			if(rolled_classes[datums] > 0)
-				var/plus_factor = rolled_classes[datums]
-
-				for(var/i in 1 to plus_factor)
-					plus_str += "+" */
-			data += "<div class='class_bar_div'><a class='vagrant' href='?src=\ref[src];class_selected=1;selected_class=\ref[datums];'><img class='ninetysskull' src='gragstar.gif' width=32 height=32>[datums.name]<span id='green_plussa'>[plus_str]</span><img class='ninetysskull' src='gragstar.gif' width=32 height=32></a></div>\n"
+			data += class_entry_html(datums)
 	else if(!showing_combat_classes)
 		var/datum/job/selected_job = SSjob.GetJob(H.job)
 		if(selected_job.class_categories == TRUE)
 			var/list/class_cat_list = list()
 
-			for(var/datum/advclass/class_categories in rolled_classes)
+			for(var/datum/advclass/class_categories in shown_classes)
 				if(!(class_cat_list.Find(class_categories.class_select_category)))
 					class_cat_list += class_categories.class_select_category
 
 			for(var/rolled_categories in class_cat_list)
 				data += "<details class='class_dropdown'>"
 				data += "<summary class='class_category'>[rolled_categories]</summary>\n"
-				for(var/datum/advclass/datums in rolled_classes)
+				for(var/datum/advclass/datums in shown_classes)
 					if(datums.class_select_category == rolled_categories)
-						var/plus_str = ""
-						data += "<div class='class_bar_div'><a class='vagrant' href='?src=\ref[src];class_selected=1;selected_class=\ref[datums];'>"
-						data += "<img class='ninetysskull' src='gragstar.gif' width=32 height=32>[datums.name]<span id='green_plussa'>[plus_str]</span><img class='ninetysskull' src='gragstar.gif' width=32 height=32>"
-						data += "</a></div>\n"
+						data += class_entry_html(datums)
 				data += "</details>"
 
 		else
-			for(var/datum/advclass/datums in rolled_classes)
-				var/plus_str = ""
-				data += "<div class='class_bar_div'><a class='vagrant' href='?src=\ref[src];class_selected=1;selected_class=\ref[datums];'><img class='ninetysskull' src='gragstar.gif' width=32 height=32>[datums.name]<span id='green_plussa'>[plus_str]</span><img class='ninetysskull' src='gragstar.gif' width=32 height=32></a></div>\n"
+			for(var/datum/advclass/datums in shown_classes)
+				data += class_entry_html(datums)
 
 	if(special_session_queue && special_session_queue.len)
 		for(var/datum/advclass/datums in special_session_queue)
 			data += "<div class='class_bar_div'><a class='vagrant' href='?src=\ref[src];special_selected=1;selected_special=\ref[datums];'><img class='ninetysskull' src='gragstar.gif' width=32 height=32>[datums.name]<img class='ninetysskull' src='gragstar.gif' width=32 height=32></a></div>\n"
 
 	if(showing_combat_classes)
-		for(var/datum/advclass/datums in rolled_classes)
+		for(var/datum/advclass/datums in shown_classes)
 			if(!(CTAG_PILGRIM in datums.category_tags))
 				continue
-			var/plus_str = ""
-/*			if(rolled_classes[datums] > 0)
-				var/plus_factor = rolled_classes[datums]
-
-				for(var/i in 1 to plus_factor)
-					plus_str += "+" */
-			data += "<div class='class_bar_div'><a class='vagrant' href='?src=\ref[src];class_selected=1;selected_class=\ref[datums];'><img class='ninetysskull' src='gragstar.gif' width=32 height=32>[datums.name]<span id='green_plussa'>[plus_str]</span><img class='ninetysskull' src='gragstar.gif' width=32 height=32></a></div>\n"
+			data += class_entry_html(datums)
 	data += "</div>"
 
 	//Buttondiv Segment
@@ -335,6 +350,11 @@
 			<span class="subclasses">[cur_picked_class.classes[i]]</span></div>
 			"}
 		data += "<br>"
+
+	var/mob/living/carbon/human/picker = linked_client?.mob
+	var/patron_tooltip = istype(picker) ? get_patron_lock_tooltip(picker.patron, cur_picked_class.get_allowed_patrons()) : null
+	if(patron_tooltip)
+		data += {"<br><span class="post_title_shit" style="color: [PATRON_SWITCH_COLOR];">[patron_tooltip]</span>"}
 
 	data += {"</div>
 				<div id='button_div'>

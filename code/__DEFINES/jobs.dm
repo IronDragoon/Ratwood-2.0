@@ -58,6 +58,15 @@
 #define JOB_UNAVAILABLE_VIRTUESVICE 13
 #define JOB_UNAVAILABLE_PQ 14
 
+// Patron lock states, see code/datums/gods/patron_locks.dm
+#define PATRON_LOCK_NONE 0
+#define PATRON_LOCK_SWITCH 1
+#define PATRON_LOCK_LOCKED 2
+/// Menu colour for roles that switch your patron when joined
+#define PATRON_SWITCH_COLOR "#c9a24a"
+/// Menu colour for roles your faith is locked out of
+#define PATRON_LOCKED_COLOR "#a36c63"
+
 #define DEFAULT_RELIGION "Christianity"
 #define DEFAULT_DEITY "Space Jesus"
 

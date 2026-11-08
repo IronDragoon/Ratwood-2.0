@@ -84,6 +84,9 @@
 	if(!H)
 		return FALSE
 
+	if(!dummy)
+		apply_patron_lock(H, get_allowed_patrons())
+
 	if(outfit)
 		H.equipOutfit(outfit, dummy)
 
@@ -169,7 +172,8 @@
 	Whoa! we are checking requirements here!
 	On the datum! Wow!
 */
-/datum/advclass/proc/check_requirements(mob/living/carbon/human/H)
+/// ignore_patron_lock skips the patron check, so the class picker can tell which classes only fail because of the patron.
+/datum/advclass/proc/check_requirements(mob/living/carbon/human/H, ignore_patron_lock = FALSE)
 
 	var/datum/species/pref_species = H.dna.species
 	var/list/local_allowed_sexes = list()
@@ -194,7 +198,8 @@
 	if(length(allowed_ages) && !(H.age in allowed_ages))
 		return FALSE
 
-	if(length(allowed_patrons) && !(H.patron.type in allowed_patrons))
+	// A same-faith mismatch passes, and the patron is switched when the class is equipped.
+	if(!ignore_patron_lock && get_patron_lock_status(H.patron, get_allowed_patrons()) == PATRON_LOCK_LOCKED)
 		return FALSE
 
 	if(maximum_possible_slots > -1)

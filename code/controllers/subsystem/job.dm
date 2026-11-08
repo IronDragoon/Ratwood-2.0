@@ -136,7 +136,7 @@ SUBSYSTEM_DEF(job)
 		if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
 			JobDebug("FOC incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
-		if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
+		if(get_patron_lock_status(player.client.prefs.selected_patron, job.get_allowed_patrons()) == PATRON_LOCK_LOCKED)
 			JobDebug("FOC incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 		if(length(job.virtue_restrictions) && ((player.client.prefs.virtue.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions)))
@@ -217,7 +217,8 @@ SUBSYSTEM_DEF(job)
 			JobDebug("GRJ incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
-		if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
+		// Random jobs never switch a patron the player didn't agree to.
+		if(get_patron_lock_status(player.client.prefs.selected_patron, job.get_allowed_patrons()) != PATRON_LOCK_NONE)
 			JobDebug("GRJ incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
@@ -480,96 +481,99 @@ SUBSYSTEM_DEF(job)
 //		CheckHeadPositions(level)
 
 		// Loop through all unassigned players
-		for(var/mob/dead/new_player/player in unassigned)
-			if(PopcapReached())
-				RejectPlayer(player)
+		// First pass only takes players whose patron already fits, so they win slots over players who would need a switch.
+		for(var/allow_patron_switch in list(FALSE, TRUE))
+			for(var/mob/dead/new_player/player in unassigned)
+				if(PopcapReached())
+					RejectPlayer(player)
 
-			// Loop through all jobs
-			for(var/datum/job/job in shuffledoccupations) // SHUFFLE ME BABY
-				if(!job)
-					continue
-
-				if(job.title in GLOB.villain_positions) //handled above
-					continue
-
-				if(is_banned_from(player.ckey, job.title))
-					JobDebug("DO isbanned failed, Player: [player], Job:[job.title]")
-					continue
-
-				if(QDELETED(player))
-					JobDebug("DO player deleted during job ban check")
-					break
-
-				if(!job.player_old_enough(player.client))
-					JobDebug("DO player not old enough, Player: [player], Job:[job.title]")
-					continue
-
-				if(job.required_playtime_remaining(player.client))
-					JobDebug("DO player not enough xp, Player: [player], Job:[job.title]")
-					continue
-
-				if(player.mind && (job.title in player.mind.restricted_roles))
-					JobDebug("DO incompatible with antagonist role, Player: [player], Job:[job.title]")
-					continue
-
-				if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
-					JobDebug("DO incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
-					continue
-
-				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
-					JobDebug("DO incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
-					continue
-
-				if(length(job.virtue_restrictions) && ((player.client.prefs.virtue.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions)))
-					JobDebug("DO incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue.name]")
-					continue
-
-				if(has_restricted_vice(player.client.prefs, job))
-					JobDebug("DO incompatible with vices, Player: [player], Job: [job.title]")
-					continue
-
-				if(job.plevel_req > player.client.patreonlevel())
-					JobDebug("DO incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
-					continue
-
-				#ifdef USES_PQ
-				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
-					continue
-				if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq))
-					continue
-				#endif
-
-				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
-					continue
-
-				if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
-					JobDebug("DO incompatible with blacklist, Player: [player], Job: [job.title]")
-					continue
-
-				if(CONFIG_GET(flag/usewhitelist))
-					if(job.whitelist_req && (!player.client.whitelisted()))
+				// Loop through all jobs
+				for(var/datum/job/job in shuffledoccupations) // SHUFFLE ME BABY
+					if(!job)
 						continue
 
-				if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
-					JobDebug("DO incompatible with age, Player: [player], Job: [job.title]")
-					continue
+					if(job.title in GLOB.villain_positions) //handled above
+						continue
 
-				if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
-					JobDebug("DO incompatible with gender preference, Player: [player], Job: [job.title]")
-					continue
+					if(is_banned_from(player.ckey, job.title))
+						JobDebug("DO isbanned failed, Player: [player], Job:[job.title]")
+						continue
 
-				if(!job.special_job_check(player))
-					JobDebug("DO player did not pass special check, Player: [player], Job:[job.title]")
-					continue
-
-				// If the player wants that job on this level, then try give it to him.
-				if(player.client.prefs.job_preferences[job.title] == level)
-					// If the job isn't filled
-					if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
-						testing("DO pass, Player: [player], Level:[level], Job:[job.title]")
-						AssignRole(player, job.title)
-						unassigned -= player
+					if(QDELETED(player))
+						JobDebug("DO player deleted during job ban check")
 						break
+
+					if(!job.player_old_enough(player.client))
+						JobDebug("DO player not old enough, Player: [player], Job:[job.title]")
+						continue
+
+					if(job.required_playtime_remaining(player.client))
+						JobDebug("DO player not enough xp, Player: [player], Job:[job.title]")
+						continue
+
+					if(player.mind && (job.title in player.mind.restricted_roles))
+						JobDebug("DO incompatible with antagonist role, Player: [player], Job:[job.title]")
+						continue
+
+					if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
+						JobDebug("DO incompatible with species, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
+						continue
+
+					var/patron_lock = get_patron_lock_status(player.client.prefs.selected_patron, job.get_allowed_patrons())
+					if(patron_lock == PATRON_LOCK_LOCKED || (patron_lock == PATRON_LOCK_SWITCH && !allow_patron_switch))
+						JobDebug("DO incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
+						continue
+
+					if(length(job.virtue_restrictions) && ((player.client.prefs.virtue.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions)))
+						JobDebug("DO incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue.name]")
+						continue
+
+					if(has_restricted_vice(player.client.prefs, job))
+						JobDebug("DO incompatible with vices, Player: [player], Job: [job.title]")
+						continue
+
+					if(job.plevel_req > player.client.patreonlevel())
+						JobDebug("DO incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
+						continue
+
+					#ifdef USES_PQ
+					if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
+						continue
+					if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq))
+						continue
+					#endif
+
+					if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
+						continue
+
+					if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
+						JobDebug("DO incompatible with blacklist, Player: [player], Job: [job.title]")
+						continue
+
+					if(CONFIG_GET(flag/usewhitelist))
+						if(job.whitelist_req && (!player.client.whitelisted()))
+							continue
+
+					if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
+						JobDebug("DO incompatible with age, Player: [player], Job: [job.title]")
+						continue
+
+					if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
+						JobDebug("DO incompatible with gender preference, Player: [player], Job: [job.title]")
+						continue
+
+					if(!job.special_job_check(player))
+						JobDebug("DO player did not pass special check, Player: [player], Job:[job.title]")
+						continue
+
+					// If the player wants that job on this level, then try give it to him.
+					if(player.client.prefs.job_preferences[job.title] == level)
+						// If the job isn't filled
+						if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
+							testing("DO pass, Player: [player], Level:[level], Job:[job.title]")
+							AssignRole(player, job.title)
+							unassigned -= player
+							break
 
 
 	JobDebug("DO, Handling unassigned.")
@@ -597,69 +601,72 @@ SUBSYSTEM_DEF(job)
 			require += job
 	for(var/datum/job/job in require)
 		for(var/level in level_order)
-			for(var/mob/dead/new_player/player in unassigned)
-				if(player.client.prefs.job_preferences[job.title] != level)
-					continue
-
-				if(is_banned_from(player.ckey, job.title))
-					continue
-
-				if(QDELETED(player))
-					break
-
-				if(!job.player_old_enough(player.client))
-					continue
-
-				if(job.required_playtime_remaining(player.client))
-					continue
-
-				if(player.mind && (job.title in player.mind.restricted_roles))
-					continue
-
-				if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
-					continue
-
-				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron.type in job.allowed_patrons))
-					continue
-
-				if(length(job.virtue_restrictions) && ((player.client.prefs.virtue.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions)))
-					continue
-
-				if(length(job.vice_restrictions) && (player.client.prefs.charflaw.type in job.vice_restrictions))
-					continue
-
-				if(job.plevel_req > player.client.patreonlevel())
-					continue
-
-				#ifdef USES_PQ
-				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq) && level != JP_LOW) //since its required people on low can roll for it
-					continue
-				#endif
-
-				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
-					continue
-
-				if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
-					continue
-
-				if(CONFIG_GET(flag/usewhitelist))
-					if(job.whitelist_req && (!player.client.whitelisted()))
+			// Players whose patron already fits get first pick, as in DivideOccupations().
+			for(var/allow_patron_switch in list(FALSE, TRUE))
+				for(var/mob/dead/new_player/player in unassigned)
+					if(player.client.prefs.job_preferences[job.title] != level)
 						continue
 
-				if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
-					continue
+					if(is_banned_from(player.ckey, job.title))
+						continue
 
-				if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
-					continue
+					if(QDELETED(player))
+						break
 
-				if(!job.special_job_check(player))
-					continue
+					if(!job.player_old_enough(player.client))
+						continue
 
-				// We only need 1 person for the required job, the rest can use the normal system
-				if((job.current_positions < 1))
-					AssignRole(player, job.title)
-					unassigned -= player
-					amt_picked++
+					if(job.required_playtime_remaining(player.client))
+						continue
+
+					if(player.mind && (job.title in player.mind.restricted_roles))
+						continue
+
+					if(length(job.allowed_races) && !(player.client.prefs.pref_species.type in job.allowed_races))
+						continue
+
+					var/patron_lock = get_patron_lock_status(player.client.prefs.selected_patron, job.get_allowed_patrons())
+					if(patron_lock == PATRON_LOCK_LOCKED || (patron_lock == PATRON_LOCK_SWITCH && !allow_patron_switch))
+						continue
+
+					if(length(job.virtue_restrictions) && ((player.client.prefs.virtue.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions)))
+						continue
+
+					if(length(job.vice_restrictions) && (player.client.prefs.charflaw.type in job.vice_restrictions))
+						continue
+
+					if(job.plevel_req > player.client.patreonlevel())
+						continue
+
+					#ifdef USES_PQ
+					if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq) && level != JP_LOW) //since its required people on low can roll for it
+						continue
+					#endif
+
+					if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
+						continue
+
+					if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
+						continue
+
+					if(CONFIG_GET(flag/usewhitelist))
+						if(job.whitelist_req && (!player.client.whitelisted()))
+							continue
+
+					if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
+						continue
+
+					if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
+						continue
+
+					if(!job.special_job_check(player))
+						continue
+
+					// We only need 1 person for the required job, the rest can use the normal system
+					if((job.current_positions < 1))
+						AssignRole(player, job.title)
+						unassigned -= player
+						amt_picked++
 	return amt_picked
 
 /datum/controller/subsystem/job/proc/validate_required_jobs(list/required_jobs)
@@ -766,6 +773,8 @@ SUBSYSTEM_DEF(job)
 		H.mind.assigned_role = rank
 
 	if(job)
+		if(ishuman(H))
+			apply_patron_lock(H, job.get_allowed_patrons())
 		var/new_mob = job.equip(H, null, null, joined_late , null, M.client)
 		if(ismob(new_mob))
 			H = new_mob
