@@ -275,14 +275,25 @@ GLOBAL_LIST_INIT(gloryhole_art, list(
 	hidden_mobs |= M
 	RegisterSignal(M, COMSIG_QDELETING, PROC_REF(on_hidden_deleted), override = TRUE)
 	M.layer = GLORYHOLE_HIDDEN_LAYER
-	M.remove_filter("gloryhole_mask")
-	if(gloryhole_has_art(dir))
-		var/mask_state = GLOB.gloryhole_art["[dir]"]["mask"]
-		// The mask sits on the mob, so move it back by the mob's offset to keep it fixed on the board.
-		var/mask_x = (x - M.x) * world.icon_size - shift_x
-		var/mask_y = (y - M.y) * world.icon_size - shift_y
-		M.add_filter("gloryhole_mask", 1, alpha_mask_filter(mask_x, mask_y, icon(icon, mask_state)))
+	apply_mask(M, shift_x, shift_y)
 	M.update_vision_cone()
+
+/// Re-pins the mask to the board after a hidden mob's sprite moved, e.g. from pixel shifting, so they can shift under the board without poking out past its edges.
+/obj/structure/bondage/gloryhole/proc/update_mask(mob/living/M)
+	if(M.behind_gloryhole != src)
+		return
+	apply_mask(M, M.pixel_x, M.pixel_y)
+
+/// Puts the board-outline mask on a hidden mob. shift_x and shift_y are where its sprite sits relative to its own tile.
+/obj/structure/bondage/gloryhole/proc/apply_mask(mob/living/M, shift_x, shift_y)
+	M.remove_filter("gloryhole_mask")
+	if(!gloryhole_has_art(dir))
+		return
+	var/mask_state = GLOB.gloryhole_art["[dir]"]["mask"]
+	// The mask sits on the mob, so move it back by the mob's offset to keep it fixed on the board.
+	var/mask_x = (x - M.x) * world.icon_size - shift_x
+	var/mask_y = (y - M.y) * world.icon_size - shift_y
+	M.add_filter("gloryhole_mask", 1, alpha_mask_filter(mask_x, mask_y, icon(icon, mask_state)))
 
 /// Stops drawing a mob behind the board.
 /obj/structure/bondage/gloryhole/proc/release_hidden(mob/living/M)

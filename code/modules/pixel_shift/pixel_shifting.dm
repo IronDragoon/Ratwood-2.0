@@ -40,6 +40,8 @@
 		is_shifted = FALSE
 		pixel_x = get_standard_pixel_x_offset() + base_pixel_x
 		pixel_y = get_standard_pixel_y_offset() + base_pixel_y
+		// Someone buckled behind a gloryhole snaps back to their spot, so re-pin the mask to the board
+		behind_gloryhole?.update_mask(src)
 
 /mob/proc/pixel_shift(direction)
 	return
@@ -53,12 +55,6 @@
 	return ..()
 
 /mob/living/pixel_shift(direction)
-	// The gloryhole decides where its buckled mob sits, so its mask stays lined up
-	if(istype(buckled, /obj/structure/bondage/gloryhole))
-		return
-	// Shifting by hand moves a partner out of their step-up spot behind a gloryhole
-	if(behind_gloryhole)
-		behind_gloryhole.release_hidden(src)
 	passthroughable = NONE
 	if(CHECK_BITFIELD(direction, NORTH))
 		if(pixel_y <= PIXEL_SHIFT_MAXIMUM + base_pixel_y)
@@ -87,6 +83,9 @@
 		passthroughable |= NORTH | EAST | WEST
 	if(pixel_x < -PIXEL_SHIFT_PASSABLE_THRESHOLD)
 		passthroughable |= NORTH | EAST | SOUTH
+
+	// Behind a gloryhole, keep the board-outline mask pinned to the board while we move under it
+	behind_gloryhole?.update_mask(src)
 
 /mob/living/CanPass(atom/movable/mover, turf/target)
 	if(!mover)	//On rare occasions, there isn't a mover present.
