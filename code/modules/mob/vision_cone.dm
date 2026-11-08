@@ -104,6 +104,10 @@
 	if(hud_used?.fov)
 		if(hud_used.fov.alpha == 0)
 			return
+	// Behind a gloryhole, our own sprite stays on the mob plane under the board's front, the same as everyone else sees it.
+	// Raising it (or the board) to GAME_PLANE_UPPER would draw it over the board, or the board over whoever stands in front.
+	if(behind_gloryhole)
+		return
 	var/image/I = image(src, src)
 	I.override = 1
 	I.plane = GAME_PLANE_UPPER
@@ -118,6 +122,9 @@
 		IB.override = 1
 		IB.plane = GAME_PLANE_UPPER
 		IB.layer = IB.layer
+		// In front of a gloryhole: our sprite and the board share GAME_PLANE_UPPER here, so put the board under us explicitly instead of tying on layer
+		if(istype(buckled, /obj/structure/bondage/gloryhole))
+			IB.layer = I.layer - 0.01
 		IB.pixel_x = 0
 		IB.pixel_y = 0
 		IB.appearance_flags = RESET_TRANSFORM|KEEP_TOGETHER

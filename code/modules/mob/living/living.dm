@@ -613,7 +613,7 @@
 	if(!override && M.buckled)
 		return
 	M.reset_offsets("pulledby")
-	M.layer = MOB_LAYER
+	M.layer = M.behind_gloryhole ? GLORYHOLE_HIDDEN_LAYER : MOB_LAYER
 	//animate(M, pixel_x = 0 , pixel_y = 0, 1)
 
 /mob/living
@@ -1942,9 +1942,10 @@
 	if(lying)
 		if(!lying_prev)
 			fall(!canstand_involuntary)
-		layer = LYING_MOB_LAYER //so mob lying always appear behind standing mobs
-		if (is_shifted)
-			layer = LYING_MOB_LAYER + pixelshift_layer //So mobs can pixelshift layers while lying down
+		if(!behind_gloryhole) // that layer is pinned while they're behind the board
+			layer = LYING_MOB_LAYER //so mob lying always appear behind standing mobs
+			if (is_shifted)
+				layer = LYING_MOB_LAYER + pixelshift_layer //So mobs can pixelshift layers while lying down
 	else
 		if(layer == LYING_MOB_LAYER)
 			layer = initial(layer)

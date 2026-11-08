@@ -32,6 +32,8 @@
 	var/climbing = FALSE
 
 	var/pixelshift_layer = 0
+	/// The gloryhole this mob is drawn behind, if any. While set, the mob's layer is pinned to GLORYHOLE_HIDDEN_LAYER.
+	var/obj/structure/bondage/gloryhole/behind_gloryhole
 
 	var/lying = 0			//number of degrees. DO NOT USE THIS IN CHECKS. CHECK FOR MOBILITY FLAGS INSTEAD!!
 	var/lying_prev = 0		//last value of lying on update_mobility

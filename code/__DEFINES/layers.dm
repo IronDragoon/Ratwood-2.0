@@ -75,6 +75,10 @@
 #define BELOW_MOB_LAYER 3.7
 #define LYING_MOB_LAYER 3.8
 //#define MOB_LAYER 4 //For easy recordkeeping; this is a byond define
+/// A mob drawn behind a gloryhole's board. Must stay below GLORYHOLE_FRONT_LAYER.
+#define GLORYHOLE_HIDDEN_LAYER 3.98
+/// The copy of a gloryhole's board drawn on the mob plane, between the mob behind it and everyone else.
+#define GLORYHOLE_FRONT_LAYER 3.99
 #define ABOVE_MOB_LAYER 4.1
 #define WALL_OBJ_LAYER 4.25
 #define EDGED_TURF_LAYER 4.3

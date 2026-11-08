@@ -111,6 +111,19 @@
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 0
 
+/// The hole faces the builder, and only north and south facings are supported (and only once they have art).
+/datum/crafting_recipe/roguetown/structure/gloryhole/TurfCheck(mob/user, turf/T)
+	. = ..()
+	if(!.)
+		return
+	var/facing = turn(user.dir, 180)
+	if(!(facing in list(NORTH, SOUTH)))
+		to_chat(user, span_warning("It has to face north or south."))
+		return FALSE
+	if(!gloryhole_has_art(facing))
+		to_chat(user, span_warning("I can only build it facing south for now."))
+		return FALSE
+
 /datum/crafting_recipe/roguetown/structure/chains
 	name = "chains"
 	result = /obj/structure/bondage/chains

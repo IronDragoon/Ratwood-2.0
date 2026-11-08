@@ -32,6 +32,9 @@
 
 /mob/living/unpixel_shift()
 	. = ..()
+	// A partner stepped up behind a gloryhole stops being hidden once the step-up slide ends
+	if(behind_gloryhole && !buckled)
+		behind_gloryhole.release_hidden(src)
 	passthroughable = NONE
 	if(is_shifted)
 		is_shifted = FALSE
@@ -50,6 +53,12 @@
 	return ..()
 
 /mob/living/pixel_shift(direction)
+	// The gloryhole decides where its buckled mob sits, so its mask stays lined up
+	if(istype(buckled, /obj/structure/bondage/gloryhole))
+		return
+	// Shifting by hand moves a partner out of their step-up spot behind a gloryhole
+	if(behind_gloryhole)
+		behind_gloryhole.release_hidden(src)
 	passthroughable = NONE
 	if(CHECK_BITFIELD(direction, NORTH))
 		if(pixel_y <= PIXEL_SHIFT_MAXIMUM + base_pixel_y)

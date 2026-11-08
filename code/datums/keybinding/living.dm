@@ -307,6 +307,8 @@
 		return
 	if(M.mobility_flags & MOBILITY_STAND)
 		return
+	if(M.behind_gloryhole) // layer is pinned behind the board
+		return
 	if(M.pixelshift_layer <= 0.04)
 		M.is_shifted = TRUE
 		M.pixelshift_layer = M.pixelshift_layer + 0.01
@@ -327,6 +329,8 @@
 	if(!isliving(M))
 		return
 	if(M.mobility_flags & MOBILITY_STAND)
+		return
+	if(M.behind_gloryhole) // layer is pinned behind the board
 		return
 	if(M.pixelshift_layer >= -0.04)
 		M.is_shifted = TRUE
