@@ -44,3 +44,6 @@
 	if(target.sexcon.finished_check())
 		return TRUE
 	return FALSE
+
+/datum/sex_action/toy_other_masturbate/get_gloryhole_parts(mob/living/carbon/human/user, mob/living/carbon/human/target, occupant_is_user)
+	return occupant_is_user ? SEX_PART_NULL : SEX_PART_GROIN

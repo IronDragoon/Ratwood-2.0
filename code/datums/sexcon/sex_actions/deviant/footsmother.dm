@@ -54,3 +54,6 @@
 	if(user.sexcon.finished_check())
 		return TRUE
 	return FALSE
+
+/datum/sex_action/footsmother/get_gloryhole_parts(mob/living/carbon/human/user, mob/living/carbon/human/target, occupant_is_user)
+	return occupant_is_user ? SEX_PART_FEET : SEX_PART_JAWS

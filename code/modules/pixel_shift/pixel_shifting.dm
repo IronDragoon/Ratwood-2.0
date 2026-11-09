@@ -32,9 +32,9 @@
 
 /mob/living/unpixel_shift()
 	. = ..()
-	// A partner stepped up behind a gloryhole stops being hidden once the step-up slide ends
-	if(behind_gloryhole && !buckled)
-		behind_gloryhole.release_hidden(src)
+	// A partner's step-up ends with the slide (moving, being grabbed), which also stops them being hidden behind a north-facing board
+	if(stepped_up_gloryhole)
+		stepped_up_gloryhole.release_partner(src)
 	passthroughable = NONE
 	if(is_shifted)
 		is_shifted = FALSE

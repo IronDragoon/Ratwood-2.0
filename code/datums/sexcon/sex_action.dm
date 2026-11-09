@@ -52,6 +52,11 @@
 		return FALSE
 	return has_accessible_needed_parts(user, target)
 
+/// The parts this action uses on a gloryhole occupant, which must all be what they've pressed against the hole.
+/// occupant_is_user says which side the occupant is on. Actions that don't tag that side's sex part override this.
+/datum/sex_action/proc/get_gloryhole_parts(mob/living/carbon/human/user, mob/living/carbon/human/target, occupant_is_user)
+	return occupant_is_user ? user_sex_part : target_sex_part
+
 /datum/sex_action/proc/on_start(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	return
 

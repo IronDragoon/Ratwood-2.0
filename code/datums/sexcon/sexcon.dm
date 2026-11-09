@@ -97,6 +97,10 @@
 	var/list/hidden_genitals = list()
 	/// Bypasses positioning and exposure checks entirely
 	var/freeuse = FALSE
+	/// The gloryhole whose side panel shows in our menu, if any
+	var/obj/structure/bondage/gloryhole/gloryhole_panel
+	/// Whether our menu window is open, so things can redraw it without popping it back open
+	var/menu_open = FALSE
 	// Moved here from proc/get_generic_force_adjective to reduce list initialization/destruction
 	var/static/list/stealth_force_adjectives 	= list("subtly", "sneakily", "covertly", "stealthily", "quietly")
 	var/static/list/low_force_adjectives 		= list("gently", "carefully", "tenderly", "gingerly", "delicately", "lazily")
@@ -1347,6 +1351,8 @@
 			continue
 		if(!action.shows_on_menu(user, target))
 			continue
+		if(!gloryhole_allows_sex_action(action, user, target)) // only what's pressed against the hole
+			continue
 		dat += "<td>"
 		var/link = ""
 		if(!can_perform_action(action_type, user_is_incapacitated))
@@ -1361,13 +1367,35 @@
 			dat += "</tr><tr>"
 
 	dat += "</tr></table>"
-	var/datum/browser/popup = new(user, "sexcon", "<center>Sate Desire</center>", 500, 550)
-	popup.set_content(dat.Join())
-	popup.open()
+	var/obj/structure/bondage/gloryhole/hole = gloryhole_panel
+	if(hole && (QDELETED(hole) || hole.get_role(user) == GLORYHOLE_ROLE_NONE))
+		hole = null
+		gloryhole_panel = null
+	var/content = dat.Join()
+	if(hole) // the gloryhole's panel goes in a column beside the usual menu
+		content = "<table width='100%'><tr><td width='66%' valign='top'>[content]</td><td width='34%' valign='top' style='border-left: 1px solid #555555; padding-left: 6px;'>[hole.get_panel_html(user)]</td></tr></table>"
+	var/datum/browser/popup = new(user, "sexcon", "<center>Sate Desire</center>", hole ? 760 : 500, 550)
+	popup.set_content(content)
+	popup.open(FALSE)
+	menu_open = TRUE
+	INVOKE_ASYNC(src, PROC_REF(watch_menu_close))
 	return
+
+/// Gets told when our menu window closes, so menu_open stays accurate. Not done through the browser's ref, which would leave a signal per redraw.
+/datum/sex_controller/proc/watch_menu_close()
+	for(var/i in 1 to 10)
+		if(!user?.client)
+			return
+		if(winexists(user, "sexcon"))
+			onclose(user, "sexcon", src)
+			return
 
 /datum/sex_controller/Topic(href, href_list)
 	if(usr != user)
+		return
+	if(href_list["close"])
+		menu_open = FALSE
+		gloryhole_panel = null
 		return
 	switch(href_list["task"])
 		if("action")
@@ -1566,6 +1594,8 @@
 	if(istype(action, /datum/sex_action/chastityplay) && !chastity_content_enabled_for_pair())
 		return FALSE
 	if(!inherent_perform_check(action_type, incapacitated))
+		return FALSE
+	if(!gloryhole_allows_sex_action(action, user, target)) // not even freeuse gets around what's pressed against the hole
 		return FALSE
 	if(!action.can_perform(user, target))
 		return FALSE

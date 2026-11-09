@@ -61,3 +61,7 @@
 	if(target.sexcon.finished_check())
 		return TRUE
 	return FALSE
+
+/datum/sex_action/grind_body/get_gloryhole_parts(mob/living/carbon/human/user, mob/living/carbon/human/target, occupant_is_user)
+	// Both bodies meet at whichever zone the grinder picked
+	return user.zone_selected == BODY_ZONE_PRECISE_GROIN ? SEX_PART_GROIN : SEX_PART_CHEST

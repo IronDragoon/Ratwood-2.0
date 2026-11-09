@@ -58,6 +58,10 @@
 /obj/item/paper/inqslip/confession,
 /turf/open/floor/rogue/grass,
 /area/rogue/indoors)
+"by" = (
+/obj/structure/bondage/gloryhole,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/indoors)
 "ce" = (
 /obj/effect/decal/mossy{
 	dir = 1
@@ -3624,7 +3628,7 @@ AX
 FP
 CZ
 CZ
-CZ
+by
 AX
 vq
 vq

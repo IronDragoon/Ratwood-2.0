@@ -1401,6 +1401,8 @@
 #include "code\game\objects\structures\roguetown\bell.dm"
 #include "code\game\objects\structures\roguetown\bell_common.dm"
 #include "code\game\objects\structures\roguetown\bondage.dm"
+#include "code\game\objects\structures\roguetown\gloryhole.dm"
+#include "code\game\objects\structures\roguetown\gloryhole_menu.dm"
 #include "code\game\objects\structures\roguetown\bushsapling.dm"
 #include "code\game\objects\structures\roguetown\deadbodies.dm"
 #include "code\game\objects\structures\roguetown\gate.dm"

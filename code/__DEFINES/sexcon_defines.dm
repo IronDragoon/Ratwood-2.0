@@ -113,3 +113,16 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 	#define ERP_LOCATION 6
 	#define ERP_GRABS 7
 	#define ERP_SKIPUNDIES 8
+
+// Gloryhole placements: what the buckled mob presses against the hole
+#define GLORYHOLE_PLACEMENT_NEUTRAL "neutral"
+#define GLORYHOLE_PLACEMENT_MOUTH "mouth"
+#define GLORYHOLE_PLACEMENT_COCK "cock"
+#define GLORYHOLE_PLACEMENT_ASS "ass"
+
+// Where a mob stands relative to a gloryhole, which decides what its menu panel offers
+#define GLORYHOLE_ROLE_NONE 0
+#define GLORYHOLE_ROLE_OCCUPANT 1
+#define GLORYHOLE_ROLE_FRONT 2
+#define GLORYHOLE_ROLE_BEHIND 3
+#define GLORYHOLE_ROLE_SIDE 4

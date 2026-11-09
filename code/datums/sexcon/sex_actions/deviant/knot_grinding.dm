@@ -97,3 +97,9 @@
 	if(target.sexcon.finished_check())
 		return TRUE
 	return FALSE
+
+/datum/sex_action/knot_grinding/get_gloryhole_parts(mob/living/carbon/human/user, mob/living/carbon/human/target, occupant_is_user)
+	var/mob/living/carbon/human/occupant = occupant_is_user ? user : target
+	if(occupant.sexcon.knotted_status == KNOTTED_AS_TOP)
+		return SEX_PART_COCK
+	return occupant.sexcon.knotted_part

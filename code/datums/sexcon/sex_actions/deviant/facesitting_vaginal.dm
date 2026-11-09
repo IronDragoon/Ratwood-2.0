@@ -55,3 +55,6 @@
 		return TRUE
 	return FALSE
 
+
+/datum/sex_action/facesitting_vaginal/get_gloryhole_parts(mob/living/carbon/human/user, mob/living/carbon/human/target, occupant_is_user)
+	return occupant_is_user ? SEX_PART_CUNT : SEX_PART_JAWS

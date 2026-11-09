@@ -112,3 +112,6 @@
 	if(user.sexcon.finished_check())
 		return TRUE
 	return FALSE
+
+/datum/sex_action/titsmother/get_gloryhole_parts(mob/living/carbon/human/user, mob/living/carbon/human/target, occupant_is_user)
+	return occupant_is_user ? SEX_PART_BREASTS : SEX_PART_JAWS
