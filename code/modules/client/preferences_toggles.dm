@@ -152,8 +152,8 @@
 		list("id" = "descriptor_color", "label" = "Enable Colored Descriptors", "enabled" = !!owner.prefs.descriptor_color, "desc" = "Color genital descriptors based on arousal and body hair descriptors based on hair color."),
 		list("id" = "cursed_collars", "label" = "Enable Cursed Collars", "enabled" = !!owner.prefs.cursed_collarable, "desc" = "Allow others to equip a cursed collar on you."),
 		list("id" = "milkable", "label" = "Enable Breast Milking", "enabled" = !!owner.prefs.milkable, "desc" = "Allow other players to milk your breasts if lactating. You can still milk yourself when disabled. Only applies to clicking chest with a reagent container, NOT lactation during sex actions."),
-		list("id" = "hypno_sender", "label" = "Enable Hypnotizing Others", "enabled" = !!owner.prefs.hypno_sender, "desc" = "Gain the Hypnotize emote and send hypnotic messages to receptive players. Does not let you receive them."),
-		list("id" = "hypno_receiver", "label" = "Enable Being Hypnotized", "enabled" = !!owner.prefs.hypno_receiver, "desc" = "Receive hypnotic messages from other players and view them in the Hypnotize panel. Does not let you send them."),
+		list("id" = "hypno_sender", "label" = "Enable Hypnotizing Others", "enabled" = !!owner.prefs.hypno_sender, "desc" = "Gain the Hypnotize emote and send hypnotic messages to receptive players. Also needed to use the Hypnotic Gaze and Presence quirks. Does not let you receive them."),
+		list("id" = "hypno_receiver", "label" = "Enable Being Hypnotized", "enabled" = !!owner.prefs.hypno_receiver, "desc" = "Receive hypnotic messages and suggestions from other players and view them in the Hypnotize panel. Following a suggestion is always up to you. Does not let you send them."),
 		list("id" = "manticore_tail_messages", "label" = "Tailmaws", "enabled" = !!owner.prefs.manticore_tail_messages, "desc" = "Show flavor messages from your manticore tail when moving or during intimate actions, and see tail maw descriptions when examining others."),
 	)
 
@@ -711,6 +711,7 @@
 		to_chat(src, "You can now send hypnotic messages to receptive players.")
 	else
 		to_chat(src, "You can no longer send hypnotic messages.")
+	hypnotic_gaze_prefs_changed()
 	if(ishuman(mob))
 		var/mob/living/carbon/human/H = mob
 		H.on_hypnosis_prefs_changed()
@@ -727,6 +728,7 @@
 		to_chat(src, "You are now receptive to hypnotic messages.")
 	else
 		to_chat(src, "You are no longer receptive to hypnotic messages.")
+	hypnotic_gaze_prefs_changed()
 	if(ishuman(mob))
 		var/mob/living/carbon/human/H = mob
 		H.on_hypnosis_prefs_changed()

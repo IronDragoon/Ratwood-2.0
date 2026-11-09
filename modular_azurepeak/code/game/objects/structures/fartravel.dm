@@ -56,6 +56,7 @@
 			dat += ", [content.name]"
 		dat += "."
 	if(departing_mob.mind)
+		SEND_SIGNAL(departing_mob.mind, COMSIG_MIND_PERMANENT_DEPARTURE)
 		departing_mob.mind.unknow_all_people()
 		for(var/datum/mind/MF in get_minds())
 			departing_mob.mind.become_unknown_to(MF)

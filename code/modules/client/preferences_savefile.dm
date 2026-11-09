@@ -602,6 +602,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		redolent_type = "Pleasant"
 	if(!(redolent_type in list("Gross", "Neutral", "Pleasant")))
 		redolent_type = "Neutral"
+	S["hypnotic_gaze_text"] >> hypnotic_gaze_text
+	S["hypnotic_gaze_style"] >> hypnotic_gaze_style
+	S["hypnotic_presence_text"] >> hypnotic_presence_text
+	S["hypnotic_presence_style"] >> hypnotic_presence_style
+	hypnotic_gaze_text = sanitize_hypnotic_gaze_text(hypnotic_gaze_text)
+	hypnotic_gaze_style = sanitize_hypnotic_gaze_style(hypnotic_gaze_style)
+	hypnotic_presence_text = sanitize_hypnotic_presence_text(hypnotic_presence_text)
+	hypnotic_presence_style = sanitize_hypnotic_gaze_style(hypnotic_presence_style)
 
 /datum/preferences/proc/_load_culinary_preferences(S)
 	var/list/loaded_culinary_preferences
@@ -647,6 +655,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	for(var/quirk_type in quirk_types)
 		if(ispath(quirk_type, /datum/quirk))
 			quirks += new quirk_type()
+	normalize_hypnotic_quirks()
 
 /datum/preferences/proc/_load_loadout(S)
 	var/loadout_type
@@ -1179,6 +1188,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["vice6"], preferences_typepath_or_null(vice6))
 	WRITE_FILE(S["redolent_type"], redolent_type)
 	WRITE_FILE(S["redolent_scent"], redolent_scent)
+	WRITE_FILE(S["hypnotic_gaze_text"], hypnotic_gaze_text)
+	WRITE_FILE(S["hypnotic_gaze_style"], hypnotic_gaze_style)
+	WRITE_FILE(S["hypnotic_presence_text"], hypnotic_presence_text)
+	WRITE_FILE(S["hypnotic_presence_style"], hypnotic_presence_style)
 	WRITE_FILE(S["feature_mcolor"]		, features["mcolor"])
 	WRITE_FILE(S["feature_mcolor2"]		, features["mcolor2"])
 	WRITE_FILE(S["feature_mcolor3"]		, features["mcolor3"])

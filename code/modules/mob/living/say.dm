@@ -346,9 +346,9 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		if(eavesdrop_range && get_dist(source, AM) > message_range+keenears && !(the_dead[AM]))
 			AM.Hear(eavesrendered, src, message_language, eavesdropping, , spans, message_mode, original_message)
 		else if(highlighted_message)
-			AM.Hear(rendered, src, message_language, highlighted_message, , spans, message_mode, original_message)
+			AM.Hear(rendered, src, message_language, highlighted_message, , spans, message_mode, original_message, TRUE)
 		else
-			AM.Hear(rendered, src, message_language, message, , spans, message_mode, original_message)
+			AM.Hear(rendered, src, message_language, message, , spans, message_mode, original_message, TRUE)
 
 
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_LIVING_SAY_SPECIAL, src, message)
@@ -395,7 +395,9 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		return FALSE
 	return TRUE
 
-/mob/living/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, message_mode, original_message)
+/// hypnotic_speech is TRUE only for speech heard in full from the speaker (not eavesdropped),
+/// which is the only speech a pending hypnotic suggestion may capture.
+/mob/living/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, message_mode, original_message, hypnotic_speech = FALSE)
 	. = ..()
 	if(!client)
 		return
@@ -417,6 +419,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	last_heard_raw_message = raw_message
 	// Recompose message for AI hrefs, language incomprehension.
 	message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mode)
+	if(hypnotic_speech && hypnotic_pending?.capture(src, speaker, message_language, raw_message, radio_freq, message_mode))
+		message = hypno_span(message)
 	show_message(message, MSG_AUDIBLE, deaf_message, deaf_type)
 	return message
 
@@ -583,7 +587,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 			AM.Hear(eavesrendered, src, message_language, eavesdropping, null, spans, message_mode, original_message)
 			heard_message += AM
 		else
-			AM.Hear(rendered, src, message_language, highlighted_message || message, null, spans, message_mode, original_message)
+			AM.Hear(rendered, src, message_language, highlighted_message || message, null, spans, message_mode, original_message, TRUE)
 			heard_message += AM
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_LIVING_SAY_SPECIAL, src, message)
 

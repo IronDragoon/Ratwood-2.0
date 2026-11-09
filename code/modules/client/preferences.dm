@@ -325,6 +325,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/charflaw/vice6
 	var/redolent_type = "Neutral"
 	var/redolent_scent = ""
+	/// Hypnotic Gaze / Presence examine lines, stored as plain text and encoded at display time.
+	/// Styles are hypnosis framework style ids (see modular_azurepeak/quirks/hypnotic_gaze.dm).
+	var/hypnotic_gaze_text = "Their eyes are enticing to gaze into."
+	var/hypnotic_gaze_style = "hypnotic"
+	var/hypnotic_presence_text = "There is something strangely compelling about their presence."
+	var/hypnotic_presence_style = "hypnotic"
 
 	var/setspouse = ""
 	var/gender_choice = ANY_GENDER

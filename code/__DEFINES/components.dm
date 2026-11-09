@@ -182,6 +182,8 @@
 #define COMSIG_EXIT_AREA "exit_area" 							//from base of area/Exited(): (/area)
 
 #define COMSIG_MIND_TRANSFER "mind_transfer"
+///from far travel and the admin send-to-lobby action, when a mind's character leaves the round for good: ()
+#define COMSIG_MIND_PERMANENT_DEPARTURE "mind_permanent_departure"
 
 #define COMSIG_CLICK_RIGHT_SHIFT "shift_right_click"
 

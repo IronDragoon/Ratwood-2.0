@@ -121,6 +121,13 @@
 					if(contact_stink)
 						. += contact_stink.get_examine_text()
 
+	var/gaze_examine = hypnotic_gaze_examine(user)
+	if(gaze_examine)
+		. += gaze_examine
+	var/trance_examine = hypnotized_examine(user)
+	if(trance_examine)
+		. += trance_examine
+
 	var/obscured = check_obscured_slots()
 	var/skipface = (wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE))
 	if(HAS_TRAIT(user, TRAIT_ROYALSERVANT))
