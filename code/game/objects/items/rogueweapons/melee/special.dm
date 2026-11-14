@@ -7,9 +7,6 @@
 	penfactor = PEN_NONE
 	item_d_type = "blunt"
 	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
-	//We want chipping, m'lord.
-	blunt_chipping = TRUE
-	blunt_chip_strength = BLUNT_CHIP_WEAK
 
 /datum/intent/lord_electrocute
 	name = "electrocute"
@@ -542,6 +539,7 @@
 	desc = "Fittingly coined as a 'peasant's falchion', this hunting sword's blade has been retempered to hunt the most dangerous game. Those jagged edges are perfect for tearing into flesh-and-maille."
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/strike)
 	icon_state = "maciejowski"
+	sheathe_icon = "maciejowski"
 	gripped_intents = list(/datum/intent/rend, /datum/intent/sword/chop/militia, /datum/intent/sword/strike)
 	force = 18
 	force_wielded = 25

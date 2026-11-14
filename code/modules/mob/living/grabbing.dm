@@ -35,6 +35,7 @@
 	var/handaction
 	var/bleed_suppressing = 0.75 //multiplier for how much we suppress bleeding, can accumulate so two grabs means 50% less bleeding; each grab being 25% basically.
 	var/chokehold = FALSE
+	var/sippy = FALSE
 
 /obj/item/grabbing/intercept_zImpact(atom/movable/AM, levels = 1) // with this shit it doesn't generate "X falls through open space". thank u guppyluxx
 	. = ..()
@@ -105,7 +106,7 @@
 	if(!iscarbon(grabbed))
 		return
 	var/mob/living/carbon/C = grabbed
-	C.update_action_buttons_icon()
+	C.update_mob_action_buttons()
 
 /obj/item/grabbing/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
@@ -139,7 +140,7 @@
 			grabbee.l_grab = null
 		if(grabbee.mouth == src)
 			grabbee.mouth = null
-			grabbee.update_action_buttons_icon()
+			grabbee.update_mob_action_buttons()
 		grabbee = null
 	for(var/datum/D in dependents)
 		D.grabdropped(src)

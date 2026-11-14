@@ -1,5 +1,11 @@
 /datum/status_effect/buff
 	status_type = STATUS_EFFECT_REFRESH
+	/// Buffs sharing this group are mutually exclusive; only the highest exclusive_priority stays.
+	var/exclusive_group = null
+	/// Higher wins within a group; on a tie the incumbent is kept.
+	var/exclusive_priority = 0
+	/// TRUE if refused on-apply by a stronger group member
+	var/rejected_by_exclusion = FALSE
 
 
 /datum/status_effect/buff/drunk
@@ -630,6 +636,8 @@
 	examine_text = "SUBJECTPRONOUN is bathed in a restorative aura!"
 	var/healing_on_tick = 1
 	var/tech_healing_modifier = 1
+	/// Wound types this healing effect must leave untouched.
+	var/list/excluded_wound_types
 	/// Color of the outline applied during the heal
 	var/outline_colour = "#c42424"
 
@@ -665,11 +673,11 @@
 	if(owner.get_blood_volume() < BLOOD_VOLUME_NORMAL)
 		owner.set_blood_volume(min(owner.get_blood_volume()+healing_on_tick, BLOOD_VOLUME_NORMAL))
 	if(wCount.len > 0)
-		owner.heal_wounds(healing_on_tick)
+		owner.heal_wounds(healing_on_tick, excluded_types = excluded_wound_types)
 		owner.update_damage_overlays()
 	if(HAS_TRAIT(owner, TRAIT_SIMPLE_WOUNDS))
 		if(wCount.len > 0)
-			owner.heal_wounds(healing_on_tick * 2)
+			owner.heal_wounds(healing_on_tick * 2, excluded_types = excluded_wound_types)
 		owner.bleed_rate = owner.get_bleed_rate()
 		if(!length(owner.get_wounds()) && !length(owner.get_embedded_objects()))
 			owner.simple_bleeding = 0
@@ -764,6 +772,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/healing/campfire
 	examine_text = null
 	duration = 10 SECONDS
+	excluded_wound_types = list(/datum/wound/slash/incision)
 
 /atom/movable/screen/alert/status_effect/buff/campfire_stamina
 	name = "Camp Rest"
@@ -826,7 +835,8 @@
 		owner.set_blood_volume(min(owner.get_blood_volume()+healing_on_tick, BLOOD_VOLUME_OKAY))
 	var/list/wCount = owner.get_wounds()
 	if(length(wCount))
-		owner.heal_wounds(healing_on_tick, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic, /datum/wound/dislocation))
+		// Surgical openings must remain open until deliberately closed.
+		owner.heal_wounds(healing_on_tick, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic, /datum/wound/dislocation), list(/datum/wound/slash/incision))
 		owner.update_damage_overlays()
 	owner.adjustBruteLoss(-healing_on_tick, 0)
 	owner.adjustFireLoss(-healing_on_tick, 0)
@@ -1838,6 +1848,9 @@
 	mob_effect_icon = 'icons/mob/mob_effects.dmi'
 	mob_effect_icon_state = "eff_riposte"
 	mob_effect_layer = MOB_EFFECT_LAYER_GUARD
+	/// Set TRUE when guard successfully deflects a spell. Halves the guard cooldown as reward.
+	var/deflected_spell = FALSE
+	var/dur
 
 //We have a lot of signals as the ability is meant to be interrupted by or interact with a lot of mechanics.
 /datum/status_effect/buff/clash/on_creation(mob/living/new_owner, ...)
@@ -1849,6 +1862,7 @@
 
 
 	RegisterSignal(new_owner, COMSIG_MOB_ATTACKED_BY_HAND, PROC_REF(process_touch))
+	RegisterSignal(new_owner, COMSIG_MOB_ATTACKED_BY_BITE, PROC_REF(process_bite))
 	RegisterSignal(new_owner, COMSIG_MOB_ON_KICK, PROC_REF(guard_on_kick))
 	RegisterSignal(new_owner, COMSIG_MOB_KICKED, PROC_REF(guard_kicked))
 	RegisterSignal(new_owner, COMSIG_LIVING_ONJUMP, PROC_REF(guard_disrupted))
@@ -1874,7 +1888,7 @@
 	if(U.has_status_effect(/datum/status_effect/buff/clash) && !target.has_status_effect(/datum/status_effect/buff/clash))
 		if(user == parent)
 			bad_guard = TRUE
-	if(ishuman(target) && target.get_active_held_item() && !bad_guard)
+	if(ishuman(target) && (target.get_active_held_item() || target.has_status_effect(/datum/status_effect/buff/clash)) && !bad_guard)
 		var/mob/living/carbon/human/HM = target
 		var/obj/item/IM = target.get_active_held_item()
 		var/obj/item/IU
@@ -1924,9 +1938,14 @@
 		playsound(H, sfx_on_apply, 100, TRUE)
 
 /datum/status_effect/buff/clash/tick()
-	if(!owner.get_active_held_item() || !(owner.mobility_flags & MOBILITY_STAND))
+	if(!(owner.mobility_flags & MOBILITY_STAND))
 		var/mob/living/carbon/human/H = owner
 		H.bad_guard()
+		return
+	if(!owner.get_active_held_item())
+		if(!ishuman(owner) || owner.get_skill_level(/datum/skill/combat/unarmed) < 3)
+			var/mob/living/carbon/human/H = owner
+			H.bad_guard(span_warning("I'm not skilled enough in the art of unarmed combat to maintain my guard without a weapon!"))
 
 /datum/status_effect/buff/clash/process(wait)
 	if(duration != -1 && duration < world.time)
@@ -1940,6 +1959,7 @@
 		owner.balloon_alert_to_viewers("<font color = '#ffffff'>Guard expired!</font>")
 	UnregisterSignal(owner, COMSIG_ATOM_BULLET_ACT)
 	UnregisterSignal(owner, COMSIG_MOB_ATTACKED_BY_HAND)
+	UnregisterSignal(owner, COMSIG_MOB_ATTACKED_BY_BITE)
 	UnregisterSignal(owner, COMSIG_MOB_ITEM_ATTACK)
 	UnregisterSignal(owner, COMSIG_MOB_ITEM_BEING_ATTACKED)
 	UnregisterSignal(owner, COMSIG_MOB_ON_KICK)
@@ -2120,9 +2140,39 @@
 
 /datum/status_effect/buff/clash/limbguard/process_touch(mob/living/carbon/human/parent, mob/living/carbon/human/attacker, mob/living/carbon/human/defender)
 	if(attacker && check_zone(attacker.zone_selected) == protected_zone)
-		var/obj/item/I = defender.get_active_held_item()
-		defender.process_clash(attacker, I, null)	//This will strike at their hand, but not clear away the effect. They tried to grab the protected limb.
+		if(attacker.gloves?.obj_broken == FALSE)	//Gloved hands eat the punishment -- we shred their gloves against our guard instead of breaking their arm (for now).
+			attacker.gloves.take_damage(201, BRUTE) // Breaks regular leather gloves and unarmed knuckles. Does not break metal gloves instantly.
+			var/obj/item/I = defender.get_active_held_item()
+			defender.process_clash(attacker, I, null)
+		else	//Bare hands -- your bone is forfeit.
+			var/arm_zone = (attacker.active_hand_index % 2 == 0) ? BODY_ZONE_R_ARM : BODY_ZONE_L_ARM
+			var/obj/item/bodypart/arm = attacker.get_bodypart(arm_zone)
+			if(arm)
+				arm.add_wound(/datum/wound/fracture, crit_message = FALSE)
+				owner.flash_fullscreen("whiteflash")
+				defender.flash_fullscreen("whiteflash")
+				var/obj/item/I = defender.get_active_held_item()
+				defender.process_clash(attacker, I, null)
+				owner.visible_message("<span class='crit'><b>Critical hit!</b> [owner] catches [attacker]'s bare-handed strike and SNAPS [attacker.p_their()] [parse_zone(arm_zone)]!")
+		playsound(owner, 'sound/combat/limbguard_struck.ogg', 100, TRUE)
+		remove_self()
 		return COMPONENT_HAND_NO_ATTACK
+
+//Unlike a weapon strike, there's nothing to disarm here -- we just wrench the guarded limb free and rough them up for it.
+/datum/status_effect/buff/clash/limbguard/process_bite(mob/living/parent, mob/user)
+	if(!is_active || !istype(user, /mob/living/carbon/human))
+		return
+	if(check_zone(user.zone_selected) != protected_zone)
+		return
+	apply_debuffs(user)
+	counter_bite(user)
+	playsound(owner, 'sound/combat/limbguard_struck.ogg', 100, TRUE)
+	if(user.mind)
+		owner.stamina_add(-(owner.max_stamina / 3))
+		owner.energy_add((owner.max_energy / 5))
+	remove_self()
+	return COMPONENT_HAND_NO_ATTACK
+
 
 /datum/status_effect/buff/clash/limbguard/apply_cooldown()
 	owner.apply_status_effect(/datum/status_effect/debuff/specialcd, 60 SECONDS)
@@ -2130,47 +2180,6 @@
 
 /datum/status_effect/buff/clash/limbguard/guard_kicked()
 	return
-
-#define BLOODRAGE_FILTER "bloodrage"
-
-/atom/movable/screen/alert/status_effect/buff/graggar_bloodrage
-	name = "BLOODRAGE"
-	desc = "GRAGGAR! GRAGGAR! GRAGGAR!"
-	icon_state = "bloodrage"
-
-/datum/status_effect/buff/bloodrage
-	id = "bloodrage"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/graggar_bloodrage
-	var/outline_color = "#ad0202"
-	duration = 15 SECONDS
-
-/datum/status_effect/buff/bloodrage/on_apply()
-	ADD_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, TRAIT_STATUS_EFFECT(id))
-	var/holyskill = owner.get_skill_level(/datum/skill/magic/holy)
-	duration = ((15 SECONDS) * holyskill)
-	var/filter = owner.get_filter(BLOODRAGE_FILTER)
-	if(!filter)
-		owner.add_filter(BLOODRAGE_FILTER, 2, list("type" = "outline", "color" = outline_color, "alpha" = 60, "size" = 2))
-	if(!HAS_TRAIT(owner, TRAIT_DODGEEXPERT))
-		if(owner.STASTR < STRENGTH_SOFTCAP)
-			effectedstats = list(STATKEY_STR = (STRENGTH_SOFTCAP - owner.STASTR))
-			. = ..()
-			return TRUE
-	if(holyskill >= SKILL_LEVEL_APPRENTICE)
-		effectedstats = list(STATKEY_STR = 2)
-	else
-		effectedstats = list(STATKEY_STR = 1)
-	. = ..()
-	return TRUE
-
-/datum/status_effect/buff/bloodrage/on_remove()
-	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, TRAIT_STATUS_EFFECT(id))
-	owner.visible_message(span_warning("[owner] wavers, their rage simmering down."))
-	owner.OffBalance(3 SECONDS)
-	owner.remove_filter(BLOODRAGE_FILTER)
-	owner.emote("breathgasp", forced = TRUE)
-	owner.Slowdown(3)
 
 /datum/status_effect/buff/psydonic_endurance
 	id = "psydonic_endurance"
@@ -2181,8 +2190,6 @@
 	name = "Psydonic Endurance"
 	desc = "I am protected by blessed Psydonian plate armor."
 	icon_state = "buff"
-
-#undef BLOODRAGE_FILTER
 
 #define EORANAURA_FILTER "eoranaura"
 
@@ -2616,3 +2623,225 @@
 /atom/movable/screen/alert/status_effect/buff/oath_ring
 	name = "Oathmarked"
 	desc = "The oath drives me forward, so long as the reminder is kept near."
+
+/datum/status_effect/buff/phase
+	id = "phase"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/phase
+	effectedstats = list(STATKEY_SPD = 4)
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 5 SECONDS
+	var/original_alpha = 255
+
+/datum/status_effect/buff/phase/on_creation(mob/living/new_owner, duration_mult = 1)
+	if(ishuman(new_owner))
+		var/mob/living/carbon/human/H = new_owner
+		switch(H.highest_ac_worn())
+			if(ARMOR_CLASS_NONE)
+				duration = 5 SECONDS
+				effectedstats[STATKEY_SPD] = 4
+			if(ARMOR_CLASS_LIGHT)
+				duration = 4 SECONDS
+				effectedstats[STATKEY_SPD] = 3
+			if(ARMOR_CLASS_MEDIUM)
+				duration = 3 SECONDS
+				effectedstats[STATKEY_SPD] = 2
+			if(ARMOR_CLASS_HEAVY)
+				duration = 2 SECONDS
+				effectedstats[STATKEY_SPD] = 1
+	duration *= duration_mult
+	. = ..()
+
+/datum/status_effect/buff/phase/on_apply()
+	owner.pass_flags |= PASSMOB
+	ADD_TRAIT(owner, TRAIT_GRABIMMUNE, TRAIT_STATUS_EFFECT(id))
+	original_alpha = owner.alpha
+	animate(owner, alpha = 180, time = 2)
+	. = ..()
+
+/datum/status_effect/buff/phase/on_remove()
+	owner.pass_flags &= ~PASSMOB
+	REMOVE_TRAIT(owner, TRAIT_GRABIMMUNE, TRAIT_STATUS_EFFECT(id))
+	animate(owner, alpha = original_alpha, time = 2)
+	. = ..()
+
+/atom/movable/screen/alert/status_effect/buff/phase
+	name = "Phase"
+	desc = "I'm slipping between the realms!"
+	icon_state = "daggerdash"
+
+/datum/status_effect/buff/adrenaline_rush/ranged
+	effectedstats = list(STATKEY_SPD = 2)
+
+// When a spell is blocked and a weapon isn't logically involved. It will deflect, blocks the spell, but will not remotely disarm them, since that make no sense. I.e. Dragons Breath.
+/datum/status_effect/buff/clash/limbguard/proc/block_spell(mob/living/target, mob/living/attacker, spell_name = "the spell")
+	if(!is_active || target != owner)
+		return FALSE
+	do_sparks(2, TRUE, get_turf(owner))
+	playsound(owner, 'sound/combat/limbguard_struck.ogg', 100, TRUE)
+	owner.visible_message(span_warning("[owner] wards [owner.p_their()] [parse_zone(protected_zone)] against [spell_name]!"), \
+		span_notice("My guard wards off [spell_name]!"))
+	return TRUE
+
+//Unlike a weapon strike, there's nothing to disarm here -- we just wrench the guarded limb free and rough them up for it.
+/datum/status_effect/buff/clash/limbguard/process_bite(mob/living/parent, mob/user)
+	if(!is_active || !ishuman(user))
+		return
+	var/mob/living/carbon/human/HM = user
+	if(check_zone(HM.zone_selected) != protected_zone)
+		return
+	apply_debuffs(HM)
+	counter_bite(HM)
+	playsound(owner, 'sound/combat/limbguard_struck.ogg', 100, TRUE)
+	if(HM.mind)
+		owner.stamina_add(-(owner.max_stamina / 3))
+		owner.energy_add((owner.max_energy / 5))
+	remove_self()
+	return COMPONENT_HAND_NO_ATTACK
+
+/datum/status_effect/buff/clash/limbguard/proc/counter_bite(mob/living/carbon/human/target)
+	owner.visible_message("<span class='crit'><b>Critical hit!</b> [owner] deftly counters [target]'s bite with a THUNDEROUS bash, SHATTERING [target.p_their()] jaw!</span>")
+	owner.flash_fullscreen("whiteflash")
+	target.flash_fullscreen("whiteflash")
+	var/obj/item/bodypart/dumb_biter_skull = target.get_bodypart(BODY_ZONE_HEAD)
+	dumb_biter_skull.add_wound(/datum/wound/fracture/mouth)
+	var/datum/effect_system/spark_spread/S = new()
+	var/turf/front = get_step(owner, owner.dir)
+	S.set_up(1, 1, front)
+	S.start()
+
+//We tried to cheese it. Generally reserved for egregious things, like attacking / casting while its active.
+/datum/status_effect/buff/clash/proc/guard_disrupted_cheesy()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.bad_guard("My focus was <b>heavily</b> disrupted!")
+
+/datum/status_effect/buff/clash/proc/process_bite(mob/living/carbon/human/parent, mob/living/user)
+	if(!ishuman(user))
+		return
+	var/obj/item/I = parent.get_active_held_item()
+	parent.process_clash(user, I, null, is_bite = TRUE)
+	return COMPONENT_HAND_NO_ATTACK
+
+/datum/status_effect/buff/emberward
+	id = "emberward"
+	duration = 1 SECONDS
+	alert_type = null
+
+/// Brief buffer after a successful deflection (guard vs spells, projectiles, or weapon specials).
+/// While active, subsequent deflectable attacks are also deflected without requiring guard.
+/datum/status_effect/buff/parry_buffer
+	id = "parry_buffer"
+	duration = 1 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/buff/parry_buffer
+
+/datum/status_effect/buff/parry_buffer/on_apply()
+	. = ..()
+	RegisterSignal(owner, COMSIG_ATOM_BULLET_ACT, PROC_REF(buffer_struck_by_projectile), TRUE)
+
+/datum/status_effect/buff/parry_buffer/on_remove()
+	UnregisterSignal(owner, COMSIG_ATOM_BULLET_ACT)
+	. = ..()
+
+/datum/status_effect/buff/parry_buffer/proc/buffer_struck_by_projectile(datum/source, obj/projectile/P)
+	if(P.guard_deflectable)
+		if(P.on_guard_deflect(owner, silent = TRUE))
+			return COMPONENT_ATOM_BLOCK_BULLET
+
+/atom/movable/screen/alert/status_effect/buff/parry_buffer
+	name = "Parry"
+	desc = span_notice("A brief window of deflection lingers from my guard.")
+	icon_state = "clash"
+
+/atom/movable/screen/alert/status_effect/buff/hearty_drinker
+	name = "Hearty Drinker"
+	desc = "Dwarven blood pumps through the veins of all true Hammerholdians!"
+	icon_state = "drunk"
+
+/datum/status_effect/buff/hearty_drinker
+	id = "hearty_drinker"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/hearty_drinker
+	effectedstats = list(STATKEY_LCK = 1)
+	duration = 5 MINUTES
+	status_type = STATUS_EFFECT_REFRESH
+
+/atom/movable/screen/alert/status_effect/buff/battle_cry
+	name = "Battle Cry"
+	desc = "THE MEN OF GRONN NEVER FALTER!"
+	icon_state = "buff"
+
+/datum/status_effect/buff/battle_cry
+	id = "battle_cry"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/battle_cry
+	duration = 1 MINUTES
+	status_type = STATUS_EFFECT_REFRESH
+
+/atom/movable/screen/alert/status_effect/buff/dagger_dash
+	name = "Dagger Dash"
+	desc = "I'm slipping through!"
+	icon_state = "daggerdash"
+
+/atom/movable/screen/alert/status_effect/buff/dagger_boost
+	name = "Dagger Boost"
+	desc = "I'm rushing!"
+	icon_state = "daggerboost"
+
+/datum/status_effect/buff/dagger_dash
+	id = "dagger_dash"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
+	effectedstats = list(STATKEY_SPD = 1)
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 3 SECONDS
+	mob_effect_icon_state = "eff_daggerboost"
+	mob_effect_layer = MOB_EFFECT_LAYER_DBOOST
+
+/datum/status_effect/buff/dagger_dash/on_creation(mob/living/new_owner)
+	if(!ishuman(new_owner))
+		return
+	var/spd_bonus = 1
+	var/highest_ac
+	var/mob/living/carbon/human/H = new_owner
+	highest_ac = H.highest_ac_worn()
+	switch(highest_ac)
+		if(ARMOR_CLASS_NONE)
+			duration = 5 SECONDS
+			spd_bonus = 4
+		if(ARMOR_CLASS_LIGHT)
+			duration = 4 SECONDS
+			spd_bonus = 3
+		if(ARMOR_CLASS_MEDIUM)
+			duration = 3 SECONDS
+			spd_bonus = 2
+		if(ARMOR_CLASS_HEAVY)
+			duration = 2 SECONDS
+			spd_bonus = 1
+	new_owner.apply_status_effect(/datum/status_effect/buff/dagger_boost, spd_bonus)
+	. = ..()
+
+/datum/status_effect/buff/dagger_dash/on_apply()
+	owner.pass_flags |= PASSMOB
+	ADD_TRAIT(owner, TRAIT_GRABIMMUNE, TRAIT_STATUS_EFFECT(id))
+	. = ..()
+
+/datum/status_effect/buff/dagger_dash/on_remove()
+	owner.pass_flags &= ~PASSMOB
+	REMOVE_TRAIT(owner, TRAIT_GRABIMMUNE, TRAIT_STATUS_EFFECT(id))
+	. = ..()
+
+/datum/status_effect/buff/dagger_boost
+	id = "dagger_boost"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_boost
+	effectedstats = list(STATKEY_SPD = 1)
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 30 SECONDS
+	var/obj/item/rogueweapon/held_dagger
+
+/datum/status_effect/buff/dagger_boost/on_creation(mob/living/new_owner, spd_boost)
+	if(spd_boost)
+		effectedstats[STATKEY_SPD] = spd_boost
+	held_dagger = new_owner.get_active_held_item()
+	. = ..()
+
+/datum/status_effect/buff/dagger_boost/process()
+	. = ..()
+	if(!istype(owner.get_active_held_item(), held_dagger))
+		owner.remove_status_effect(/datum/status_effect/buff/dagger_boost)

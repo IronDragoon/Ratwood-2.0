@@ -62,7 +62,7 @@
 	item_state = "gronnfurgloves"
 	icon = 'icons/roguetown/clothing/special/gronn.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/gronn.dmi'
-	unarmed_bonus = 1.25
+	unarmed_bonus = 5
 	max_integrity = 250
 	color = "#ffffff"
 	cold_protection = HAND_LEFT | HAND_RIGHT
@@ -171,7 +171,7 @@
 
 
 /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood/AdjustClothes(mob/user)
-	if(loc == user)
+	if(is_worn_or_stored_by(user))
 		if(adjustable == CAN_CADJUST)
 			playsound(src, 'sound/foley/equip/rummaging-03.ogg', 50, TRUE)
 			if(on)
@@ -260,7 +260,7 @@
 	icon_state = "gronnplate"
 	item_state = "gronnplate"
 	boobed = FALSE
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS
+	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
 	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
 	smeltresult = /obj/item/ingot/iron
 

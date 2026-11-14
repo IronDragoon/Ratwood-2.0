@@ -35,9 +35,6 @@
 	icon_state = "instrike"
 	item_d_type = "blunt"
 	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
-	//We want chipping, m'lord.
-	blunt_chipping = TRUE
-	blunt_chip_strength = BLUNT_CHIP_WEAK
 
 /datum/intent/flail/strike/matthiosflail
 	reach = 2
@@ -58,9 +55,6 @@
 	icon_state = "instrike"
 	item_d_type = "blunt"
 	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
-	//We want chipping, m'lord.
-	blunt_chipping = TRUE
-	blunt_chip_strength = BLUNT_CHIP_WEAK
 
 /datum/intent/mace/smash/flail
 	name = "flail smash"
@@ -111,7 +105,6 @@
 	keep_looping = TRUE
 	blade_class = BCLASS_CHOP
 	item_d_type = "slash"
-	blunt_chipping = FALSE
 
 /datum/intent/flail/sweep
 	name = "sweeping strike"
@@ -248,7 +241,7 @@
 	name = "Consecratia"
 	desc = "The weight of His anguish, His pain, His hope and His love for humenkind - all hanging on the ornamental silver-steel head chained to this arm. <br><br>A declaration of love for all that Psydon lives for, and a crushing reminder to the arch-nemesis that they will not triumph as long as He endures."
 	icon_state = "psymorningstar"
-	possible_item_intents = list(/datum/intent/flail/strike, /datum/intent/mace/smash/flailrange)
+	possible_item_intents = list(/datum/intent/flail/strikerange, /datum/intent/mace/smash/flailrange, /datum/intent/flail/sweep)//castlevania type shit
 
 /obj/item/rogueweapon/flail/sflail/psyflail/relic/ComponentInitialize()
 	AddComponent(\

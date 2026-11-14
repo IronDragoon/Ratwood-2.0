@@ -154,11 +154,9 @@
 	var/datum/advclass/base = new based_on
 	if(tutorial == initial(tutorial))
 		tutorial = base.tutorial
-	for(var/var_name in list("outfit", "subclass_stats", "subclass_skills", "subclass_languages", "subclass_virtues", "subclass_social_rank", "cmode_music"))
+	for(var/var_name in list("outfit", "subclass_stats", "subclass_skills", "subclass_languages", "subclass_virtues", "subclass_social_rank", "subclass_mage_aspects", "cmode_music"))
 		if(isnull(vars[var_name]))
 			vars[var_name] = base.vars[var_name]
-	if(!subclass_spellpoints)
-		subclass_spellpoints = base.subclass_spellpoints
 	traits_applied = base.traits_applied | traits_applied
 	// Responders answer to their team, not the local sect, so they don't lead it or spend its marques
 	traits_applied -= TRAIT_PURITAN
@@ -188,8 +186,8 @@
 		H.change_stat(stat, subclass_stats[stat])
 	for(var/skill in subclass_skills)
 		H.adjust_skillrank_up_to(skill, subclass_skills[skill], TRUE)
-	if(subclass_spellpoints > 0)
-		H.mind?.adjust_spellpoints(subclass_spellpoints)
+	if(LAZYLEN(subclass_mage_aspects))
+		H.mind?.setup_mage_aspects(subclass_mage_aspects.Copy())
 	if(subclass_social_rank)
 		H.social_rank = subclass_social_rank
 	for(var/virtue in subclass_virtues)

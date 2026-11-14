@@ -748,7 +748,7 @@ BLIND     // can't see anything
 		C.head_update(src, forced = 1)
 	for(var/X in actions)
 		var/datum/action/A = X
-		A.UpdateButtonIcon()
+		A.build_all_button_icons()
 	return TRUE
 
 /obj/item/clothing/proc/visor_toggling() //handles all the actual toggling of flags
@@ -862,3 +862,7 @@ BLIND     // can't see anything
 			return VISMSG_ARMOR_INT_STAGETWO
 		if(0 to 0.24)
 			return VISMSG_ARMOR_INT_STAGETHREE
+
+/obj/item/clothing
+	var/base_icon_state
+	var/custom_design

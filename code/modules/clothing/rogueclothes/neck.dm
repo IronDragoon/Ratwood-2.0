@@ -134,7 +134,7 @@
 	return
 
 /obj/item/clothing/neck/roguetown/coif/heavypadding/AdjustClothes(mob/user)
-	if(loc == user)
+	if(is_worn_or_stored_by(user))
 		if(adjustable == CAN_CADJUST)
 			adjustable = CADJUSTED
 			if(toggle_icon_state)
@@ -266,7 +266,7 @@
 	return
 
 /obj/item/clothing/neck/roguetown/chaincoif/full/AdjustClothes(mob/user)
-	if(loc == user)
+	if(is_worn_or_stored_by(user))
 		if(adjustable == CAN_CADJUST)
 			adjustable = CADJUSTED
 			if(toggle_icon_state)
@@ -333,6 +333,18 @@
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
 
+/obj/item/clothing/neck/roguetown/gorget/steel/graggar
+	name = "vicious gorget"
+	desc = "Curled plate, cradling the neck. Once, they were chains - now, they've allowed you to break free."
+	icon_state = "graggargorget"
+	item_state = "graggargorget"
+	max_integrity = ARMOR_INT_SIDE_ANTAG
+	armor = ARMOR_PLATE_BSTEEL	
+
+/obj/item/clothing/neck/roguetown/gorget/steel/graggar/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR")
+
 /obj/item/clothing/neck/roguetown/bevor/iron
 	name = "iron bevor"
 	desc = "A series of iron plates designed to protect the neck."
@@ -358,7 +370,7 @@
 	anvilrepair = /datum/skill/craft/armorsmithing
 	equip_sound = 'sound/foley/equip/equip_armor.ogg'
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
-	max_integrity = ARMOR_INT_SIDE_IRON
+	max_integrity = ARMOR_INT_SIDE_IRON + 50
 	resistance_flags = FIRE_PROOF
 	body_parts_inherent = NECK
 	slot_flags = ITEM_SLOT_NECK
@@ -372,8 +384,21 @@
 /obj/item/clothing/neck/roguetown/gorget/steel
 	name = "steel gorget"
 	smeltresult = /obj/item/ingot/steel
-	max_integrity = ARMOR_INT_SIDE_STEEL
+	max_integrity = ARMOR_INT_SIDE_STEEL + 100
 	icon_state = "sgorget"
+
+/obj/item/clothing/neck/roguetown/gorget/aventail
+	name = "aventail"
+	desc = "A thick garment of steel maille and padding, traditionally attached to bascinets. It's burdensome on the shoulders of those who aren't properly \
+	trained to wear knightly garments."
+	icon_state = "aventailbase"
+	body_parts_covered = NECK|MOUTH
+	slot_flags = ITEM_SLOT_NECK
+	max_integrity = ARMOR_INT_SIDE_STEEL + 50 //In essence, a chainmail gorget.
+	armor_class = ARMOR_CLASS_MEDIUM
+	armor = ARMOR_MAILLE
+	blocksound = CHAINHIT
+	smeltresult = /obj/item/ingot/steel
 
 /obj/item/clothing/neck/roguetown/gorget/steel/ancient
 	name = "ancient gorget"
@@ -391,6 +416,7 @@
 	anvilrepair = null
 
 /obj/item/clothing/neck/roguetown/gorget/gold
+	is_gold = TRUE
 	name = "golden gorget"
 	desc = "A series of resplendant golden plates designed to protect the neck, traditionally worn atop a jacket or cuirass. The holy sigil between its buckled halves promises to carry the flame of its wearer, no matter what strike's poised its way."
 	icon_state = "goldgorget"
@@ -452,7 +478,7 @@
 		detail_color = playerchoice
 		detail_tag = "_detail"
 		update_icon()
-		if(loc == user && ishuman(user))
+		if(is_worn_or_stored_by(user) && ishuman(user))
 			var/mob/living/carbon/H = user
 			H.update_inv_shirt()
 			H.update_icon()
@@ -696,7 +722,16 @@
 	if(isliving(user))
 		REMOVE_TRAIT(user, TRAIT_WORN_SILVER_PSICROSS, REF(src))
 
+/obj/item/clothing/neck/roguetown/psicross/silver/sojourner
+	name = "gilded silver psycross"
+	desc = "A silver psycross beneath a fine layer of gold, honoring Naledian tradition without forsaking the Inquisition's silver. 'Purity afloat, for paradise awaits!'"
+	icon_state = "psycross_g"
+	item_state = "psycross_g"
+	is_gold = TRUE
+	sellprice = 100
+
 /obj/item/clothing/neck/roguetown/psicross/g
+	is_gold = TRUE
 	name = "golden psycross"
 	desc = "'Purity afloat, for paradise awaits!'"
 	icon_state = "psycross_g"
@@ -1168,12 +1203,12 @@
 			ADD_TRAIT(user, TRAIT_DARKVISION, CULT_TRAIT)//Close enough to a cult. No duplicates beyond dreamer.
 			ADD_TRAIT(user, TRAIT_HARDDISMEMBER, CULT_TRAIT)//Too angry to lose a limb, or something.
 			ADD_TRAIT(user, TRAIT_IGNOREDAMAGESLOWDOWN, CULT_TRAIT)//Can't tag 'em to slow 'em.
-			armor = ARMOR_PLATE_BSTEEL
+			armor = getArmor(arglist(ARMOR_PLATE_BSTEEL))
 		else
 			to_chat(user, span_suicide("The necklace... I can hear a voice mocking me!"))
 			ADD_TRAIT(user, TRAIT_PSYCHOSIS, CULT_TRAIT)
 			user.hallucination = INFINITY
-			armor = ARMOR_CLOTHING
+			armor = getArmor(arglist(ARMOR_CLOTHING))
 
 /obj/item/clothing/neck/roguetown/dragon_scale/dropped(mob/living/user)
 	..()
@@ -1289,6 +1324,7 @@
 // AP port.
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/g
+	is_gold = TRUE
 	name = "golden inverted psycross"
 	desc = "'Doth thee wish to live deliciously? Mortality is but a shackle; and if you wish to break free from its steely grasp, all you need to do.. is put thine faith in me.'"
 	icon_state = "zcross_g"
@@ -1338,4 +1374,27 @@
 	icon_state = "undivided_s"
 	sellprice = 50
 
+/obj/item/clothing/neck/roguetown/collar/fur
+	name = "fur collar"
+	desc = "A thick ruff of trapped fur, worn about the shoulders."
+	icon_state = "furscarf"
+	item_state = "furscarf"
+	salvage_result = /obj/item/natural/fur
+	salvage_amount = 1
+	sewrepair = TRUE
+	icon = 'modular_azurepeak/icons/clothing_port/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_azurepeak/icons/clothing_port/roguetown/clothing/onmob/neck.dmi'
 
+/obj/item/clothing/neck/roguetown/cravat
+	name = "cravat"
+	desc = "An otavan fashion, a strip of tied cloth that can be donned on the neck to make oneself look more sophisticated."
+	icon_state = "cravat"
+	icon = 'modular_azurepeak/icons/clothing_port/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_azurepeak/icons/clothing_port/roguetown/clothing/onmob/neck.dmi'
+
+/obj/item/clothing/neck/roguetown/ruffle
+	name = "ruffled collar"
+	desc = "A ridiculous lace collar typically worn by jesters."
+	icon_state = "ruffle"
+	icon = 'modular_azurepeak/icons/clothing_port/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_azurepeak/icons/clothing_port/roguetown/clothing/onmob/neck.dmi'

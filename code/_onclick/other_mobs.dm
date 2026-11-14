@@ -30,7 +30,7 @@
 	SEND_SIGNAL(src, COMSIG_HUMAN_MELEE_UNARMED_ATTACK, A, proximity)
 	var/rmb_stam_penalty = 1
 	if(istype(rmb_intent, /datum/rmb_intent/strong) || istype(rmb_intent, /datum/rmb_intent/swift))
-		rmb_stam_penalty = 1.5	// Uses a modifer instead of a flat addition, less than weapons no matter what rn. 50% extra stam cost basically.
+		rmb_stam_penalty = 6	//Uses a modifer instead of a flat addition. 6 swiftstam vs 10
 	if(isliving(A))
 		var/mob/living/L = A
 		if(!used_intent.noaa)
@@ -115,6 +115,13 @@
 		return
 
 	A.attack_right(src, params)
+	//Toggling something on a hat changes how the hat is drawn, whichever slot the item's own proc refreshed.
+	if(isclothing(A))
+		var/obj/item/clothing/stored = A
+		var/obj/item/clothing/head/hat = stored.get_storing_hat()
+		if(hat && ismob(hat.loc))
+			var/mob/wearer = hat.loc
+			wearer.update_inv_head()
 
 /mob/living/attack_right(mob/user, params)
 	. = ..()
@@ -176,6 +183,13 @@
 	if(!mmb_intent)
 		if(!A.Adjacent(src))
 			return
+		if(isclothing(A))
+			var/obj/item/clothing/stored = A
+			var/obj/item/clothing/head/hat = stored.get_storing_hat()
+			if(hat)
+				if(hat.loc == src)
+					hat.cycle_stored_layer(stored, src)
+				return
 		A.MiddleClick(src, params)
 	else
 		mmb_intent.on_mmb(A, src, params)
@@ -186,7 +200,7 @@
 	if(!(interaction_flags_atom & INTERACT_ATOM_NO_FINGERPRINT_ATTACK_HAND))
 		add_fingerprint(user)
 	if(SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_HAND, user) & COMPONENT_NO_ATTACK_HAND)
-		. = TRUE
+		return TRUE
 	if(interaction_flags_atom & INTERACT_ATOM_ATTACK_HAND)
 		. = _try_interact(user)
 
@@ -196,7 +210,7 @@
 		add_fingerprint(user)
 	SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_RIGHT, user)
 	if(SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_HAND, user) & COMPONENT_NO_ATTACK_HAND)
-		. = TRUE
+		return TRUE
 	if(interaction_flags_atom & INTERACT_ATOM_ATTACK_HAND)
 		. = _try_interact(user)
 
