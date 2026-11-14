@@ -1,21 +1,20 @@
 /*
  * One per human, created the first time they open the panel or receive a hypnotic message.
- * Owns the TGUI window and the state modules share: the received log, the chosen style and the
- * cached target list. The window doesn't auto-update; anything that changes state calls
- * SStgui.update_uis(src) or returns TRUE from ui_act.
+ * Owns the TGUI window and the state modules share: the received log and the cached target list.
+ * The chosen style is a saved pref (prefs.hypno_style), not panel state. The window doesn't
+ * auto-update; anything that changes state calls SStgui.update_uis(src) or returns TRUE from ui_act.
  */
 /datum/hypnosis_panel
 	var/mob/living/carbon/human/owner
 	/// Newest last. Each entry is list("time", "html").
 	var/list/received_log = list()
-	/// Style id the sender picked this round, or null for the module default
-	var/selected_style_id
 	/// Server-rendered preview of the sender's draft, exactly as it would be sent
 	var/preview_html
-	/// Pickable subtle targets, as list("ref", "name") entries. Rebuilt on open and on refresh only.
+	/// Our subjects who can receive right now, as list("ref", "name") entries.
+	/// Rebuilt on open, on refresh and whenever one of our suggestions changes.
 	var/list/target_entries = list()
-	/// Receptive mobs in open range at the last refresh
-	var/receptive_count = 0
+	/// How many of those were in view at the last refresh
+	var/subjects_in_view = 0
 
 /datum/hypnosis_panel/New(mob/living/carbon/human/new_owner)
 	owner = new_owner
@@ -86,18 +85,21 @@
 			return module.execute(owner, src, params["op"], params)
 	return FALSE
 
+/// Only our own subjects can be messaged. Any of them from any distance, even hidden.
 /datum/hypnosis_panel/proc/refresh_targets()
 	target_entries = list()
-	for(var/mob/living/carbon/human/H in get_hypno_receivers(owner, HYPNO_SUBTLE_RANGE))
-		if(H.rogue_sneaking || H.name == "Unknown")
-			continue
-		target_entries += list(list("ref" = REF(H), "name" = H.name))
-	receptive_count = length(get_hypno_receivers(owner, world.view))
+	var/list/subjects = owner.get_hypnotic_subject_bodies()
+	for(var/mob/living/carbon/human/H as anything in subjects)
+		target_entries += list(list("ref" = REF(H), "name" = H.real_name))
+	subjects_in_view = 0
+	for(var/mob/living/carbon/human/H in get_hearers_in_view(world.view, owner))
+		if(H in subjects)
+			subjects_in_view++
 
-/// The style to use for module, honouring the player's pick when the module allows it
+/// The style to use for module, honouring the player's saved style when the module allows it
 /datum/hypnosis_panel/proc/get_style_for(datum/hypnosis_module/module)
-	var/datum/hypnosis_style/style = get_hypnosis_style(selected_style_id)
-	if(style && module.allows_style(style))
+	var/datum/hypnosis_style/style = get_hypnosis_style(owner.get_hypno_style_id())
+	if(module.allows_style(style))
 		return style
 	return GLOB.hypnosis_styles[module.default_style]
 

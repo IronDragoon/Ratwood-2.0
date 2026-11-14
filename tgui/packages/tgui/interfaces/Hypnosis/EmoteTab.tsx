@@ -4,6 +4,7 @@ import {
   Button,
   Dropdown,
   LabeledList,
+  NoticeBox,
   Section,
   Stack,
   TextArea,
@@ -18,33 +19,27 @@ type Target = {
 };
 
 type EmoteData = {
+  /** Our subjects who can receive right now */
   targets: Target[];
-  receptive_count: number;
+  subjects_in_view: number;
   allowed_styles: string[];
   style: string;
   /** Rendered and sanitized server-side, exactly as it would be sent */
   preview_html: string | null;
 };
 
-type Mode = 'subtle' | 'open';
-
 /** How long typing must pause before asking the server for a preview */
 const PREVIEW_DELAY_MS = 300;
 
-const AREA_TARGETS = [
-  { value: 'area_all', displayText: 'Everyone receptive nearby' },
-  { value: 'area_adjacent', displayText: 'Within 1 tile' },
-  { value: 'area_same_tile', displayText: 'Same tile' },
-];
+const ALL_IN_VIEW = 'all_in_view';
 
 export const EmoteTab = (props: ModuleTabProps<EmoteData>) => {
   const { module, styles, moduleAct } = props;
   const { act } = useBackend();
-  const { targets, receptive_count, allowed_styles, style, preview_html } =
+  const { targets, subjects_in_view, allowed_styles, style, preview_html } =
     module.data;
   const [message, setMessage] = useState('');
-  const [mode, setMode] = useState<Mode>('subtle');
-  const [target, setTarget] = useState('area_all');
+  const [target, setTarget] = useState(ALL_IN_VIEW);
 
   // Re-render the preview server-side once typing pauses or the style changes
   useEffect(() => {
@@ -62,18 +57,22 @@ export const EmoteTab = (props: ModuleTabProps<EmoteData>) => {
     .filter((s) => allowed_styles.includes(s.id))
     .map((s) => ({ value: s.id, displayText: s.name }));
   const currentStyle = styles.find((s) => s.id === style);
+  const allOption = {
+    value: ALL_IN_VIEW,
+    displayText: `All my subjects in view (${subjects_in_view})`,
+  };
   const targetOptions = [
-    ...AREA_TARGETS,
+    allOption,
     ...targets.map((t) => ({ value: t.ref, displayText: t.name })),
   ];
   const selectedTarget =
-    targetOptions.find((o) => o.value === target) || AREA_TARGETS[0];
+    targetOptions.find((o) => o.value === target) || allOption;
 
   const send = () => {
     if (!message.trim()) {
       return;
     }
-    moduleAct('send', { mode, message, target: selectedTarget.value });
+    moduleAct('send', { message, target: selectedTarget.value });
     setMessage('');
   };
 
@@ -88,36 +87,21 @@ export const EmoteTab = (props: ModuleTabProps<EmoteData>) => {
             </Button>
           }
         >
+          {!targets.length && (
+            <NoticeBox>
+              No one is in your hold. Entrance someone with your Hypnotic Gaze
+              or Presence first.
+            </NoticeBox>
+          )}
           <LabeledList>
-            <LabeledList.Item label="Mode">
-              <Button
-                selected={mode === 'subtle'}
-                onClick={() => setMode('subtle')}
-              >
-                Subtle
-              </Button>
-              <Button
-                selected={mode === 'open'}
-                onClick={() => setMode('open')}
-              >
-                Open
-              </Button>
+            <LabeledList.Item label="Target">
+              <Dropdown
+                width="100%"
+                selected={selectedTarget.displayText}
+                options={targetOptions}
+                onSelected={(value) => setTarget(value)}
+              />
             </LabeledList.Item>
-            {mode === 'subtle' ? (
-              <LabeledList.Item label="Target">
-                <Dropdown
-                  width="100%"
-                  selected={selectedTarget.displayText}
-                  options={targetOptions}
-                  onSelected={(value) => setTarget(value)}
-                />
-              </LabeledList.Item>
-            ) : (
-              <LabeledList.Item label="Reach">
-                {receptive_count} receptive{' '}
-                {receptive_count === 1 ? 'mind' : 'minds'} in view
-              </LabeledList.Item>
-            )}
             <LabeledList.Item label="Style">
               <Dropdown
                 width="100%"
@@ -125,6 +109,10 @@ export const EmoteTab = (props: ModuleTabProps<EmoteData>) => {
                 options={styleOptions}
                 onSelected={(value) => moduleAct('set_style', { style: value })}
               />
+              <Box color="label" mt={0.5}>
+                Saved, and used for everything you send, your gaze and
+                suggestions included.
+              </Box>
             </LabeledList.Item>
           </LabeledList>
         </Section>
@@ -161,7 +149,7 @@ export const EmoteTab = (props: ModuleTabProps<EmoteData>) => {
                 fluid
                 icon="eye"
                 textAlign="center"
-                disabled={!message.trim()}
+                disabled={!message.trim() || !targets.length}
                 onClick={send}
               >
                 Send

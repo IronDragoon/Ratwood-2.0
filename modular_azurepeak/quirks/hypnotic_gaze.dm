@@ -1,19 +1,26 @@
 /*
- * Hypnotic Gaze / Presence: suggestion and trance on top of the hypnosis framework
- * (modular/code/modules/hypnosis/). Ported from Bad-Drakian-RW.
+ * Hypnotic Influence: suggestion and trance on top of the hypnosis framework
+ * (modular/code/modules/hypnosis/). Ported from Bad-Drakian-RW's Hypnotic Gaze / Presence.
+ *
+ * One quirk; the character pref hypnotic_presence picks which spell it grants. Gaze needs eye
+ * contact, Presence does not. The spell is the only way to entrance someone, and holding the
+ * quirk is what makes someone a hypnosis sender. A trance lasts until released, and while it
+ * lasts the caster messages and sets suggestions for the subject from the Hypnotize panel.
+ * Everything shown uses the caster's framework style.
  *
  * A roleplay aid only. Nothing forces the target's character to act on the phrase.
- * Casting needs the caster's hypno_sender pref, being hypnotized needs the target's
- * hypno_receiver pref, and the examine lines show to viewers with either.
+ * Being hypnotized needs the target's hypno_receiver pref, and the examine lines show to
+ * quirk holders and viewers with that pref.
  */
 
 #define HYPNOTIC_GAZE_CHANNEL_TIME (10 SECONDS)
+/// How long after the cast the caster's next spoken line can still become the suggestion
 #define HYPNOTIC_GAZE_PENDING_TIME (10 MINUTES)
 #define HYPNOTIC_GAZE_REMINDER_TIME (20 MINUTES)
-/// Framework style id used when a saved style is missing or invalid
-#define HYPNOTIC_GAZE_DEFAULT_STYLE "hypnotic"
 
-/// Defers to the framework's single sender check, so future sender requirements apply here too
+GLOBAL_LIST_EMPTY(hypnotic_suggestions)
+
+/// Defers to the framework's single sender check (holding this quirk)
 /proc/hypnosis_can_send(mob/participant)
 	if(!ishuman(participant))
 		return FALSE
@@ -27,13 +34,19 @@
 /proc/hypnosis_content_enabled(mob/participant)
 	return hypnosis_can_send(participant) || hypnosis_can_receive(participant)
 
-/// Speech arrives HTML-encoded, with optional renderer-inserted formatting tags.
-/// Strip only actual markup, decode exactly once, and encode only at display time.
-/proc/hypnotic_speech_plaintext(text)
+/// Speech arrives HTML-encoded, with optional renderer-inserted formatting tags and the
+/// say emphasis markup (+bold+, |italic|, _underline_) still unparsed. Returns safe HTML
+/// with that markup rendered the same way say_quote() renders it.
+/proc/hypnotic_speech_html(text)
 	if(!istext(text))
 		return ""
 	var/static/regex/markup = regex(@"<[^>]*>", "g")
-	return trim(copytext_char(html_decode(markup.Replace(text, "")), 1, MAX_MESSAGE_LEN))
+	return trim(parsemarkdown_basic(markup.Replace(text, ""), limited = TRUE, barebones = TRUE))
+
+/// The speech as plain text: emphasis markup consumed, decoded exactly once. Encode only at display time.
+/proc/hypnotic_speech_plaintext(text)
+	var/static/regex/markup = regex(@"<[^>]*>", "g")
+	return trim(copytext_char(html_decode(markup.Replace(hypnotic_speech_html(text), "")), 1, MAX_MESSAGE_LEN))
 
 /// One line of at most 100 characters, or default_text if that leaves nothing
 /proc/sanitize_hypnotic_examine_text(text, default_text)
@@ -49,84 +62,61 @@
 /proc/sanitize_hypnotic_presence_text(text)
 	return sanitize_hypnotic_examine_text(text, "There is something strangely compelling about their presence.")
 
-/// Returns style_id if it names a framework hypnosis style, else the default style id
-/proc/sanitize_hypnotic_gaze_style(style_id)
-	return get_hypnosis_style(style_id) ? style_id : HYPNOTIC_GAZE_DEFAULT_STYLE
-
-/// Framework styles as name = id, for picking one in a list input
-/proc/hypnotic_gaze_style_choices()
-	. = list()
-	for(var/path in GLOB.hypnosis_styles)
-		var/datum/hypnosis_style/style = GLOB.hypnosis_styles[path]
-		.[style.name] = style.id
-
 /// Encodes plain text, then wraps it in a framework style
-/proc/hypnotic_gaze_format(text, style_id = HYPNOTIC_GAZE_DEFAULT_STYLE)
-	var/datum/hypnosis_style/style = get_hypnosis_style(sanitize_hypnotic_gaze_style(style_id))
-	return style.render(html_encode(text))
+/proc/hypnotic_gaze_format(text, style_id = HYPNO_DEFAULT_STYLE)
+	return hypno_span(html_encode(text), style_id)
 
-/// Wraps already-safe HTML in the default framework style
-/proc/hypno_span(html)
-	var/datum/hypnosis_style/style = get_hypnosis_style(HYPNOTIC_GAZE_DEFAULT_STYLE)
-	return style.render(html)
-
-/datum/quirk/hypnotic_gaze
-	name = "Hypnotic Gaze"
-	desc = "My gaze draws others in, leaving my words lingering deep within their thoughts."
+/datum/quirk/hypnotic_influence
+	name = "Hypnotic Influence"
+	desc = "Something about me draws others in, leaving my words lingering deep within their thoughts."
 	point_cost = 1
-	incompatible_quirks = list(/datum/quirk/hypnotic_presence)
-	custom_text = "Grants Hypnotic Gaze: a two-tile, ten-second stationary channel. The next words the target hears from me become a lasting suggestion. Recasting releases them. Needs Enable Hypnotizing Others."
-	var/is_presence = FALSE
-	var/hypnotic_spell_type = /obj/effect/proc_holder/spell/invoked/hypnotic_gaze
+	custom_text = "Grants Hypnotic Gaze or Hypnotic Presence, chosen with Configure: a two-tile, ten-second stationary channel that entrances a willing target until I release them. The next words they hear from me become a lasting suggestion. Gaze needs us both to have uncovered eyes; Presence does not. The Hypnotize panel then lets me send hypnotic messages to my subjects, change their suggestion or release them. It's the only way to hypnotize anyone."
 
-/datum/quirk/hypnotic_presence
-	parent_type = /datum/quirk/hypnotic_gaze
-	name = "Hypnotic Presence"
-	desc = "Something about my presence draws others in, leaving my words lingering deep within their thoughts."
-	custom_text = "Grants Hypnotic Presence: a two-tile, ten-second stationary channel that does not require exposed eyes. The next words the target hears from me become a lasting suggestion. Recasting releases them. Needs Enable Hypnotizing Others."
-	incompatible_quirks = list(/datum/quirk/hypnotic_gaze)
-	is_presence = TRUE
-	hypnotic_spell_type = /obj/effect/proc_holder/spell/invoked/hypnotic_gaze/presence
-
-/datum/quirk/hypnotic_gaze/apply_to_human(mob/living/carbon/human/recipient)
-	if(locate(/obj/effect/proc_holder/spell/invoked/hypnotic_gaze) in recipient.mob_spell_list)
+/datum/quirk/hypnotic_influence/apply_to_human(mob/living/carbon/human/recipient)
+	if(recipient.has_hypnotic_influence())
 		return
-	if(recipient.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/hypnotic_gaze))
-		return
-	recipient.hypnotic_presence = is_presence
-	if(is_presence)
-		recipient.hypnotic_gaze_text = sanitize_hypnotic_presence_text(recipient.client?.prefs?.hypnotic_presence_text)
-		recipient.hypnotic_gaze_style = sanitize_hypnotic_gaze_style(recipient.client?.prefs?.hypnotic_presence_style)
-	else
-		recipient.hypnotic_gaze_text = sanitize_hypnotic_gaze_text(recipient.client?.prefs?.hypnotic_gaze_text)
-		recipient.hypnotic_gaze_style = sanitize_hypnotic_gaze_style(recipient.client?.prefs?.hypnotic_gaze_style)
+	var/datum/preferences/prefs = recipient.client?.prefs
+	var/presence = !!prefs?.hypnotic_presence
+	recipient.hypnotic_presence = presence
+	recipient.hypnotic_gaze_text = presence ? sanitize_hypnotic_presence_text(prefs?.hypnotic_presence_text) : sanitize_hypnotic_gaze_text(prefs?.hypnotic_gaze_text)
+	var/spell_type = presence ? /obj/effect/proc_holder/spell/invoked/hypnotic_gaze/presence : /obj/effect/proc_holder/spell/invoked/hypnotic_gaze
 	if(recipient.mind)
-		recipient.mind.AddSpell(new hypnotic_spell_type)
+		recipient.mind.AddSpell(new spell_type)
 	else
-		recipient.AddSpell(new hypnotic_spell_type)
+		recipient.AddSpell(new spell_type)
+	// The quirk is the sender role, so the Hypnotize verb may need adding
+	recipient.update_hypnosis_verb()
 
-/// Old or edited presets must not grant or charge for both hypnosis alternatives.
-/// Keeps the first selected variant and leaves every unrelated quirk alone.
-/datum/preferences/proc/normalize_hypnotic_quirks()
-	if(!length(quirks))
+/mob/living/carbon/human/proc/has_hypnotic_influence()
+	if(locate(/obj/effect/proc_holder/spell/invoked/hypnotic_gaze) in mob_spell_list)
+		return TRUE
+	return !!mind?.has_spell(/obj/effect/proc_holder/spell/invoked/hypnotic_gaze)
+
+/// Suggestions this mind has placed, in a trance or carrying a phrase
+/datum/mind/proc/get_hypnotic_subjects()
+	. = list()
+	for(var/datum/hypnotic_suggestion/suggestion as anything in GLOB.hypnotic_suggestions)
+		if(suggestion.caster_mind_ref?.resolve() == src)
+			. += suggestion
+
+/// Our subjects' current bodies that can receive hypnosis right now
+/mob/living/carbon/human/proc/get_hypnotic_subject_bodies()
+	. = list()
+	if(!mind)
 		return
-	var/found = FALSE
-	var/list/normalized = list()
-	for(var/datum/quirk/quirk in quirks)
-		if(istype(quirk, /datum/quirk/hypnotic_gaze))
-			if(found)
-				continue
-			found = TRUE
-		normalized += quirk
-	quirks = normalized
+	for(var/datum/hypnotic_suggestion/suggestion as anything in mind.get_hypnotic_subjects())
+		var/datum/mind/target_mind = suggestion.target_mind_ref?.resolve()
+		var/mob/living/carbon/human/H = target_mind?.current
+		if(istype(H) && H != src && H.is_hypno_receptive())
+			. += H
 
-/// Called from both hypnosis pref toggles. Turning hypno_receiver off stops any channel aimed
-/// at us and clears our trance or suggestion. Turning hypno_sender off stops our own channel only.
+/// Called from the hypno_receiver toggle. Turning it off stops any channel aimed at us and
+/// clears our trance or suggestion.
 /client/proc/hypnotic_gaze_prefs_changed()
 	var/mob/living/carbon/human/H = mob
 	if(istype(H) && H.hypnotic_gaze_channel)
 		var/datum/hypnotic_gaze_channel/channel = H.hypnotic_gaze_channel
-		if((channel.caster == H && !prefs.hypno_sender) || (channel.target == H && !prefs.hypno_receiver))
+		if(channel.target == H && !prefs.hypno_receiver)
 			channel.interrupt()
 	if(!prefs.hypno_receiver)
 		var/datum/hypnotic_suggestion/S = mob?.mind?.hypnotic_suggestion
@@ -135,7 +125,6 @@
 
 /mob/living/carbon/human
 	var/hypnotic_gaze_text
-	var/hypnotic_gaze_style = HYPNOTIC_GAZE_DEFAULT_STYLE
 	var/hypnotic_presence = FALSE
 	var/datum/hypnotic_gaze_channel/hypnotic_gaze_channel
 
@@ -166,7 +155,7 @@
 			var/mob/living/L = viewer
 			if(L.eye_blind)
 				return null
-	return hypnotic_gaze_format(hypnotic_gaze_text, hypnotic_gaze_style)
+	return hypnotic_gaze_format(hypnotic_gaze_text, get_hypno_style_id())
 
 /obj/effect/proc_holder/spell/invoked/hypnotic_gaze
 	name = "Hypnotic Gaze"
@@ -193,7 +182,7 @@
 	var/channel_target_text = "Their gaze draws you in. You feel compelled to meet their eyes."
 	var/interrupted_target_text = "The gaze breaks before it can settle into your thoughts."
 	var/trance_target_text = "Your thoughts soften beneath their gaze. Your mind feels especially receptive to their next words."
-	var/trance_caster_text = "Their mind lies open. The next words they hear from you will become a lasting suggestion, remembered until another gaze releases them."
+	var/trance_caster_text = "Their mind lies open, and stays in your hold until released. The next words they hear from you will become a lasting suggestion."
 	var/release_target_text = "Your mind clears. Those words no longer command your thoughts."
 	var/release_caster_text = "You release their mind from its lingering suggestion."
 
@@ -206,7 +195,7 @@
 	channel_target_text = "Something about their presence draws you in. You feel an unusual pull upon your attention."
 	interrupted_target_text = "The influence fades before it can settle into your thoughts."
 	trance_target_text = "Your thoughts soften, and the world around you seems less important. Your mind feels especially receptive to their next words."
-	trance_caster_text = "Their mind lies open. The next words they hear from you will become a lasting suggestion, remembered until another hypnotic influence releases them."
+	trance_caster_text = "Their mind lies open, and stays in your hold until released. The next words they hear from you will become a lasting suggestion."
 	release_target_text = "Your mind clears. The lingering influence releases its hold upon your thoughts."
 	release_caster_text = "You release their mind from its lingering influence."
 
@@ -243,9 +232,7 @@
 		return FALSE
 	if(!hypnotic_gaze_can_channel(caster, target, requires_eye_contact) || caster.hypnotic_gaze_channel || target.hypnotic_gaze_channel)
 		var/failure_message = connection_error
-		if(!hypnosis_can_send(caster))
-			failure_message = "I need Enable Hypnotizing Others on in my toggles!"
-		else if(istype(target) && !hypnosis_can_receive(target))
+		if(istype(target) && !hypnosis_can_receive(target))
 			failure_message = "They do not consent to being hypnotized."
 		else if(requires_eye_contact && istype(caster) && !caster.hypnotic_eyes_visible())
 			failure_message = "My eyes are covered!"
@@ -257,10 +244,12 @@
 		return FALSE
 	var/releasing = !!target.mind.hypnotic_suggestion
 	var/datum/weakref/original_suggestion_ref = releasing ? WEAKREF(target.mind.hypnotic_suggestion) : null
+	// Fixed for the whole cast, so a mid-channel style change can't split the messages
+	var/style_id = caster.get_hypno_style_id()
 	channel = new(caster, target, requires_eye_contact)
 	var/datum/hypnotic_gaze_channel/attempt = channel
-	to_chat(caster, hypno_span(channel_caster_text))
-	to_chat(target, hypno_span(channel_target_text))
+	to_chat(caster, hypno_span(channel_caster_text, style_id))
+	to_chat(target, hypno_span(channel_target_text, style_id))
 	var/success = FALSE
 	try
 		success = attempt.await_channel()
@@ -274,9 +263,9 @@
 	start_recharge()
 	if(!success)
 		if(!QDELETED(caster) && hypnosis_can_send(caster))
-			to_chat(caster, hypno_span("Your concentration breaks, and their thoughts slip beyond your reach."))
+			to_chat(caster, hypno_span("Your concentration breaks, and their thoughts slip beyond your reach.", style_id))
 		if(!QDELETED(target) && hypnosis_can_receive(target))
-			to_chat(target, hypno_span(interrupted_target_text))
+			to_chat(target, hypno_span(interrupted_target_text, style_id))
 		return FALSE
 	var/datum/hypnotic_suggestion/existing = target.mind.hypnotic_suggestion
 	if(releasing)
@@ -284,14 +273,14 @@
 			return FALSE
 		if(existing)
 			qdel(existing)
-		to_chat(target, hypno_span(release_target_text))
-		to_chat(caster, hypno_span(release_caster_text))
+		to_chat(target, hypno_span(release_target_text, style_id))
+		to_chat(caster, hypno_span(release_caster_text, style_id))
 	else
 		if(existing)
 			return FALSE
-		new /datum/hypnotic_suggestion(target.mind, caster.mind)
-		to_chat(target, hypno_span(trance_target_text))
-		to_chat(caster, hypno_span(trance_caster_text))
+		new /datum/hypnotic_suggestion(target.mind, caster.mind, style_id, type)
+		to_chat(target, hypno_span(trance_target_text, style_id))
+		to_chat(caster, hypno_span(trance_caster_text, style_id))
 	return ..()
 
 /proc/hypnotic_gaze_can_channel(mob/living/carbon/human/caster, mob/living/carbon/human/target, requires_eye_contact = TRUE)
@@ -384,19 +373,31 @@
 	var/datum/weakref/body_ref
 	var/phrase
 	var/reminder_timer
+	/// Ends the window in which the caster's next spoken line becomes the phrase. The trance itself doesn't expire.
 	var/pending_timer
+	/// Whether the caster's next spoken line still becomes the phrase
+	var/capture_open = TRUE
 	var/datum/status_effect/debuff/hypnotized/status
+	/// The caster's style when they cast, so it outlives their client
+	var/style_id = HYPNO_DEFAULT_STYLE
+	/// The spell that placed us, for its release flavour text
+	var/obj/effect/proc_holder/spell/invoked/hypnotic_gaze/spell_type = /obj/effect/proc_holder/spell/invoked/hypnotic_gaze
 
-/datum/hypnotic_suggestion/New(datum/mind/target_mind, datum/mind/caster_mind)
+/datum/hypnotic_suggestion/New(datum/mind/target_mind, datum/mind/caster_mind, new_style_id, new_spell_type)
 	target_mind_ref = WEAKREF(target_mind)
 	caster_mind_ref = WEAKREF(caster_mind)
+	style_id = sanitize_hypnosis_style(new_style_id)
+	if(ispath(new_spell_type, /obj/effect/proc_holder/spell/invoked/hypnotic_gaze))
+		spell_type = new_spell_type
+	GLOB.hypnotic_suggestions += src
 	target_mind.hypnotic_suggestion = src
 	RegisterSignal(target_mind, list(COMSIG_QDELETING, COMSIG_MIND_PERMANENT_DEPARTURE), PROC_REF(clear_suggestion))
 	// Sent on the mind for every transfer, even when it had no previous body
 	RegisterSignal(target_mind, COMSIG_MIND_TRANSFERRED, PROC_REF(mind_transferred))
-	RegisterSignal(caster_mind, COMSIG_QDELETING, PROC_REF(caster_deleted))
+	RegisterSignal(caster_mind, list(COMSIG_QDELETING, COMSIG_MIND_PERMANENT_DEPARTURE), PROC_REF(caster_deleted))
 	bind_body(target_mind.current)
 	pending_timer = addtimer(CALLBACK(src, PROC_REF(expire_pending)), HYPNOTIC_GAZE_PENDING_TIME, TIMER_STOPPABLE)
+	update_caster_panel()
 	return ..()
 
 /datum/hypnotic_suggestion/proc/bind_body(mob/body)
@@ -404,7 +405,7 @@
 	if(!istype(body) || QDELETED(body))
 		return
 	body_ref = WEAKREF(body)
-	if(!phrase && isliving(body))
+	if(!phrase && capture_open && isliving(body))
 		var/mob/living/L = body
 		L.hypnotic_pending = src
 	if(isliving(body))
@@ -446,6 +447,37 @@
 	if(H.hypnosis_panel)
 		SStgui.update_uis(H.hypnosis_panel)
 
+/// Refreshes the caster's panel, if open, so its Subjects tab and emote targets match our state
+/datum/hypnotic_suggestion/proc/update_caster_panel()
+	var/datum/mind/caster_mind = caster_mind_ref?.resolve()
+	var/mob/living/carbon/human/H = caster_mind?.current
+	if(!istype(H) || !H.hypnosis_panel)
+		return
+	H.hypnosis_panel.refresh_targets()
+	SStgui.update_uis(H.hypnosis_panel)
+
+/// Wraps already-safe HTML in the caster's style
+/datum/hypnotic_suggestion/proc/render(html)
+	return hypno_span(html, style_id)
+
+/// The subject's character name, as their caster knows them
+/datum/hypnotic_suggestion/proc/subject_name()
+	var/datum/mind/target_mind = target_mind_ref?.resolve()
+	var/mob/living/carbon/human/H = target_mind?.current
+	if(istype(H))
+		return H.real_name
+	return target_mind?.name || "Someone"
+
+/// The caster frees the subject from afar, from the panel's Subjects tab
+/datum/hypnotic_suggestion/proc/release(mob/living/carbon/human/caster)
+	var/datum/mind/target_mind = target_mind_ref?.resolve()
+	var/mob/living/body = target_mind?.current
+	if(istype(body) && !QDELETED(body) && hypnosis_can_receive(body))
+		to_chat(body, render(initial(spell_type.release_target_text)))
+	to_chat(caster, render(initial(spell_type.release_caster_text)))
+	log_game("HYPNOSIS: [key_name(caster)] released [key_name(body)] from '[phrase || "a trance"]' via the panel.")
+	qdel(src)
+
 /datum/hypnotic_suggestion/proc/mind_transferred(datum/mind/source, mob/old_body)
 	SIGNAL_HANDLER
 	bind_body(source.current)
@@ -458,6 +490,7 @@
 	SIGNAL_HANDLER
 	qdel(src)
 
+/// Nobody is left to message a phraseless trance, so it ends. A phrase outlives its caster.
 /datum/hypnotic_suggestion/proc/caster_deleted()
 	SIGNAL_HANDLER
 	if(!phrase)
@@ -465,7 +498,7 @@
 
 /// Called only for fully delivered local speech, never eavesdropped fragments/emotes.
 /datum/hypnotic_suggestion/proc/capture(mob/living/listener, atom/movable/speaker, datum/language/language, raw_message, radio_freq, message_mode)
-	if(phrase || QDELETED(listener) || !hypnosis_can_receive(listener) || !listener.can_hear() || listener.stat != CONSCIOUS)
+	if(phrase || !capture_open || QDELETED(listener) || !hypnosis_can_receive(listener) || !listener.can_hear() || listener.stat != CONSCIOUS)
 		return FALSE
 	var/datum/mind/target_mind = target_mind_ref?.resolve()
 	var/datum/mind/caster_mind = caster_mind_ref?.resolve()
@@ -476,36 +509,63 @@
 		return FALSE
 	if(message_mode && message_mode != MODE_WHISPER && message_mode != MODE_WHISPER_CRIT)
 		return FALSE
-	phrase = hypnotic_speech_plaintext(raw_message)
-	if(!length(phrase))
-		phrase = null
+	var/new_phrase = hypnotic_speech_plaintext(raw_message)
+	if(!length(new_phrase))
 		return FALSE
-	if(listener.hypnotic_pending == src)
-		listener.hypnotic_pending = null
+	set_phrase(new_phrase, hypnotic_speech_html(raw_message), caster.GetVoice(), caster)
+	return TRUE
+
+/// The caster sets or replaces the phrase from the panel's Subjects tab, from any distance
+/datum/hypnotic_suggestion/proc/suggest_from_afar(mob/living/carbon/human/caster, text)
+	text = trim(replacetext(replacetext(copytext_char(text, 1, MAX_MESSAGE_LEN), ascii2text(13), ""), "\n", " "))
+	var/encoded = html_encode(text)
+	var/new_phrase = hypnotic_speech_plaintext(encoded)
+	if(!length(new_phrase))
+		return
+	var/datum/mind/target_mind = target_mind_ref?.resolve()
+	var/mob/living/carbon/human/body = target_mind?.current
+	if(!istype(body) || !body.is_hypno_receptive())
+		to_chat(caster, span_warning("Their mind is beyond my reach right now."))
+		return
+	var/html = hypnotic_speech_html(encoded)
+	set_phrase(new_phrase, html, caster.name, caster)
+	to_chat(body, render("A new suggestion settles deep within your thoughts: [html]"))
+	to_chat(caster, render("Your suggestion settles deep within [html_encode(subject_name())]'s thoughts: [html]"))
+
+/// Sets or replaces the phrase. html is the phrase as safe HTML with its emphasis kept, for the Received log.
+/datum/hypnotic_suggestion/proc/set_phrase(new_phrase, html, sender_name, mob/living/caster)
+	phrase = new_phrase
+	close_capture()
+	if(!QDELETED(status))
+		status.update_description()
+	if(reminder_timer)
+		deltimer(reminder_timer)
+	reminder_timer = addtimer(CALLBACK(src, PROC_REF(remind)), HYPNOTIC_GAZE_REMINDER_TIME, TIMER_STOPPABLE)
+	var/mob/living/body = body_ref?.resolve()
+	log_game("HYPNOSIS: [key_name(caster)] suggested '[phrase]' to [key_name(body)].")
+	if(ishuman(body))
+		var/mob/living/carbon/human/H = body
+		// add_log_entry() also refreshes the panel, so the Status tab picks up the phrase too.
+		H.get_hypnosis_panel().add_log_entry("<b>[html_encode(sender_name)]</b> " + render(html))
+	update_caster_panel()
+
+/// Stops the caster's next spoken line from becoming the phrase. The trance carries on.
+/datum/hypnotic_suggestion/proc/close_capture()
+	capture_open = FALSE
 	if(pending_timer)
 		deltimer(pending_timer)
 		pending_timer = null
-	if(!QDELETED(status))
-		status.update_description()
-	reminder_timer = addtimer(CALLBACK(src, PROC_REF(remind)), HYPNOTIC_GAZE_REMINDER_TIME, TIMER_STOPPABLE)
-	log_game("HYPNOSIS: [key_name(caster)] suggested '[phrase]' to [key_name(listener)].")
-	if(ishuman(listener))
-		var/mob/living/carbon/human/H = listener
-		// add_log_entry() also refreshes the panel, so the Status tab picks up the phrase too.
-		H.get_hypnosis_panel().add_log_entry("<b>[html_encode(caster.GetVoice())]</b> " + hypnotic_gaze_format(phrase))
-	return TRUE
+	var/mob/living/body = body_ref?.resolve()
+	if(istype(body) && body.hypnotic_pending == src)
+		body.hypnotic_pending = null
 
 /datum/hypnotic_suggestion/proc/suggestion_text()
-	return phrase ? "You feel compelled to obey: [phrase]" : "Your mind is in a trance, awaiting a suggestion."
+	return phrase ? "You feel compelled to obey: [phrase]" : "Your mind is in a trance, open to their influence."
 
 /datum/hypnotic_suggestion/proc/expire_pending()
 	pending_timer = null
-	if(phrase)
-		return
-	var/datum/mind/M = target_mind_ref?.resolve()
-	if(M?.hypnotic_suggestion == src && hypnosis_can_receive(M.current))
-		to_chat(M.current, hypno_span("The trance fades. Your thoughts are your own again."))
-	qdel(src)
+	close_capture()
+	update_caster_panel()
 
 /datum/hypnotic_suggestion/proc/remind()
 	reminder_timer = null
@@ -518,7 +578,7 @@
 		qdel(src)
 		return
 	if(istype(body) && !QDELETED(body) && hypnosis_can_receive(body) && body.stat != DEAD)
-		to_chat(body, hypnotic_gaze_format(suggestion_text()))
+		to_chat(body, hypnotic_gaze_format(suggestion_text(), style_id))
 	reminder_timer = addtimer(CALLBACK(src, PROC_REF(remind)), HYPNOTIC_GAZE_REMINDER_TIME, TIMER_STOPPABLE)
 
 /datum/hypnotic_suggestion/Destroy()
@@ -528,6 +588,8 @@
 	if(reminder_timer)
 		deltimer(reminder_timer)
 		reminder_timer = null
+	GLOB.hypnotic_suggestions -= src
+	update_caster_panel()
 	var/datum/mind/target_mind = target_mind_ref?.resolve()
 	var/datum/mind/caster_mind = caster_mind_ref?.resolve()
 	// Clear the mind's reference before unbinding, so the panel refresh shows no suggestion.
@@ -536,7 +598,7 @@
 		if(target_mind.hypnotic_suggestion == src)
 			target_mind.hypnotic_suggestion = null
 	if(caster_mind)
-		UnregisterSignal(caster_mind, COMSIG_QDELETING)
+		UnregisterSignal(caster_mind, list(COMSIG_QDELETING, COMSIG_MIND_PERMANENT_DEPARTURE))
 	unbind_body()
 	return ..()
 
@@ -572,7 +634,7 @@
 /atom/movable/screen/alert/status_effect/debuff/hypnotized
 	name = "Hypnotized"
 	icon = 'icons/mob/actions/hypnotic_gaze.dmi'
-	desc = "Your mind is in a trance, awaiting a suggestion."
+	desc = "Your mind is in a trance, open to their influence."
 	icon_state = "hypnosis_debuff"
 
 /mob/living/carbon/human/proc/hypnotized_examine(mob/viewer)
@@ -584,10 +646,9 @@
 		if(L.eye_blind)
 			return null
 	if(viewer.mind && viewer.mind == S.caster_mind_ref?.resolve())
-		return hypno_span("I have subdued their will.")
+		return S.render("I have subdued their will.")
 	return span_warning("Their eyes look a little strange.")
 
 #undef HYPNOTIC_GAZE_CHANNEL_TIME
 #undef HYPNOTIC_GAZE_PENDING_TIME
 #undef HYPNOTIC_GAZE_REMINDER_TIME
-#undef HYPNOTIC_GAZE_DEFAULT_STYLE

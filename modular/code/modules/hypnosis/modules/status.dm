@@ -5,7 +5,7 @@
 	role = HYPNO_ROLE_RECEIVER
 
 /datum/hypnosis_module/status/get_ui_data(mob/living/carbon/human/user, datum/hypnosis_panel/panel)
-	// Set by Hypnotic Gaze / Presence (modular_azurepeak/quirks/hypnotic_gaze.dm)
+	// Set by the Hypnotic Influence quirk (modular_azurepeak/quirks/hypnotic_gaze.dm)
 	var/datum/hypnotic_suggestion/suggestion = user.mind?.hypnotic_suggestion
 	return list(
 		"receptive" = user.is_hypno_receptive(),

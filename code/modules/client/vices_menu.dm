@@ -249,10 +249,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		"vice6" = vice6,
 		"redolent_type" = redolent_type,
 		"redolent_scent" = redolent_scent,
+		"hypnotic_presence" = hypnotic_presence,
 		"hypnotic_gaze_text" = hypnotic_gaze_text,
-		"hypnotic_gaze_style" = hypnotic_gaze_style,
 		"hypnotic_presence_text" = hypnotic_presence_text,
-		"hypnotic_presence_style" = hypnotic_presence_style,
 		"loadout" = loadout,
 		"loadout2" = loadout2,
 		"loadout3" = loadout3,
@@ -318,7 +317,6 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 	virtuetwo = snapshot["virtuetwo"]
 	var/list/quirks_snapshot = snapshot["quirks"]
 	quirks = quirks_snapshot ? quirks_snapshot.Copy() : list()
-	normalize_hypnotic_quirks()
 	vice1 = snapshot["vice1"]
 	vice2 = snapshot["vice2"]
 	vice3 = snapshot["vice3"]
@@ -327,10 +325,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 	vice6 = snapshot["vice6"]
 	redolent_type = snapshot["redolent_type"]
 	redolent_scent = snapshot["redolent_scent"]
+	hypnotic_presence = !!snapshot["hypnotic_presence"]
 	hypnotic_gaze_text = sanitize_hypnotic_gaze_text(snapshot["hypnotic_gaze_text"])
-	hypnotic_gaze_style = sanitize_hypnotic_gaze_style(snapshot["hypnotic_gaze_style"])
 	hypnotic_presence_text = sanitize_hypnotic_presence_text(snapshot["hypnotic_presence_text"])
-	hypnotic_presence_style = sanitize_hypnotic_gaze_style(snapshot["hypnotic_presence_style"])
 	loadout = snapshot["loadout"]
 	loadout2 = snapshot["loadout2"]
 	loadout3 = snapshot["loadout3"]
@@ -397,10 +394,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		"vice6" = vice6?.type,
 		"redolent_type" = redolent_type,
 		"redolent_scent" = redolent_scent,
+		"hypnotic_presence" = hypnotic_presence,
 		"hypnotic_gaze_text" = hypnotic_gaze_text,
-		"hypnotic_gaze_style" = hypnotic_gaze_style,
 		"hypnotic_presence_text" = hypnotic_presence_text,
-		"hypnotic_presence_style" = hypnotic_presence_style,
 		"loadout" = loadout?.type,
 		"loadout2" = loadout2?.type,
 		"loadout3" = loadout3?.type,
@@ -487,7 +483,6 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			var/resolved_type = string_to_typepath(quirk_type)
 			if(resolved_type && ispath(resolved_type, /datum/quirk))
 				quirks += new resolved_type()
-	normalize_hypnotic_quirks()
 
 	var/vice1_type = string_to_typepath(preset["vice1"])
 	if(vice1_type && ispath(vice1_type, /datum/charflaw))
@@ -525,10 +520,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		vice6 = null
 	redolent_type = preset["redolent_type"] || "Neutral"
 	redolent_scent = preset["redolent_scent"] || ""
+	hypnotic_presence = !!preset["hypnotic_presence"]
 	hypnotic_gaze_text = sanitize_hypnotic_gaze_text(preset["hypnotic_gaze_text"])
-	hypnotic_gaze_style = sanitize_hypnotic_gaze_style(preset["hypnotic_gaze_style"])
 	hypnotic_presence_text = sanitize_hypnotic_presence_text(preset["hypnotic_presence_text"])
-	hypnotic_presence_style = sanitize_hypnotic_gaze_style(preset["hypnotic_presence_style"])
 	
 	// Load loadout types and instantiate them if valid
 	var/loadout_type = string_to_typepath(preset["loadout"])
@@ -1173,12 +1167,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			var/scent_display = redolent_scent || get_default_redolent_scent(redolent_type)
 			html += "<div class='statpack-stats' style='margin-top: 4px;'><b>[redolent_type]</b>: [scent_display]</div>"
 
-		if(istype(current_quirk, /datum/quirk/hypnotic_gaze))
-			var/datum/quirk/hypnotic_gaze/hypnosis_quirk = current_quirk
-			var/examine_text = hypnosis_quirk.is_presence ? sanitize_hypnotic_presence_text(hypnotic_presence_text) : sanitize_hypnotic_gaze_text(hypnotic_gaze_text)
-			var/datum/hypnosis_style/examine_style = get_hypnosis_style(sanitize_hypnotic_gaze_style(hypnosis_quirk.is_presence ? hypnotic_presence_style : hypnotic_gaze_style))
-			// This window doesn't load the chat stylesheet, so name the style rather than render it.
-			html += "<div class='statpack-stats' style='margin-top: 4px;'><b>[examine_style.name]</b>: [html_encode(examine_text)]</div>"
+		if(istype(current_quirk, /datum/quirk/hypnotic_influence))
+			var/examine_text = hypnotic_presence ? sanitize_hypnotic_presence_text(hypnotic_presence_text) : sanitize_hypnotic_gaze_text(hypnotic_gaze_text)
+			html += "<div class='statpack-stats' style='margin-top: 4px;'><b>[hypnotic_presence ? "Presence" : "Gaze"]</b>: [html_encode(examine_text)]</div>"
 
 		if(current_quirk.custom_text)
 			html += "<div class='statpack-stats' style='margin-top: 4px;'>" + current_quirk.custom_text + "</div>"
@@ -1215,9 +1206,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		html += "<div class='actions'>"
 		if(istype(current_quirk, /datum/quirk/redolent))
 			html += "<a class='btn btn-customize' href='byond://?src=\ref[src];redolent_action=configure'>Configure Scent</a>"
-		if(istype(current_quirk, /datum/quirk/hypnotic_gaze))
-			var/presence = istype(current_quirk, /datum/quirk/hypnotic_presence)
-			html += "<a class='btn btn-customize' href='byond://?src=\ref[src];hypnotic_gaze_action=configure;presence=[presence]'>Configure [presence ? "Presence" : "Gaze"]</a>"
+		if(istype(current_quirk, /datum/quirk/hypnotic_influence))
+			html += "<a class='btn btn-customize' href='byond://?src=\ref[src];hypnotic_influence_action=configure'>Configure</a>"
 		html += "<a class='btn btn-clear' href='byond://?src=\ref[src];quirk_action=remove;index=[i]'>Remove</a>"
 		html += "</div>"
 		html += "</div>"
@@ -1828,33 +1818,28 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				open_vices_menu(usr)
 			return
 	
-	if(href_list["hypnotic_gaze_action"])
-		var/presence = text2num(href_list["presence"]) == TRUE
-		var/quirk_type = presence ? /datum/quirk/hypnotic_presence : /datum/quirk/hypnotic_gaze
-		if(href_list["hypnotic_gaze_action"] != "configure" || !has_quirk(quirk_type))
+	if(href_list["hypnotic_influence_action"])
+		if(href_list["hypnotic_influence_action"] != "configure" || !has_quirk(/datum/quirk/hypnotic_influence))
 			return
 		var/mob/editor = usr
 		if(!editor || editor.client != parent)
 			return
-		var/title = presence ? "Hypnotic Presence" : "Hypnotic Gaze"
 		var/editing_slot = default_slot
-		var/list/style_choices = hypnotic_gaze_style_choices()
-		var/datum/hypnosis_style/current_style = get_hypnosis_style(sanitize_hypnotic_gaze_style(presence ? hypnotic_presence_style : hypnotic_gaze_style))
-		var/text = presence ? hypnotic_presence_text : hypnotic_gaze_text
-		var/new_style_name = tgui_input_list(editor, "Choose your examine text's style:", title, style_choices, current_style.name)
-		if(!new_style_name || !editor || editor.client != parent || default_slot != editing_slot || !has_quirk(quirk_type))
+		var/list/modes = list("Gaze (needs eye contact)" = FALSE, "Presence (no eye contact)" = TRUE)
+		var/new_mode = tgui_input_list(editor, "How does your influence take hold? Its style follows your Hypnotize panel style.", "Hypnotic Influence", modes, modes[hypnotic_presence ? 2 : 1])
+		if(!new_mode || !editor || editor.client != parent || default_slot != editing_slot || !has_quirk(/datum/quirk/hypnotic_influence))
 			return
+		var/presence = modes[new_mode]
 		var/prompt = presence ? "Text shown when others examine your presence:" : "Text shown when others can see your eyes:"
-		var/new_text = tgui_input_text(editor, prompt, title, text, max_length = 100, multiline = TRUE, encode = FALSE)
-		if(isnull(new_text) || !editor || editor.client != parent || default_slot != editing_slot || !has_quirk(quirk_type))
+		var/new_text = tgui_input_text(editor, prompt, "Hypnotic Influence", presence ? hypnotic_presence_text : hypnotic_gaze_text, max_length = 100, multiline = TRUE, encode = FALSE)
+		if(isnull(new_text) || !editor || editor.client != parent || default_slot != editing_slot || !has_quirk(/datum/quirk/hypnotic_influence))
 			return
 		save_to_history()
+		hypnotic_presence = presence
 		if(presence)
 			hypnotic_presence_text = sanitize_hypnotic_presence_text(new_text)
-			hypnotic_presence_style = sanitize_hypnotic_gaze_style(style_choices[new_style_name])
 		else
 			hypnotic_gaze_text = sanitize_hypnotic_gaze_text(new_text)
-			hypnotic_gaze_style = sanitize_hypnotic_gaze_style(style_choices[new_style_name])
 		open_vices_menu(editor)
 		return
 

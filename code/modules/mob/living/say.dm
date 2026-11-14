@@ -419,8 +419,9 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	last_heard_raw_message = raw_message
 	// Recompose message for AI hrefs, language incomprehension.
 	message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mode)
-	if(hypnotic_speech && hypnotic_pending?.capture(src, speaker, message_language, raw_message, radio_freq, message_mode))
-		message = hypno_span(message)
+	var/datum/hypnotic_suggestion/pending_suggestion = hypnotic_pending
+	if(hypnotic_speech && pending_suggestion?.capture(src, speaker, message_language, raw_message, radio_freq, message_mode))
+		message = pending_suggestion.render(message)
 	show_message(message, MSG_AUDIBLE, deaf_message, deaf_type)
 	return message
 

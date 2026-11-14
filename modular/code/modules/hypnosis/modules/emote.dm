@@ -1,17 +1,10 @@
-#define HYPNO_EMOTE_SUBTLE "subtle"
-#define HYPNO_EMOTE_OPEN "open"
-
-/// Subtle area targets, mapped to their range
-GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
-	"area_same_tile" = 0,
-	"area_adjacent" = 1,
-	"area_all" = HYPNO_SUBTLE_RANGE,
-))
+/// Target value for every subject in view, instead of one subject's ref
+#define HYPNO_EMOTE_ALL_IN_VIEW "all_in_view"
 
 /datum/hypnosis_module/emote
 	id = "emote"
 	name = "Hypnotic Emote"
-	desc = "Send a subtle or open emote in a hypnotic style to receptive minds nearby."
+	desc = "Send an emote in your hypnotic style to the minds you hold in a trance."
 	role = HYPNO_ROLE_SENDER
 
 /datum/hypnosis_module/emote/get_ui_data(mob/living/carbon/human/user, datum/hypnosis_panel/panel)
@@ -23,7 +16,7 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 	var/datum/hypnosis_style/current = panel.get_style_for(src)
 	return list(
 		"targets" = panel.target_entries,
-		"receptive_count" = panel.receptive_count,
+		"subjects_in_view" = panel.subjects_in_view,
 		"allowed_styles" = allowed,
 		"style" = current.id,
 		"preview_html" = panel.preview_html,
@@ -33,8 +26,9 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 	switch(op)
 		if("set_style")
 			var/datum/hypnosis_style/style = get_hypnosis_style(params["style"])
-			if(style && allows_style(style))
-				panel.selected_style_id = style.id
+			if(style && allows_style(style) && user.client)
+				user.client.prefs.hypno_style = style.id
+				user.client.prefs.save_preferences()
 			return TRUE
 		if("preview")
 			var/message = clean_message(user, params["message"])
@@ -62,24 +56,17 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 	if(GLOB.say_disabled)
 		to_chat(user, span_danger("Speech is currently admin-disabled."))
 		return
-	var/mode = params["mode"]
-	if(mode != HYPNO_EMOTE_SUBTLE && mode != HYPNO_EMOTE_OPEN)
-		return
 	var/message = clean_message(user, params["message"])
 	if(!message)
 		return
-
-	var/list/recipients
-	if(mode == HYPNO_EMOTE_OPEN)
-		recipients = get_hypno_receivers(user, world.view)
-	else
-		recipients = get_subtle_recipients(user, params["target"])
-		if(!recipients)
-			to_chat(user, span_boldwarning("That mind is no longer within reach, refresh and try again."))
-			return
+	var/target = params["target"]
+	var/list/recipients = get_recipients(user, target)
+	if(!recipients)
+		to_chat(user, span_boldwarning("That mind is no longer within your reach, refresh and try again."))
+		return
 
 	var/html = format_message(user, message, panel.get_style_for(src), list())
-	user.log_message("HYPNOSIS ([uppertext(mode)]) - [message]", LOG_EMOTE)
+	user.log_message("HYPNOSIS ([target == HYPNO_EMOTE_ALL_IN_VIEW ? "SUBJECTS IN VIEW" : "SUBJECT"]) - [message]", LOG_EMOTE)
 	to_chat(user, html)
 	panel.preview_html = null
 	var/delivered = 0
@@ -87,25 +74,22 @@ GLOBAL_LIST_INIT(hypnosis_emote_areas, list(
 		if(receiver.receive_hypnosis(html, sound))
 			delivered++
 	if(!delivered)
-		to_chat(user, span_warning("No receptive minds nearby."))
+		to_chat(user, span_warning("None of your subjects are here to receive it."))
 
-/// Recipients of a subtle message, or null if a single picked target is no longer valid
-/datum/hypnosis_module/emote/proc/get_subtle_recipients(mob/living/carbon/human/user, target)
-	var/list/in_range = get_hypno_receivers(user, HYPNO_SUBTLE_RANGE)
-	if(target in GLOB.hypnosis_emote_areas)
-		var/distance = GLOB.hypnosis_emote_areas[target]
-		var/turf/user_turf = get_turf(user)
+/// Only our own subjects ever receive. Returns null if a single picked subject is no longer valid.
+/datum/hypnosis_module/emote/proc/get_recipients(mob/living/carbon/human/user, target)
+	var/list/subjects = user.get_hypnotic_subject_bodies()
+	if(target == HYPNO_EMOTE_ALL_IN_VIEW)
 		. = list()
-		for(var/mob/living/carbon/human/H as anything in in_range)
-			if(get_dist(get_turf(H), user_turf) <= distance)
+		for(var/mob/living/carbon/human/H in get_hearers_in_view(world.view, user))
+			if(H in subjects)
 				. += H
 		return
 	if(!istext(target))
 		return null
 	var/mob/living/carbon/human/picked = locate(target)
-	if(!(picked in in_range) || picked.rogue_sneaking || picked.name == "Unknown")
+	if(!istype(picked) || !(picked in subjects))
 		return null
 	return list(picked)
 
-#undef HYPNO_EMOTE_SUBTLE
-#undef HYPNO_EMOTE_OPEN
+#undef HYPNO_EMOTE_ALL_IN_VIEW

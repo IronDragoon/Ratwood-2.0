@@ -3539,6 +3539,7 @@
 #include "modular\code\modules\hypnosis\modules\emote.dm"
 #include "modular\code\modules\hypnosis\modules\received.dm"
 #include "modular\code\modules\hypnosis\modules\status.dm"
+#include "modular\code\modules\hypnosis\modules\subjects.dm"
 #include "modular\code\modules\hypnosis\styles\_style.dm"
 #include "modular\code\modules\jobs\job_types\roguetown\roguetown.dm"
 #include "modular\code\modules\living\emote.dm"

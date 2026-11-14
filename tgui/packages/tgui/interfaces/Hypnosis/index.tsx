@@ -6,6 +6,7 @@ import { Window } from '../../layouts';
 import { EmoteTab } from './EmoteTab';
 import { ReceivedTab } from './ReceivedTab';
 import { StatusTab } from './StatusTab';
+import { SubjectsTab } from './SubjectsTab';
 import type { HypnosisData, ModuleTabProps } from './types';
 
 /** Tab component for each /datum/hypnosis_module id */
@@ -13,6 +14,7 @@ const MODULE_TABS: Record<string, ComponentType<ModuleTabProps<any>>> = {
   emote: EmoteTab,
   received: ReceivedTab,
   status: StatusTab,
+  subjects: SubjectsTab,
 };
 
 export const Hypnosis = () => {

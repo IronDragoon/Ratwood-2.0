@@ -138,10 +138,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/cursed_collarable = FALSE
 	/// If we are lactating, can others milk us via reagent containers (not for sex actions, but the stuff in milking.dm)
 	var/milkable = FALSE
-	/// If we can use the hypnosis panel to send hypnotic messages
-	var/hypno_sender = FALSE
 	/// If we can receive hypnotic messages from others
 	var/hypno_receiver = FALSE
+	/// Hypnosis framework style id for everything we send, picked in the Hypnotize panel
+	var/hypno_style = "hypnotic"
 	/// If manticore tail flavor messages are on by default
 	var/manticore_tail_messages = FALSE
 	var/voting_popup = TRUE
@@ -328,12 +328,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/charflaw/vice6
 	var/redolent_type = "Neutral"
 	var/redolent_scent = ""
-	/// Hypnotic Gaze / Presence examine lines, stored as plain text and encoded at display time.
-	/// Styles are hypnosis framework style ids (see modular_azurepeak/quirks/hypnotic_gaze.dm).
+	/// Hypnotic Influence: Presence instead of Gaze (see modular_azurepeak/quirks/hypnotic_gaze.dm)
+	var/hypnotic_presence = FALSE
+	/// Hypnotic Influence examine lines, one per mode, stored as plain text and encoded at display time
 	var/hypnotic_gaze_text = "Their eyes are enticing to gaze into."
-	var/hypnotic_gaze_style = "hypnotic"
 	var/hypnotic_presence_text = "There is something strangely compelling about their presence."
-	var/hypnotic_presence_style = "hypnotic"
 
 	var/setspouse = ""
 	var/gender_choice = ANY_GENDER

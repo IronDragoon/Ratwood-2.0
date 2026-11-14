@@ -27,7 +27,7 @@ export const StatusTab = (props: ModuleTabProps<StatusData>) => {
       )}
       {trance && !phrase && (
         <NoticeBox color="purple">
-          Your mind is in a trance, awaiting a suggestion.
+          Your mind is in a trance, open to their influence.
         </NoticeBox>
       )}
       {!trance && <NoticeBox>You are not under any suggestion.</NoticeBox>}

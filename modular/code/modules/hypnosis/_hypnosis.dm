@@ -1,9 +1,10 @@
 /*
  * Hypnosis framework (ERP, opt-in).
  *
- * Two prefs gate everything:
- *   - hypno_sender: can open the panel and send hypnotic messages, never receives them.
- *   - hypno_receiver: can open the panel and receive hypnotic messages, never sends them.
+ * Two roles:
+ *   - Sender: holds the Hypnotic Influence quirk (modular_azurepeak/quirks/hypnotic_gaze.dm).
+ *     Its spell is the only way to entrance someone, and senders message only their own subjects.
+ *   - Receiver: has the hypno_receiver pref on. Needed to be entranced or receive anything.
  *
  * Features are /datum/hypnosis_module subtypes (see modules/), each shown as a tab in the panel
  * when the player has the module's role. Text styles are /datum/hypnosis_style subtypes (see styles/).
@@ -16,8 +17,8 @@
 
 /// How many received messages the panel keeps
 #define HYPNO_LOG_MAX 50
-/// Range of subtle hypnotic messages, matching the subtle emote
-#define HYPNO_SUBTLE_RANGE 4
+/// Style id used when a player's saved style is missing or invalid
+#define HYPNO_DEFAULT_STYLE "hypnotic"
 
 GLOBAL_LIST_INIT(hypnosis_modules, init_subtypes_assoc(/datum/hypnosis_module))
 GLOBAL_LIST_INIT(hypnosis_styles, init_subtypes_assoc(/datum/hypnosis_style))
@@ -34,19 +35,26 @@ GLOBAL_LIST_INIT(hypnosis_styles, init_subtypes_assoc(/datum/hypnosis_style))
 		if(style.id == id)
 			return style
 
-/// Receptive humans in view of source within range, excluding source
-/proc/get_hypno_receivers(atom/source, range)
-	. = list()
-	for(var/mob/living/carbon/human/H in get_hearers_in_view(range, source))
-		if(H != source && H.is_hypno_receptive())
-			. += H
+/// Returns style_id if it names a hypnosis style, else the default style id
+/proc/sanitize_hypnosis_style(style_id)
+	return get_hypnosis_style(style_id) ? style_id : HYPNO_DEFAULT_STYLE
+
+/// Wraps already-safe HTML in the style style_id names, or the default style
+/proc/hypno_span(html, style_id = HYPNO_DEFAULT_STYLE)
+	var/datum/hypnosis_style/style = get_hypnosis_style(sanitize_hypnosis_style(style_id))
+	return style.render(html)
+
+/// The player's one hypnosis style, picked in the panel. Everything they send uses it:
+/// hypnotic emotes and every Hypnotic Influence message, examine line and suggestion.
+/mob/proc/get_hypno_style_id()
+	return sanitize_hypnosis_style(client?.prefs?.hypno_style)
 
 /mob/living/carbon/human
 	var/datum/hypnosis_panel/hypnosis_panel
 
-/// Whether we have access to the sending side at all. Any future quirk or trait requirement goes here.
+/// Whether we have access to the sending side at all: only Hypnotic Influence holders do
 /mob/living/carbon/human/proc/can_hypnotize()
-	return !!client?.prefs?.hypno_sender
+	return has_hypnotic_influence()
 
 /// Whether we can send a hypnotic message right now, giving feedback if not
 /mob/living/carbon/human/proc/can_send_hypnosis()
