@@ -314,6 +314,7 @@
 		return TRUE
 
 	if(HAS_TRAIT(I, TRAIT_NODROP) && !force)
+		I.on_blocked_unequip(src)
 		return FALSE
 
 	// Can't take it out of your equipment, can still hold and pick it up, put in and out of storage.

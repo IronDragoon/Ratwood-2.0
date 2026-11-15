@@ -84,6 +84,20 @@
 		return
 	. += span_info("It is focused on their [portal_focus_name(linked_underwear.focus)]. Middle-click to refocus.")
 
+/// Called when a TRAIT_NODROP item refuses to leave someone's inventory (drop, throw, store, hand over).
+/obj/item/proc/on_blocked_unequip(mob/user)
+	return
+
+/obj/item/portallight
+	/// world.time after which the "can't let go" reason may show again, so one attempt doesn't print it twice.
+	var/next_knot_lock_notice = 0
+
+/obj/item/portallight/on_blocked_unequip(mob/user)
+	if(!knot_locked || world.time < next_knot_lock_notice)
+		return
+	next_knot_lock_notice = world.time + 1 SECONDS
+	to_chat(user, span_warning("I can't let go of [src]! Something is knotted through the portal. (Click the knot alert to pull free.)"))
+
 /obj/item/portallight/proc/get_wearer()
 	return linked_underwear?.get_wearer()
 
