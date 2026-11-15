@@ -179,15 +179,21 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 			return
 		if(!underwear)
 			return
+		if(!underwear.can_be_removed(usr))
+			return
 		usr.visible_message(span_warning("[usr] starts taking off [src]'s [underwear.name]."),span_warning("I start taking off [src]'s [underwear.name]..."))
 		if(do_after(usr, 50, needhand = 1, target = src))
+			if(!underwear?.can_be_removed(usr))
+				return
 			var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
+			var/obj/item/undies/undies = underwear
 			chest.remove_bodypart_feature(underwear.undies_feature)
 			underwear.forceMove(get_turf(src))
 			if(iscarbon(usr))
 				var/mob/living/carbon/C = usr
 				C.put_in_hands(underwear)
 			underwear = null
+			undies.on_removed(src)
 
 	if(href_list["legwearsthing"]) //canUseTopic check for this is handled by mob/Topic()
 		if(!get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, grabs = FALSE, skipundies = TRUE))

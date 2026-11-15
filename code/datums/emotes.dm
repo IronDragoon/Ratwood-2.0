@@ -146,6 +146,7 @@
 			pre_color_msg = trim(pre_color_msg, MAX_MESSAGE_LEN)
 		// captured before the wrap below. Not pre_color_msg, that one is runechat text with its punctuation stripped
 		var/seen_log_msg = "[emotelocation] [msg]"
+		var/portal_relay_msg = msg // before the name is prefixed, for portal panties to pass on
 		// Checks to see if we're emoting on the body while we have a head, or if we're emoting on the head.
 		if(human && human.voice_color)
 			var/color_to_use = human.voice_color
@@ -170,6 +171,8 @@
 			emotelocation.audible_message(msg, runechat_message = runechat_msg_to_use, log_seen = SEEN_LOG_EMOTE, log_seen_msg = seen_log_msg, ignored_mobs = hidden_ghosts)
 		else
 			emotelocation.visible_message(msg, runechat_message = runechat_msg_to_use, log_seen = SEEN_LOG_EMOTE, log_seen_msg = seen_log_msg, ignored_mobs = hidden_ghosts)
+		if(human)
+			human.relay_emote_through_portal(portal_relay_msg)
 
 /mob/living/proc/get_emote_pitch()
 	return clamp(voice_pitch, 0.5, 2)

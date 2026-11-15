@@ -38,14 +38,19 @@
 			if(!underwear)
 				modular_handle_chastity_middleclick_strip(user)
 				return
+			if(!underwear.can_be_removed(user))
+				return
 			src.visible_message(span_notice("[user] begins to take off [(src==user)?" ":"[src]'s"][underwear]..."))
 			if(do_after(user, 30, needhand = 1, target = src))
+				if(!underwear?.can_be_removed(user))
+					return
 				var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
 				var/obj/item/undies/undies = underwear
 				underwear = null
 				undies.forceMove(get_turf(src))
 				user.put_in_hands(undies)
 				chest.remove_bodypart_feature(undies.undies_feature)
+				undies.on_removed(src)
 			return
 	if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
 		if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
