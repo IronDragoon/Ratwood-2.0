@@ -270,6 +270,8 @@
 			if(I.swingsound)
 				used_sound = pick(I.swingsound)
 			dropItemToGround(I, silent = TRUE)
+		else if(HAS_TRAIT(I, TRAIT_NODROP))
+			I.on_blocked_unequip(src)
 
 			if(HAS_TRAIT(src, TRAIT_PACIFISM) && I.throwforce)
 				to_chat(src, "<span class='notice'>I set [I] down gently on the ground.</span>")
