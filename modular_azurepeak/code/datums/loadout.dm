@@ -1068,6 +1068,16 @@ GLOBAL_LIST_INIT(loadout_items, init_subtypes(/datum/loadout_item))
 	name = "Cursed Chastity Device"
 	path = /obj/item/chastity/cursed
 
+/datum/loadout_item/portal_light
+	name = "Portal Light"
+	path = /obj/item/portallight
+	triumph_cost = 2
+
+/datum/loadout_item/portal_panties
+	name = "Portal Panties"
+	path = /obj/item/undies/portal
+	triumph_cost = 2
+
 /datum/loadout_item/wooddildo
 	name = "Wooden Dildo"
 	path = /obj/item/dildo/wood

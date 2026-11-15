@@ -700,8 +700,11 @@
 	if(!from_tailmaw && user.getorganslot(ORGAN_SLOT_PENIS) && knotted_status == KNOTTED_AS_TOP && knotted_owner == user && ishuman(knotted_recipient) && !QDELETED(knotted_recipient) && knotted_recipient?.sexcon)
 		var/orifice = knotted_part_partner
 		var/is_oral_knot = (orifice & SEX_PART_JAWS) != SEX_PART_NULL
-		var/knotted_climax_msg = is_oral_knot ? "[user] climaxes down [knotted_recipient]'s throat!" : "[user] climaxes deep inside [knotted_recipient]!"
-		user.visible_message(span_love(knotted_climax_msg), vision_distance = (suppress_moan ? 1 : DEFAULT_MESSAGE_RANGE))
+		if(knot_via_portal)
+			portal_knot_climax_message(is_oral_knot)
+		else
+			var/knotted_climax_msg = is_oral_knot ? "[user] climaxes down [knotted_recipient]'s throat!" : "[user] climaxes deep inside [knotted_recipient]!"
+			user.visible_message(span_love(knotted_climax_msg), vision_distance = (suppress_moan ? 1 : DEFAULT_MESSAGE_RANGE))
 		//Rolls impreg on deep climax in relevant scenarios
 		if(!is_oral_knot)
 			if(orifice & SEX_PART_CUNT)
@@ -1515,7 +1518,8 @@
 			break
 		if(!user.stamina_add(action.stamina_cost * get_stamina_cost_multiplier()))
 			break
-		if(!do_after(user, (action.do_time / get_speed_multiplier()), target = target, progress = show_progress))
+		// Remote actions don't track the target, or a step from either side would cut the act off.
+		if(!do_after(user, (action.do_time / get_speed_multiplier()), target = (action.remote_action ? null : target), progress = show_progress, allow_movement = action.remote_action))
 			break
 		if(current_action == null || performed_action_type != current_action)
 			break

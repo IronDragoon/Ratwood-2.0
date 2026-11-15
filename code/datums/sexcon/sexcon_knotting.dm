@@ -65,6 +65,11 @@
 		return
 	if(!btm.client?.prefs?.sexable)
 		return
+	// A knot tied through a portal locks the light and the panties instead of tethering the two bodies.
+	var/obj/item/portallight/knot_portal = istype(action, /datum/sex_action/portal) ? find_portal_light_between(user, btm) : null
+	var/self_knot = (btm == user)
+	if(self_knot && !knot_portal) // only a portal lets someone knot themselves
+		return
 	var/btm_forced = knot_swap_roles && btm_sexcon.do_knot_action_as_bottom && !user_sexcon.do_knot_action
 	if(user_sexcon.considered_limp())
 		if(!user.sexcon.knotted_status)
@@ -105,7 +110,16 @@
 	btm.sexcon.knotted_part = bottom_knotted_part|target_knotted_part // add existing knotted parts flags to new knotted orifice flags
 	btm.sexcon.knotted_part_partner = bottom_knotted_part // we store the receptive bitflags so we can apply area-specific effects later
 	btm.sexcon.knotted_forced_by_bottom = btm_forced
-	log_combat(user, btm, "Started knot tugging")
+	if(self_knot) // one controller holds both ends; keep it as the top so climaxes and the alert work
+		user.sexcon.knotted_status = KNOTTED_AS_TOP
+		user.sexcon.knotted_forced_by_bottom = FALSE
+	if(knot_portal)
+		user.sexcon.knot_via_portal = TRUE
+		btm.sexcon.knot_via_portal = TRUE
+		user.sexcon.knot_portal_light = knot_portal
+		btm.sexcon.knot_portal_light = knot_portal
+		knot_portal.set_knot_lock(TRUE, user.sexcon)
+	log_combat(user, btm, "Started knot tugging[knot_portal ? " through a portal" : ""]")
 
 	if(force > SEX_FORCE_MID) // if using force above default
 		if(force >= SEX_FORCE_EXTREME) // damage if set to max force
@@ -118,7 +132,9 @@
 		else
 			btm.sexcon.try_do_pain_effect(PAIN_MILD_EFFECT, FALSE)
 		btm.Stun(80) // stun for dramatic effect
-	if(btm_forced)
+	if(knot_portal)
+		portal_knot_tie_message(btm, btm_forced)
+	else if(btm_forced)
 		var/knot_word_force = user.sexcon.get_knot_synonym()
 		btm.visible_message(span_notice("[btm] forces [btm.p_them()]self down onto [user]'s [knot_word_force]!"), span_notice("I force myself down onto their [knot_word_force]!"))
 		to_chat(user, span_notice("They forced themselves onto my [user.sexcon.get_knot_synonym()]!"))
@@ -137,10 +153,12 @@
 				to_chat(btm, span_userdanger("You have been triple-knotted!"))
 		if(we_got_baothad)
 			to_chat(btm, span_userdanger("Baothan magick infuses within, you can't think straight!"))
-	if(!btm.has_status_effect(/datum/status_effect/knot_tied)) // only apply status if we don't have it already
+	if(!self_knot && !btm.has_status_effect(/datum/status_effect/knot_tied)) // only apply status if we don't have it already
 		btm.apply_status_effect(/datum/status_effect/knot_tied)
 	if(!user.has_status_effect(/datum/status_effect/knotted)) // only apply status if we don't have it already
 		user.apply_status_effect(/datum/status_effect/knotted)
+	if(self_knot) // set after the "knotted!" message, which reads the bottom's part alone
+		user.sexcon.knotted_part = top_knotted_part|bottom_knotted_part
 	btm.remove_status_effect(/datum/status_effect/knot_gaped)
 	RegisterSignal(user.sexcon.knotted_owner, COMSIG_MOVABLE_MOVED, PROC_REF(knot_movement), TRUE)
 	RegisterSignal(user.sexcon.knotted_recipient, COMSIG_MOVABLE_MOVED, PROC_REF(knot_movement), TRUE)
@@ -193,6 +211,10 @@
 		return
 	if(isnull(top.client) || !top.client?.prefs.sexable || isnull(btm.client) || !btm.client?.prefs.sexable) // we respect safewords here, let the players untie themselves
 		knot_remove()
+		return
+	if(top.sexcon.knot_via_portal) // nothing tethers the bodies; the light and panties stay locked instead
+		if(top.stat >= SOFT_CRIT || top.sexcon.considered_limp())
+			knot_remove()
 		return
 	if(prob(10) && top.m_intent == MOVE_INTENT_WALK && (btm in top.buckled_mobs)) // if the two characters are being held in a fireman carry, let them muturally get pleasure from it
 		var/obj/item/organ/penis/penis = top.getorganslot(ORGAN_SLOT_PENIS)
@@ -277,6 +299,10 @@
 		return
 	if(top.stat >= SOFT_CRIT) // only removed if the knot owner is injured/asleep/dead
 		knot_remove()
+		return
+	if(top.sexcon.knot_via_portal) // nothing tethers the bodies; the light and panties stay locked instead
+		if(top.sexcon.considered_limp())
+			knot_remove()
 		return
 	if(btm.pulling == top || top.pulling == btm)
 		return
@@ -363,13 +389,20 @@
 			playsound(btm, 'sound/misc/mat/pop.ogg', 100, TRUE, -2, ignore_walls = FALSE)
 			playsound(top, 'sound/misc/mat/segso.ogg', 50, TRUE, -2, ignore_walls = FALSE)
 			btm.emote("paincrit", forced = TRUE)
-			if(notify)
+			if(notify && top.sexcon.knot_via_portal)
+				portal_knot_remove_message(top, btm, TRUE, btm_removed)
+			else if(notify)
 				var/knot_word_yank = top.sexcon.get_knot_synonym()
 				if(btm_removed)
 					btm.visible_message(span_notice("[btm] yanks [btm.p_them()]self free from [top]'s [knot_word_yank]!"), span_notice("I yank myself free from [top]'s [knot_word_yank]!"))
 				else
 					top.visible_message(span_notice("[top] yanks their [knot_word_yank] out of [btm]!"), span_notice("I yank my [knot_word_yank] out from [btm]."))
 			btm.sexcon.try_do_pain_effect(PAIN_HIGH_EFFECT, FALSE)
+		else if(notify && top.sexcon.knot_via_portal)
+			playsound(btm, 'sound/misc/mat/insert (1).ogg', 50, TRUE, -2, ignore_walls = FALSE)
+			portal_knot_remove_message(top, btm, FALSE, btm_removed)
+			btm.emote("painmoan", forced = TRUE)
+			btm.sexcon.try_do_pain_effect(PAIN_MILD_EFFECT, FALSE)
 		else if(notify)
 			playsound(btm, 'sound/misc/mat/insert (1).ogg', 50, TRUE, -2, ignore_walls = FALSE)
 			var/knot_word_slip = top.sexcon.get_knot_synonym()
@@ -418,6 +451,7 @@
 /datum/sex_controller/proc/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
 	var/mob/living/carbon/human/top = knotted_owner
 	var/mob/living/carbon/human/btm = knotted_recipient
+	portal_knot_release()
 	if(istype(top) && top?.sexcon?.knotted_status)
 		if(!keep_top_status) // only keep the status if we're reapplying the knot
 			top.remove_status_effect(/datum/status_effect/knotted)
@@ -550,6 +584,12 @@
 		var/mob/living/carbon/human/top = L.sexcon.knotted_owner
 		if(istype(top) && top.sexcon)
 			var/do_forceful_removal = L.cmode || L.sexcon.arousal > MAX_AROUSAL / 4 || L.sexcon.manual_arousal > SEX_MANUAL_AROUSAL_PARTIAL // bottom forced the knot, so bottom can wrench free
+			top.sexcon.knot_remove(forceful_removal = do_forceful_removal, remover = L)
+	else if(L.sexcon.knotted_status == KNOTTED_AS_BTM && L.sexcon.knot_via_portal)
+		// The bottom can't take the panties off while knotted, so they can always pull free of the portal.
+		var/mob/living/carbon/human/top = L.sexcon.knotted_owner
+		if(istype(top) && top.sexcon)
+			var/do_forceful_removal = L.cmode || L.sexcon.arousal > MAX_AROUSAL / 4 || L.sexcon.manual_arousal > SEX_MANUAL_AROUSAL_PARTIAL
 			top.sexcon.knot_remove(forceful_removal = do_forceful_removal, remover = L)
 	else if(L.sexcon.knotted_status == KNOTTED_AS_BTM)
 		to_chat(L, span_warning("I can't pull free!"))

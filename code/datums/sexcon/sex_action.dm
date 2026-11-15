@@ -14,6 +14,8 @@
 	/// If TRUE, skips adjacency and instead requires direct line of sight within ranged_los_distance tiles
 	var/ranged_los_action = FALSE
 	var/ranged_los_distance = 7
+	/// If TRUE, the action works at any distance and neither participant moving interrupts it (portal actions)
+	var/remote_action = FALSE
 	/// Whether the action is forbidden from being done while incapacitated (stun, handcuffed)
 	var/check_incapacitated = TRUE
 	/// Whether the action requires an aggressive grab on the victim
