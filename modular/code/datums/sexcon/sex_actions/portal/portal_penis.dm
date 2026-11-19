@@ -127,7 +127,7 @@
 		span_warning("I sink my [hole_word] down onto their cock through the portal."), \
 		span_love("Something slick sinks down onto my cock through the portal!"))
 	portal_holder_vague(user, target)
-	playsound(user, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), 20, TRUE, ignore_walls = FALSE)
+	playsound_erp(user, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), 20, TRUE, extrarange = 0, travel = SOUND_TRAVEL_LEAKING)
 
 /datum/sex_action/portal/ride/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(!user.sexcon.do_knot_action_as_bottom)

@@ -159,7 +159,7 @@
 		span_love("Something pushes into my [hole_word] through the portal!"), \
 		span_warning("I slide my cock into the portal and into my own [hole_word]."))
 	portal_holder_vague(user, target)
-	playsound(user, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), 20, TRUE, ignore_walls = FALSE)
+	playsound_erp(user, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), 20, TRUE, extrarange = 0, travel = SOUND_TRAVEL_LEAKING)
 
 /datum/sex_action/portal/fuck/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(!user.sexcon.do_knot_action)
