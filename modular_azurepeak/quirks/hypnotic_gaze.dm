@@ -2,7 +2,7 @@
  * Hypnotic Influence: suggestion and trance on top of the hypnosis framework
  * (modular/code/modules/hypnosis/). Ported from Bad-Drakian-RW's Hypnotic Gaze / Presence.
  *
- * One quirk; the character pref hypnotic_presence picks which spell it grants. Gaze needs eye
+ * One quirk; its Configure setting picks which spell it grants. Gaze needs eye
  * contact, Presence does not. The spell is the only way to entrance someone, and holding the
  * quirk is what makes someone a hypnosis sender. A trance lasts until released, and while it
  * lasts the caster messages and sets suggestions for the subject from the Hypnotize panel.
@@ -71,14 +71,56 @@ GLOBAL_LIST_EMPTY(hypnotic_suggestions)
 	desc = "Something about me draws others in, leaving my words lingering deep within their thoughts."
 	point_cost = 1
 	custom_text = "Grants Hypnotic Gaze or Hypnotic Presence, chosen with Configure: a two-tile, ten-second stationary channel that entrances a willing target until I release them. The next words they hear from me become a lasting suggestion. Gaze needs us both to have uncovered eyes; Presence does not. The Hypnotize panel then lets me send hypnotic messages to my subjects, change their suggestion or release them. It's the only way to hypnotize anyone."
+	configurable = TRUE
+	/// Presence instead of Gaze
+	var/presence = FALSE
+	/// Examine lines, one per mode, stored as plain text and encoded at display time
+	var/gaze_text = "Their eyes are enticing to gaze into."
+	var/presence_text = "There is something strangely compelling about their presence."
+
+/datum/quirk/hypnotic_influence/config_summary()
+	var/examine_text = presence ? presence_text : gaze_text
+	return "<b>[presence ? "Presence" : "Gaze"]</b>: [html_encode(examine_text)]"
+
+/datum/quirk/hypnotic_influence/save_config()
+	return list("presence" = presence, "gaze_text" = gaze_text, "presence_text" = presence_text)
+
+/datum/quirk/hypnotic_influence/load_config(list/data, savefile/S)
+	if(islist(data))
+		presence = data["presence"]
+		gaze_text = data["gaze_text"]
+		presence_text = data["presence_text"]
+	// Character-level keys from before the quirk held its own config
+	else if(S)
+		S["hypnotic_presence"] >> presence
+		S["hypnotic_gaze_text"] >> gaze_text
+		S["hypnotic_presence_text"] >> presence_text
+	presence = !!presence
+	gaze_text = sanitize_hypnotic_gaze_text(gaze_text)
+	presence_text = sanitize_hypnotic_presence_text(presence_text)
+
+/datum/quirk/hypnotic_influence/configure(mob/user)
+	var/list/modes = list("Gaze (needs eye contact)" = FALSE, "Presence (no eye contact)" = TRUE)
+	var/new_mode = tgui_input_list(user, "How does your influence take hold? Its style follows your Hypnotize panel style.", "Hypnotic Influence", modes, modes[presence ? 2 : 1])
+	if(!new_mode)
+		return
+	var/new_presence = modes[new_mode]
+	var/prompt = new_presence ? "Text shown when others examine your presence:" : "Text shown when others can see your eyes:"
+	var/new_text = tgui_input_text(user, prompt, "Hypnotic Influence", new_presence ? presence_text : gaze_text, max_length = 100, multiline = TRUE, encode = FALSE)
+	if(isnull(new_text))
+		return
+	presence = new_presence
+	if(presence)
+		presence_text = sanitize_hypnotic_presence_text(new_text)
+	else
+		gaze_text = sanitize_hypnotic_gaze_text(new_text)
+	to_chat(user, span_notice("Set my Hypnotic Influence to [presence ? "Presence" : "Gaze"]."))
 
 /datum/quirk/hypnotic_influence/apply_to_human(mob/living/carbon/human/recipient)
 	if(recipient.has_hypnotic_influence())
 		return
-	var/datum/preferences/prefs = recipient.client?.prefs
-	var/presence = !!prefs?.hypnotic_presence
 	recipient.hypnotic_presence = presence
-	recipient.hypnotic_gaze_text = presence ? sanitize_hypnotic_presence_text(prefs?.hypnotic_presence_text) : sanitize_hypnotic_gaze_text(prefs?.hypnotic_gaze_text)
+	recipient.hypnotic_gaze_text = presence ? sanitize_hypnotic_presence_text(presence_text) : sanitize_hypnotic_gaze_text(gaze_text)
 	var/spell_type = presence ? /obj/effect/proc_holder/spell/invoked/hypnotic_gaze/presence : /obj/effect/proc_holder/spell/invoked/hypnotic_gaze
 	if(recipient.mind)
 		recipient.mind.AddSpell(new spell_type)
