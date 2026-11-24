@@ -27,7 +27,7 @@
 	if(!user.sexcon.do_subtle_action)
 		user.sexcon.generic_sex_noise()
 	user.sexcon.perform_sex_action(target, 2, target_pain, TRUE)
-	target.sexcon.handle_passive_ejaculation()
+	portal_wearer_passive(user, target)
 	portal_twitch(user, target)
 
 /datum/sex_action/portal/finger/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -83,7 +83,7 @@
 			span_love("They gush into my mouth through the portal!"), \
 			span_love("I gush into someone's mouth through the portal!"), \
 			span_love("I gush into my own mouth through the portal!"))
-		target.sexcon.cum_into(oral = TRUE, splashed_user = user)
+		target.sexcon.cum_into(oral = TRUE, splashed_user = user, portal_holder = user)
 	portal_twitch(user, target)
 
 /datum/sex_action/portal/lick/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -123,7 +123,7 @@
 	if(!do_subtle)
 		user.sexcon.make_sucking_noise()
 	user.sexcon.perform_sex_action(target, 2, 0, TRUE)
-	target.sexcon.handle_passive_ejaculation()
+	portal_wearer_passive(user, target)
 	portal_twitch(user, target)
 
 /datum/sex_action/portal/rim/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -181,7 +181,7 @@
 			span_love("Someone cums deep into my [hole_word] through the portal!"), \
 			span_love("I cum deep into my own [hole_word] through the portal!"))
 		for(var/i = 1; i <= user.sexcon.get_load_bursts(); i++)
-			user.sexcon.cum_into(splashed_user = target, knot_action = src, knot_btm = target, orifice = target_sex_part, consume_charge = i == 1 ? TRUE : FALSE)
+			user.sexcon.cum_into(splashed_user = target, knot_action = src, knot_btm = target, orifice = target_sex_part, consume_charge = i == 1 ? TRUE : FALSE, portal_holder = user)
 			try_portal_impregnate(user, target)
 			sleep(10)
 		user.virginity = FALSE
@@ -191,7 +191,7 @@
 		user.sexcon.perform_sex_action(target, 1.2, 3, FALSE)
 	else
 		user.sexcon.perform_sex_action(target, 2, !user.sexcon.do_knot_action ? 3 : 7, FALSE)
-	target.sexcon.handle_passive_ejaculation()
+	portal_wearer_passive(user, target)
 	portal_twitch(user, target)
 
 /datum/sex_action/portal/fuck/proc/try_portal_impregnate(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -247,7 +247,7 @@
 	user.sexcon.perform_sex_action(user, 2, grind_pain, TRUE)
 	user.sexcon.handle_passive_ejaculation()
 	user.sexcon.perform_sex_action(target, 1.5, grind_pain, TRUE)
-	target.sexcon.handle_passive_ejaculation()
+	portal_wearer_passive(user, target)
 	portal_twitch(user, target)
 
 /datum/sex_action/portal/grind/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)

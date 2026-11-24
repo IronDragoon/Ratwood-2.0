@@ -27,7 +27,7 @@
 
 /// The light in the user's active hand, if it opens onto the target.
 /datum/sex_action/portal/proc/get_portal_light(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	var/obj/item/portallight/light = user?.get_active_held_item()
+	var/obj/item/portal_light/light = user?.get_active_held_item()
 	if(!istype(light))
 		return null
 	if(!target || light.get_wearer() != target)
@@ -55,12 +55,13 @@
 	return TRUE
 
 /datum/sex_action/portal/proc/portal_ready(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	var/obj/item/portallight/light = get_portal_light(user, target)
+	var/obj/item/portal_light/light = get_portal_light(user, target)
 	if(!light)
 		return FALSE
 	if(light.linked_underwear.focus != portal_focus)
 		return FALSE
-	return portal_focus_available(target, portal_focus)
+	var/datum/portal_focus/focus = get_portal_focus(portal_focus)
+	return focus?.available_on(target)
 
 /datum/sex_action/portal/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	if(user == target && !allow_self)
@@ -88,6 +89,14 @@
 
 /datum/sex_action/portal/is_finished(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	return !portal_ready(user, target)
+
+/**
+ * The wearer's passive climax during a portal action. Whatever comes from the part inside the portal
+ * (their cock, or their cunt when they have no cock) spills out at the holder's end, with private lines.
+ */
+/datum/sex_action/portal/proc/portal_wearer_passive(mob/living/carbon/human/user, mob/living/carbon/human/target, mob/living/carbon/human/splashed = null)
+	var/through_portal = portal_focus == SEX_PART_COCK || (portal_focus == SEX_PART_CUNT && !target.getorganslot(ORGAN_SLOT_PENIS))
+	target.sexcon.handle_passive_ejaculation(splashed, portal_holder = through_portal ? user : null)
 
 /// Sends one line to the holder, one to the wearer, or the self line when they are the same person.
 /datum/sex_action/portal/proc/portal_tell(mob/living/carbon/human/user, mob/living/carbon/human/target, holder_msg, wearer_msg, self_msg)

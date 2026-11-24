@@ -4,38 +4,52 @@
 
 #define PORTAL_KNOT_TRAIT "portal_knot"
 
-/// The wearer's focus parts, in the order the light cycles through them.
-#define PORTAL_FOCUS_ORDER list(SEX_PART_CUNT, SEX_PART_COCK, SEX_PART_ANUS)
+/**
+ * PORTAL FOCUS
+ * What differs by the part the portal opens onto. GLOB.portal_foci holds one each, in the order the light cycles through them.
+ */
+/datum/portal_focus
+	/// SEX_PART_CUNT, SEX_PART_COCK or SEX_PART_ANUS.
+	var/part
+	var/name
+	/// The organ the wearer needs. Null for the anus, which only needs a chest.
+	var/organ_slot
+	/// The light's overlay for this focus. Null draws the wearer's own cock instead.
+	var/overlay_state
+	/// What the wearer feels when the panties go on.
+	var/worn_line
 
-/// Does this person have the organ behind a portal focus?
-/proc/portal_focus_available(mob/living/carbon/human/wearer, focus)
+/datum/portal_focus/New(part, name, organ_slot, overlay_state, worn_line)
+	src.part = part
+	src.name = name
+	src.organ_slot = organ_slot
+	src.overlay_state = overlay_state
+	src.worn_line = worn_line
+
+/// Whether this person has the part behind this focus.
+/datum/portal_focus/proc/available_on(mob/living/carbon/human/wearer)
 	if(!wearer)
 		return FALSE
-	switch(focus)
-		if(SEX_PART_CUNT)
-			return !!wearer.getorganslot(ORGAN_SLOT_VAGINA)
-		if(SEX_PART_COCK)
-			return !!wearer.getorganslot(ORGAN_SLOT_PENIS)
-		if(SEX_PART_ANUS)
-			return !!wearer.get_bodypart(BODY_ZONE_CHEST)
-	return FALSE
+	return organ_slot ? !!wearer.getorganslot(organ_slot) : !!wearer.get_bodypart(BODY_ZONE_CHEST)
 
-/proc/portal_focus_name(focus)
-	switch(focus)
-		if(SEX_PART_CUNT)
-			return "cunt"
-		if(SEX_PART_COCK)
-			return "cock"
-		if(SEX_PART_ANUS)
-			return "ass"
-	return "nothing"
+GLOBAL_LIST_INIT(portal_foci, list(
+	new /datum/portal_focus(SEX_PART_CUNT, "cunt", ORGAN_SLOT_VAGINA, "portal_vag", "I feel magical energies focus around my loins."),
+	new /datum/portal_focus(SEX_PART_COCK, "cock", ORGAN_SLOT_PENIS, null, "I feel magical energies focus around my cock."),
+	new /datum/portal_focus(SEX_PART_ANUS, "ass", null, "portal_anus", "I feel magical energies focus around my backside."),
+))
+
+/proc/get_portal_focus(part)
+	for(var/datum/portal_focus/focus as anything in GLOB.portal_foci)
+		if(focus.part == part)
+			return focus
+	return null
 
 /// Finds the portal light linking these two people (or one person to themselves), held by either of them.
 /proc/find_portal_light_between(mob/living/carbon/human/first, mob/living/carbon/human/second)
 	if(!ishuman(first) || !ishuman(second))
 		return null
 	for(var/mob/living/carbon/human/holder as anything in list(first, second))
-		for(var/obj/item/portallight/light in holder.held_items)
+		for(var/obj/item/portal_light/light in holder.held_items)
 			var/mob/living/carbon/human/wearer = light.get_wearer()
 			if(!wearer)
 				continue
@@ -47,10 +61,18 @@
 				return light
 	return null
 
+/// This person's portal panties, if they are wearing a pair right now.
+/mob/living/carbon/human/proc/get_worn_portal_panties()
+	RETURN_TYPE(/obj/item/undies/portal)
+	var/obj/item/undies/portal/portal_undies = underwear
+	if(!istype(portal_undies) || portal_undies.get_wearer() != src)
+		return null
+	return portal_undies
+
 /**
  * PORTAL LIGHT
  */
-/obj/item/portallight
+/obj/item/portal_light
 	name = "portal light"
 	desc = "A softly pulsing arcane device."
 	icon = 'modular/icons/obj/lewd/portal.dmi'
@@ -63,19 +85,30 @@
 	var/knot_locked = FALSE
 	/// The top's sex controller for the knot tied through this light, so destroying the light can pull it free.
 	var/datum/sex_controller/knot_sexcon
+	/// world.time after which the "can't let go" reason may show again, so one attempt doesn't print it twice.
+	var/next_knot_lock_notice = 0
+	/// Which portal_glow_[n] colour the light shows, from the wearer's arousal. 0 while unlinked.
+	var/glow_step = 0
 
-/obj/item/portallight/Destroy()
-	if(knot_locked && knot_sexcon)
-		var/datum/sex_controller/knotted = knot_sexcon
-		set_knot_lock(FALSE) // now, while the link still reaches the panties; the async release finishes after Destroy
-		// Async: the yank runs emotes and sleeps, which Destroy must not.
-		INVOKE_ASYNC(knotted, TYPE_PROC_REF(/datum/sex_controller, knot_remove), TRUE)
+/obj/item/portal_light/Destroy()
+	break_knot_on_destroy()
 	if(linked_underwear?.linked_light == src)
 		linked_underwear.linked_light = null
 	linked_underwear = null
 	return ..()
 
-/obj/item/portallight/examine(mob/user)
+/**
+ * For either item's Destroy while a knot is tied through it: lifts the item locks now, while the link still
+ * reaches both items, then yanks the knot free asynchronously, since the yank runs emotes and sleeps.
+ */
+/obj/item/portal_light/proc/break_knot_on_destroy()
+	if(!knot_locked || !knot_sexcon)
+		return
+	var/datum/sex_controller/knot_controller = knot_sexcon
+	set_knot_lock(FALSE)
+	INVOKE_ASYNC(knot_controller, TYPE_PROC_REF(/datum/sex_controller, knot_remove), TRUE)
+
+/obj/item/portal_light/examine(mob/user)
 	. = ..()
 	if(!linked_underwear)
 		. += span_info("It isn't linked to anything. Touch it to a pair of portal panties to link them.")
@@ -83,27 +116,20 @@
 	if(!get_wearer())
 		. += span_info("It is linked, but there's no one on the other side.")
 		return
-	. += span_info("It is focused on their [portal_focus_name(linked_underwear.focus)]. Middle-click to refocus.")
+	var/datum/portal_focus/focus = get_portal_focus(linked_underwear.focus)
+	. += span_info("It is focused on their [focus?.name]. Middle-click to refocus.")
 
-/// Called when a TRAIT_NODROP item refuses to leave someone's inventory (drop, throw, store, hand over).
-/obj/item/proc/on_blocked_unequip(mob/user)
-	return
-
-/obj/item/portallight
-	/// world.time after which the "can't let go" reason may show again, so one attempt doesn't print it twice.
-	var/next_knot_lock_notice = 0
-
-/obj/item/portallight/on_blocked_unequip(mob/user)
+/obj/item/portal_light/on_blocked_unequip(mob/user)
 	if(!knot_locked || world.time < next_knot_lock_notice)
 		return
 	next_knot_lock_notice = world.time + 1 SECONDS
 	to_chat(user, span_warning("I can't let go of [src]! Something is knotted through the portal. (Click the knot alert to pull free.)"))
 
-/obj/item/portallight/proc/get_wearer()
+/obj/item/portal_light/proc/get_wearer()
 	return linked_underwear?.get_wearer()
 
 /// Whoever is holding the light, in either hand.
-/obj/item/portallight/proc/get_holder()
+/obj/item/portal_light/proc/get_holder()
 	if(!ishuman(loc))
 		return null
 	var/mob/living/carbon/human/holder = loc
@@ -111,14 +137,14 @@
 		return null
 	return holder
 
-/obj/item/portallight/proc/set_linked_underwear(obj/item/undies/portal/new_underwear)
+/obj/item/portal_light/proc/set_linked_underwear(obj/item/undies/portal/new_underwear)
 	if(linked_underwear == new_underwear)
 		update_portal_icon()
 		return
 	if(linked_underwear?.linked_light == src)
 		linked_underwear.linked_light = null
 	if(new_underwear?.linked_light && new_underwear.linked_light != src)
-		var/obj/item/portallight/old_light = new_underwear.linked_light
+		var/obj/item/portal_light/old_light = new_underwear.linked_light
 		old_light.linked_underwear = null
 		old_light.update_portal_icon()
 	linked_underwear = new_underwear
@@ -126,7 +152,7 @@
 		new_underwear.linked_light = src
 	update_portal_icon()
 
-/obj/item/portallight/proc/set_knot_lock(locked, datum/sex_controller/top_sexcon)
+/obj/item/portal_light/proc/set_knot_lock(locked, datum/sex_controller/top_sexcon)
 	knot_locked = locked
 	knot_sexcon = locked ? top_sexcon : null
 	if(linked_underwear)
@@ -135,10 +161,6 @@
 		ADD_TRAIT(src, TRAIT_NODROP, PORTAL_KNOT_TRAIT)
 	else
 		REMOVE_TRAIT(src, TRAIT_NODROP, PORTAL_KNOT_TRAIT)
-
-/obj/item/portallight
-	/// Which portal_glow_[n] colour the light shows, from the wearer's arousal. 0 while unlinked.
-	var/glow_step = 0
 
 /// Arousal to glow colour: green, lime, yellow, orange, then red from the climax threshold.
 /proc/portal_glow_step(arousal)
@@ -154,7 +176,7 @@
 		flesh = "#[flesh]"
 	return flesh
 
-/obj/item/portallight/proc/update_portal_icon()
+/obj/item/portal_light/proc/update_portal_icon()
 	cut_overlays()
 	icon_state = "unpaired"
 	glow_step = 0
@@ -168,32 +190,25 @@
 	var/mutable_appearance/sleeve = mutable_appearance(icon, "portal_sleeve_normal")
 	sleeve.color = flesh
 	add_overlay(sleeve)
-	if(linked_underwear.focus == SEX_PART_COCK)
+	var/datum/portal_focus/focus = get_portal_focus(linked_underwear.focus)
+	if(!focus)
+		return
+	if(!focus.overlay_state)
 		var/mutable_appearance/cock = portal_cock_overlay(wearer)
 		if(cock) // no usable sprite leaves the sleeve bare
 			add_overlay(cock)
 		return
-	var/organ_state
-	switch(linked_underwear.focus)
-		if(SEX_PART_CUNT)
-			organ_state = "portal_vag"
-		if(SEX_PART_ANUS)
-			organ_state = "portal_anus"
-	if(organ_state)
-		var/mutable_appearance/organ = mutable_appearance(icon, organ_state)
-		organ.color = gradient("#f37272", flesh, 0.35) // pink, warmed toward their own flesh
-		add_overlay(organ)
+	var/mutable_appearance/organ = mutable_appearance(icon, focus.overlay_state)
+	organ.color = gradient("#f37272", flesh, 0.35) // pink, warmed toward their own flesh
+	add_overlay(organ)
 
 /// The wearer's arousal changed; their light redraws only when that crosses into another glow colour.
 /datum/sex_controller/proc/portal_arousal_changed()
 	var/mob/living/carbon/human/wearer = user
 	if(!istype(wearer))
 		return
-	var/obj/item/undies/portal/portal_undies = wearer.underwear
-	if(!istype(portal_undies) || !portal_undies.linked_light)
-		return
-	var/obj/item/portallight/light = portal_undies.linked_light
-	if(light.glow_step != portal_glow_step(arousal))
+	var/obj/item/portal_light/light = wearer.get_worn_portal_panties()?.linked_light
+	if(light && light.glow_step != portal_glow_step(arousal))
 		light.update_portal_icon()
 
 /// Side-on portal cocks, built once per look: "[accessory type]-[icon state]-[colours]" = icon.
@@ -216,7 +231,7 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
  * The wearer's own cock, drawn side-on poking out of the portal: their shape, size, colours and current
  * soft or hard state, from the same cached sprites as their body. Null if there's nothing to draw.
  */
-/obj/item/portallight/proc/portal_cock_overlay(mob/living/carbon/human/wearer)
+/obj/item/portal_light/proc/portal_cock_overlay(mob/living/carbon/human/wearer)
 	var/obj/item/organ/penis/cock = wearer.getorganslot(ORGAN_SLOT_PENIS)
 	if(!cock?.accessory_type)
 		return null
@@ -247,12 +262,11 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 
 /// The wearer's cock changed state; a light focused on it redraws to match.
 /mob/living/carbon/human/proc/refresh_portal_cock()
-	var/obj/item/undies/portal/portal_undies = underwear
-	if(!istype(portal_undies) || portal_undies.focus != SEX_PART_COCK)
-		return
-	portal_undies.linked_light?.update_portal_icon()
+	var/obj/item/undies/portal/portal_undies = get_worn_portal_panties()
+	if(portal_undies?.focus == SEX_PART_COCK)
+		portal_undies.linked_light?.update_portal_icon()
 
-/obj/item/portallight/attack_self(mob/user)
+/obj/item/portal_light/attack_self(mob/user)
 	. = ..()
 	var/mob/living/carbon/human/holder = user
 	if(!istype(holder))
@@ -284,7 +298,7 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 		return
 	holder.sexcon.start(wearer)
 
-/obj/item/portallight/MiddleClick(mob/user, params)
+/obj/item/portal_light/MiddleClick(mob/user, params)
 	. = ..()
 	if(!ishuman(user) || !user.is_holding(src))
 		return
@@ -295,17 +309,17 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 	if(linked_underwear.knot_locked)
 		to_chat(user, span_warning("The portal won't shift while something is knotted through it!"))
 		return
-	var/list/order = PORTAL_FOCUS_ORDER
-	var/start = max(order.Find(linked_underwear.focus), 1)
-	for(var/step in 1 to length(order))
-		var/candidate = order[((start + step - 1) % length(order)) + 1]
-		if(!portal_focus_available(wearer, candidate))
+	var/list/foci = GLOB.portal_foci
+	var/start = max(foci.Find(get_portal_focus(linked_underwear.focus)), 1)
+	for(var/step in 1 to length(foci))
+		var/datum/portal_focus/candidate = foci[((start + step - 1) % length(foci)) + 1]
+		if(!candidate.available_on(wearer))
 			continue
-		if(candidate == linked_underwear.focus)
+		if(candidate.part == linked_underwear.focus)
 			to_chat(user, span_info("There's nothing else to focus on."))
 			return
-		linked_underwear.focus = candidate
-		to_chat(user, span_info("I refocus the portal on their [portal_focus_name(candidate)]."))
+		linked_underwear.focus = candidate.part
+		to_chat(user, span_info("I refocus the portal on their [candidate.name]."))
 		update_portal_icon()
 		return
 
@@ -324,10 +338,10 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 
 /obj/item/portal_pair_case/attack_self(mob/user)
 	. = ..()
-	var/obj/item/portallight/light = new(get_turf(user))
+	var/obj/item/portal_light/light = new(get_turf(user))
 	var/obj/item/undies/portal/panties = new(get_turf(user))
 	light.set_linked_underwear(panties)
-	playsound(user, 'sound/foley/latch.ogg', 50, TRUE, -2)
+	user.playsound_local(get_turf(user), 'sound/foley/latch.ogg', 50, TRUE) // the opener alone hears it
 	to_chat(user, span_notice("I open [src]; a portal light and a pair of portal panties, already linked."))
 	qdel(src)
 	user.put_in_hands(light)
@@ -342,7 +356,7 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 	icon = 'modular/icons/obj/lewd/portal.dmi'
 	icon_state = "panties"
 	sprite_acc = /datum/sprite_accessory/underwear/portal
-	var/obj/item/portallight/linked_light
+	var/obj/item/portal_light/linked_light
 	/// Which part the portal opens onto: SEX_PART_CUNT, SEX_PART_COCK or SEX_PART_ANUS.
 	var/focus = SEX_PART_CUNT
 	/// Set while a knot is tied through the portal. The panties can't come off.
@@ -355,12 +369,9 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 	undies_feature.accessory_type = sprite_acc
 
 /obj/item/undies/portal/Destroy()
-	if(knot_locked && linked_light?.knot_sexcon)
-		var/datum/sex_controller/knotted = linked_light.knot_sexcon
-		linked_light.set_knot_lock(FALSE) // now, while the link still reaches the light; the async release finishes after Destroy
-		// Async: the yank runs emotes and sleeps, which Destroy must not.
-		INVOKE_ASYNC(knotted, TYPE_PROC_REF(/datum/sex_controller, knot_remove), TRUE)
-	var/obj/item/portallight/old_light = linked_light
+	if(knot_locked)
+		linked_light?.break_knot_on_destroy()
+	var/obj/item/portal_light/old_light = linked_light
 	if(old_light?.linked_underwear == src)
 		old_light.linked_underwear = null
 	linked_light = null
@@ -386,23 +397,14 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 		on_worn(wearer)
 
 /obj/item/undies/portal/proc/on_worn(mob/living/carbon/human/wearer)
-	focus = SEX_PART_ANUS
-	for(var/candidate in PORTAL_FOCUS_ORDER)
-		if(portal_focus_available(wearer, candidate))
-			focus = candidate
+	var/datum/portal_focus/chosen = GLOB.portal_foci[length(GLOB.portal_foci)] // the ass, which everyone has
+	for(var/datum/portal_focus/candidate as anything in GLOB.portal_foci)
+		if(candidate.available_on(wearer))
+			chosen = candidate
 			break
-	switch(focus)
-		if(SEX_PART_CUNT)
-			to_chat(wearer, span_info("I feel magical energies focus around my loins."))
-		if(SEX_PART_COCK)
-			to_chat(wearer, span_info("I feel magical energies focus around my cock."))
-		else
-			to_chat(wearer, span_info("I feel magical energies focus around my backside."))
+	focus = chosen.part
+	to_chat(wearer, span_info(chosen.worn_line))
 	linked_light?.update_portal_icon()
-
-/// Whether these can be taken off right now. Called by both ways of stripping underwear.
-/obj/item/undies/proc/can_be_removed(mob/user)
-	return TRUE
 
 /obj/item/undies/portal/can_be_removed(mob/user)
 	if(knot_locked)
@@ -410,17 +412,13 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 		return FALSE
 	return TRUE
 
-/// Called after these come off a wearer.
-/obj/item/undies/proc/on_removed(mob/living/carbon/human/old_wearer)
-	return
-
 /obj/item/undies/portal/on_removed(mob/living/carbon/human/old_wearer)
 	linked_light?.update_portal_icon()
 
 /obj/item/undies/portal/attackby(obj/item/I, mob/user, params)
-	if(!istype(I, /obj/item/portallight))
+	if(!istype(I, /obj/item/portal_light))
 		return ..()
-	var/obj/item/portallight/light = I
+	var/obj/item/portal_light/light = I
 	if(knot_locked || light.knot_locked)
 		to_chat(user, span_warning("The link won't change while something is knotted through it!"))
 		return TRUE
@@ -449,10 +447,9 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
  * The wearer's emotes reach whoever holds the linked light, names swapped for "someone".
  */
 /mob/living/carbon/human/proc/relay_emote_through_portal(message)
-	var/obj/item/undies/portal/portal_undies = underwear
-	if(!istype(portal_undies) || !message)
+	if(!message)
 		return
-	var/mob/living/carbon/human/holder = portal_undies.linked_light?.get_holder()
+	var/mob/living/carbon/human/holder = get_worn_portal_panties()?.linked_light?.get_holder()
 	if(!holder || holder == src || !holder.client)
 		return
 	if(holder in hearers(DEFAULT_MESSAGE_RANGE, src)) // close enough to have seen it anyway
@@ -475,4 +472,3 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 	to_chat(holder, span_love("<i>Through the portal,</i> someone [message]"))
 
 #undef PORTAL_KNOT_TRAIT
-#undef PORTAL_FOCUS_ORDER

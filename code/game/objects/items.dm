@@ -450,6 +450,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		A.update_icon()
 	return ..()
 
+/// Called when a TRAIT_NODROP item refuses to leave someone's inventory (drop, throw, store, hand over).
+/obj/item/proc/on_blocked_unequip(mob/user)
+	return
+
 /obj/item/proc/check_allowed_items(atom/target, not_inside, target_self)
 	if(((src in target) && !target_self) || (!isturf(target.loc) && !isturf(target) && not_inside))
 		return 0

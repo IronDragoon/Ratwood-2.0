@@ -5,11 +5,11 @@
 	/// TRUE while this controller's knot is tied through a portal light.
 	var/knot_via_portal = FALSE
 	/// The portal light the knot is tied through, locked until the knot ends.
-	var/obj/item/portallight/knot_portal_light
+	var/obj/item/portal_light/knot_portal_light
 
 /// Unlocks the light and panties and clears the portal flags on both ends of the knot.
 /datum/sex_controller/proc/portal_knot_release()
-	var/obj/item/portallight/locked_light
+	var/obj/item/portal_light/locked_light
 	var/list/controllers = list(src)
 	var/mob/living/carbon/human/top = knotted_owner
 	var/mob/living/carbon/human/btm = knotted_recipient
@@ -38,14 +38,21 @@
 		to_chat(user, span_notice("My [knot_word] swells and ties through the portal."))
 		to_chat(btm, span_notice("Something swells and ties inside me through the portal!"))
 
-/// The top climaxes while knotted. Called on the top's controller.
+/// The top climaxes while knotted. Called on the top's controller. Private at both ends, like every portal line.
 /datum/sex_controller/proc/portal_knot_climax_message(is_oral_knot)
-	user.visible_message(span_love("[user] shudders in climax!"), vision_distance = (suppress_moan ? 1 : DEFAULT_MESSAGE_RANGE), ignored_mobs = list(knotted_recipient))
 	if(knotted_recipient == user)
 		to_chat(user, span_love(is_oral_knot ? "I climax down my own throat through the portal!" : "I climax deep inside myself through the portal!"))
 		return
 	to_chat(user, span_love("I climax deep through the portal!"))
 	to_chat(knotted_recipient, span_love(is_oral_knot ? "Someone climaxes down my throat through the portal!" : "Someone climaxes deep inside me through the portal!"))
+
+/// A climax that spills out of a portal at portal_holder's end. Called on the climaxer's controller. Private at both ends.
+/datum/sex_controller/proc/portal_climax_message(mob/living/carbon/human/portal_holder)
+	if(portal_holder == user)
+		to_chat(user, span_love("I climax, and it spills back out of the portal over me!"))
+		return
+	to_chat(user, span_love("I climax through the portal!"))
+	to_chat(portal_holder, span_love("Someone climaxes through the portal, spilling over me!"))
 
 /// The knot comes out, gently or with a yank. Sent privately so neither side is named.
 /proc/portal_knot_remove_message(mob/living/carbon/human/top, mob/living/carbon/human/btm, forceful, btm_removed)

@@ -43,8 +43,25 @@
 				undies_feature.accessory_colors = color
 
 /obj/item/undies/Destroy()
+	// Deleted while worn by someone who stays: drop every reference they hold, or this item hard-deletes.
+	if(iscarbon(loc))
+		var/mob/living/carbon/wearer = loc
+		if(wearer.underwear == src && !QDELETED(wearer))
+			var/obj/item/bodypart/chest = wearer.get_bodypart(BODY_ZONE_CHEST)
+			chest?.remove_bodypart_feature(undies_feature)
+			wearer.underwear = null
+	if(undies_feature?.underwear_item == src)
+		undies_feature.underwear_item = null
 	undies_feature = null
 	return ..()
+
+/// Whether these can be taken off right now. Called by both ways of stripping underwear.
+/obj/item/undies/proc/can_be_removed(mob/user)
+	return TRUE
+
+/// Called after these come off a wearer.
+/obj/item/undies/proc/on_removed(mob/living/carbon/human/old_wearer)
+	return
 
 /obj/item/undies/bikini
 	name = "bikini"

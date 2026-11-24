@@ -488,7 +488,8 @@
 	egg.color = "#[user.voice_color]"
 	egg.name = "[user.dna.species.name] eggs"
 
-/datum/sex_controller/proc/cum_into(oral = FALSE, mob/living/carbon/human/splashed_user = null, datum/sex_action/knot_action = null, knot_swap_roles = FALSE, mob/living/carbon/human/knot_btm = null, orifice = SEX_PART_NULL, skip_knot_try = FALSE, consume_charge = TRUE, source_part = SEX_PART_NULL)
+/datum/sex_controller/proc/cum_into(oral = FALSE, mob/living/carbon/human/splashed_user = null, datum/sex_action/knot_action = null, knot_swap_roles = FALSE, mob/living/carbon/human/knot_btm = null, orifice = SEX_PART_NULL, skip_knot_try = FALSE, consume_charge = TRUE, source_part = SEX_PART_NULL, mob/living/carbon/human/portal_holder = null)
+	// portal_holder: set when this happens through a portal light. Sounds play at the holder's end and the receiver's line is private.
 	// splashed_user is the bottom receiving; for top-initiated actions it matches target, for riding/blowjob it is the rider/sucker while target may be null
 	var/mob/living/carbon/human/effective_target = splashed_user || target
 	if((orifice & SEX_PART_TAIL_MAW) && !get_manticore_tail(effective_target))
@@ -498,10 +499,11 @@
 	log_combat(user, effective_target, "Came inside the target")
 	werewolf_sex_infect_attempt(user, effective_target)
 	deadite_sex_infect_attempt(user, effective_target)
+	var/mob/living/carbon/human/sound_source = portal_holder || user
 	if(oral)
-		playsound_erp(user, pick(list('sound/misc/mat/mouthend (1).ogg','sound/misc/mat/mouthend (2).ogg')), 100, FALSE, extrarange = 0)
+		playsound_erp(sound_source, pick(list('sound/misc/mat/mouthend (1).ogg','sound/misc/mat/mouthend (2).ogg')), 100, FALSE, extrarange = 0)
 	else
-		playsound_erp(user, 'sound/misc/mat/endin.ogg', 100, TRUE, extrarange = 0)
+		playsound_erp(sound_source, 'sound/misc/mat/endin.ogg', 100, TRUE, extrarange = 0)
 	if(!skip_knot_try && consume_charge && (knot_btm || (user != effective_target && !isnull(effective_target) && istype(effective_target))))
 		knot_try(knot_action = knot_action, knot_swap_roles = knot_swap_roles, knot_btm = knot_btm)
 	var/datum/sex_controller/receiver_sexcon = splashed_user?.sexcon
@@ -513,7 +515,9 @@
 		var/datum/status_effect/facial/splashed_type = splashed_user.has_status_effect(status_type)
 		if(!splashed_type)
 			splashed_user.apply_status_effect(status_type)
-			if(oral)
+			if(portal_holder)
+				to_chat(splashed_user, span_love(oral ? "I take a load down my throat!" : "I take a load inside me!"))
+			else if(oral)
 				splashed_user.visible_message(span_love("[splashed_user] takes a load down their throat!"), span_love("I take a load down my throat!"))
 			else
 				splashed_user.visible_message(span_love("[splashed_user] takes a load inside them!"), span_love("I take a load inside me!"))
@@ -704,7 +708,8 @@
 		return
 	cum_chalice.reagents.add_reagent(contents_to_drip,1)
 
-/datum/sex_controller/proc/ejaculate(climax_part = SEX_PART_NULL)
+/// portal_holder: the climax spills out of a portal at this person's end, with private lines and their end's sound and mess.
+/datum/sex_controller/proc/ejaculate(climax_part = SEX_PART_NULL, mob/living/carbon/human/portal_holder = null)
 	var/from_tailmaw = get_manticore_tail(user) && ((climax_part & SEX_PART_TAIL_MAW) || (!user.getorganslot(ORGAN_SLOT_TESTICLES) && !user.getorganslot(ORGAN_SLOT_VAGINA)))
 	if(try_resist_orgasm())
 		return
@@ -731,7 +736,8 @@
 				user.try_impregnate(knotted_recipient)
 			else if((orifice & SEX_PART_ANUS) && HAS_TRAIT(knotted_recipient, TRAIT_BAOTHA_FERTILITY_BOON) && !knotted_recipient.getorganslot(ORGAN_SLOT_VAGINA))
 				user.try_impregnate(knotted_recipient)
-		cum_into(oral = is_oral_knot, splashed_user = knotted_recipient, orifice = orifice, skip_knot_try = TRUE)
+		var/mob/living/carbon/human/knot_portal_holder = knot_via_portal ? (knot_portal_light?.get_holder() || user) : null
+		cum_into(oral = is_oral_knot, splashed_user = knotted_recipient, orifice = orifice, skip_knot_try = TRUE, portal_holder = knot_portal_holder)
 		return
 	var/climax_msg = "[user] makes a mess!"
 	var/modular_climax_msg = from_tailmaw ? null : modular_get_chastity_climax_message(climax_msg)
@@ -740,15 +746,19 @@
 	else
 		if(!from_tailmaw && (has_chastity_cage() || has_chastity_anal()))
 			climax_msg = "[user] climaxes and makes a mess in their chastity device!"
-	user.visible_message(span_love(climax_msg), vision_distance = (suppress_moan ? 1 : DEFAULT_MESSAGE_RANGE))
-	playsound_erp(user, 'sound/misc/mat/endout.ogg', suppress_moan ? 12 : 50, TRUE, extrarange = 0)
+	var/mob/living/carbon/human/mess_at = portal_holder || user
+	if(portal_holder)
+		portal_climax_message(portal_holder)
+	else
+		user.visible_message(span_love(climax_msg), vision_distance = (suppress_moan ? 1 : DEFAULT_MESSAGE_RANGE))
+	playsound_erp(mess_at, 'sound/misc/mat/endout.ogg', suppress_moan ? 12 : 50, TRUE, extrarange = 0)
 	var/semen_vol = get_semen_volume()
 	var/obj/item/organ/testicles/testes = user.getorganslot(ORGAN_SLOT_TESTICLES)
-	add_cum_floor(get_turf(user), do_big_puddle = testes?.ball_size > DEFAULT_TESTICLES_SIZE)
-	drop_egg(get_turf(user))
+	add_cum_floor(get_turf(mess_at), do_big_puddle = testes?.ball_size > DEFAULT_TESTICLES_SIZE)
+	drop_egg(get_turf(mess_at))
 	after_ejaculation()
 
-	var/cur_loc = get_turf(user)
+	var/cur_loc = get_turf(mess_at)
 	if(!cur_loc || !isturf(cur_loc))
 		return
 	var/obj/item/reagent_containers/glass/cum_chalice = locate() in cur_loc
@@ -1203,7 +1213,7 @@
 		return FALSE
 	return TRUE
 
-/datum/sex_controller/proc/handle_passive_ejaculation(mob/living/carbon/human/splashed_user = null, climax_part = SEX_PART_NULL)
+/datum/sex_controller/proc/handle_passive_ejaculation(mob/living/carbon/human/splashed_user = null, climax_part = SEX_PART_NULL, mob/living/carbon/human/portal_holder = null)
 	var/mob/living/carbon/human/M = user
 	if(aphrodisiac > 1.5)
 		if(M.check_handholding())
@@ -1224,7 +1234,7 @@
 				adjust_arousal(0.25)
 			else
 				if(prob(3))
-					ejaculate(climax_part)
+					ejaculate(climax_part, portal_holder)
 					if(splashed_user)
 						var/datum/status_effect/facial/facial = splashed_user.has_status_effect(/datum/status_effect/facial)
 						if(!facial)
@@ -1238,7 +1248,7 @@
 		return
 	if(!can_ejaculate())
 		return FALSE
-	ejaculate(climax_part)
+	ejaculate(climax_part, portal_holder)
 	if(splashed_user)
 		var/datum/status_effect/facial/facial = splashed_user.has_status_effect(/datum/status_effect/facial)
 		if(!facial)

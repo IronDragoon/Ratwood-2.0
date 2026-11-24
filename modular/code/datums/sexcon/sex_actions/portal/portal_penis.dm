@@ -30,7 +30,7 @@
 		user.sexcon.generic_sex_noise()
 	user.sexcon.perform_sex_action(target, 2, 0, TRUE)
 	// It spills out of the light, over the holder.
-	target.sexcon.handle_passive_ejaculation(user)
+	portal_wearer_passive(user, target, splashed = user)
 	portal_twitch(user, target)
 
 /datum/sex_action/portal/stroke/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -90,7 +90,7 @@
 			span_love("I cum into someone's mouth through the portal!"), \
 			span_love("I cum into my own mouth through the portal!"))
 		for(var/i = 1; i <= target.sexcon.get_load_bursts(); i++)
-			target.sexcon.cum_into(oral = TRUE, splashed_user = user, knot_action = src, knot_swap_roles = TRUE, knot_btm = user, consume_charge = i == 1 ? TRUE : FALSE)
+			target.sexcon.cum_into(oral = TRUE, splashed_user = user, knot_action = src, knot_swap_roles = TRUE, knot_btm = user, consume_charge = i == 1 ? TRUE : FALSE, portal_holder = user)
 			sleep(10)
 	portal_twitch(user, target)
 
@@ -148,7 +148,7 @@
 			span_love("I cum deep into someone through the portal!"))
 		for(var/i = 1; i <= target.sexcon.get_load_bursts(); i++)
 			sleep(10)
-			target.sexcon.cum_into(splashed_user = user, knot_action = src, knot_swap_roles = TRUE, knot_btm = user, orifice = user_sex_part, consume_charge = i == 1 ? TRUE : FALSE)
+			target.sexcon.cum_into(splashed_user = user, knot_action = src, knot_swap_roles = TRUE, knot_btm = user, orifice = user_sex_part, consume_charge = i == 1 ? TRUE : FALSE, portal_holder = user)
 			try_portal_impregnate(user, target)
 		target.virginity = FALSE
 		user.virginity = FALSE

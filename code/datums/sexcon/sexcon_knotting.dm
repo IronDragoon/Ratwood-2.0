@@ -20,6 +20,10 @@
 			return TRUE
 	return FALSE
 
+/// Whether this person pulling out of a knot yanks rather than slips: in combat mode, or still aroused (considered hard).
+/datum/sex_controller/proc/wants_forceful_unknot()
+	return user.cmode || arousal > MAX_AROUSAL / 4 || manual_arousal > SEX_MANUAL_AROUSAL_PARTIAL
+
 /datum/sex_controller/proc/knot_check_remove(action_path)
 	var/datum/sex_controller/user_sexcon = user?.sexcon
 	var/datum/sex_controller/target_sexcon = target?.sexcon
@@ -66,7 +70,7 @@
 	if(!btm.client?.prefs?.sexable)
 		return
 	// A knot tied through a portal locks the light and the panties instead of tethering the two bodies.
-	var/obj/item/portallight/knot_portal = istype(action, /datum/sex_action/portal) ? find_portal_light_between(user, btm) : null
+	var/obj/item/portal_light/knot_portal = istype(action, /datum/sex_action/portal) ? find_portal_light_between(user, btm) : null
 	var/self_knot = (btm == user)
 	if(self_knot && !knot_portal) // only a portal lets someone knot themselves
 		return
@@ -373,6 +377,8 @@
 		knot_exit(keep_top_status, keep_btm_status)
 		return
 	if(ishuman(btm) && !QDELETED(btm) && ishuman(top) && !QDELETED(top))
+		// Through a portal, every sound plays at the light holder's end and the load lines stay private.
+		var/mob/living/carbon/human/portal_holder = top.sexcon.knot_via_portal ? (top.sexcon.knot_portal_light?.get_holder() || top) : null
 		if(forceful_removal)
 			var/damage = top.sexcon.knotted_part_partner&SEX_PART_JAWS ? 10 : 30 // base damage value
 			if (top.sexcon.arousal > MAX_AROUSAL / 4 || top.sexcon.manual_arousal > SEX_MANUAL_AROUSAL_PARTIAL) // considered still hard, let it rip like a beyblade
@@ -386,8 +392,8 @@
 				if(affecting && affecting.brute_dam < 150-damage) // cap damage applied
 					btm.apply_damage(damage, BRUTE, body_zone)
 			btm.Stun(80)
-			playsound_erp(btm, 'sound/misc/mat/pop.ogg', 100, TRUE, -2)
-			playsound_erp(top, 'sound/misc/mat/segso.ogg', 50, TRUE, -2)
+			playsound_erp(portal_holder || btm, 'sound/misc/mat/pop.ogg', 100, TRUE, -2)
+			playsound_erp(portal_holder || top, 'sound/misc/mat/segso.ogg', 50, TRUE, -2)
 			btm.emote_erp("paincrit", travel = SOUND_TRAVEL_LEAKING)
 			if(notify && top.sexcon.knot_via_portal)
 				portal_knot_remove_message(top, btm, TRUE, btm_removed)
@@ -399,7 +405,7 @@
 					top.visible_message(span_notice("[top] yanks their [knot_word_yank] out of [btm]!"), span_notice("I yank my [knot_word_yank] out from [btm]."))
 			btm.sexcon.try_do_pain_effect(PAIN_HIGH_EFFECT, FALSE)
 		else if(notify && top.sexcon.knot_via_portal)
-			playsound_erp(btm, 'sound/misc/mat/insert (1).ogg', 50, TRUE, -2, travel = SOUND_TRAVEL_LEAKING)
+			playsound_erp(portal_holder, 'sound/misc/mat/insert (1).ogg', 50, TRUE, -2, travel = SOUND_TRAVEL_LEAKING)
 			portal_knot_remove_message(top, btm, FALSE, btm_removed)
 			btm.emote_erp("painmoan")
 			btm.sexcon.try_do_pain_effect(PAIN_MILD_EFFECT, FALSE)
@@ -417,7 +423,10 @@
 			var/datum/status_effect/facial/internal/creampie = btm.has_status_effect(/datum/status_effect/facial/internal)
 			if(!creampie)
 				btm.apply_status_effect(/datum/status_effect/facial/internal)
-				btm.visible_message(span_love("[btm] takes a load inside them!"), span_love("I take a load inside me!"))
+				if(portal_holder)
+					to_chat(btm, span_love("I take a load inside me!"))
+				else
+					btm.visible_message(span_love("[btm] takes a load inside them!"), span_love("I take a load inside me!"))
 			else
 				creampie.refresh_cum()
 			if(top?.dna?.species?.id == "gnoll")
@@ -437,7 +446,10 @@
 			var/datum/status_effect/facial/facial = btm.has_status_effect(/datum/status_effect/facial)
 			if(!facial)
 				btm.apply_status_effect(/datum/status_effect/facial)
-				btm.visible_message(span_love("[btm] takes a load down their throat!"), span_love("I take a load down my throat!"))
+				if(portal_holder)
+					to_chat(btm, span_love("I take a load down my throat!"))
+				else
+					btm.visible_message(span_love("[btm] takes a load down their throat!"), span_love("I take a load down my throat!"))
 			else
 				facial.refresh_cum()
 			if(btm.reagents)
@@ -584,13 +596,13 @@
 	if(L.sexcon.knotted_status == KNOTTED_AS_BTM && L.sexcon.knotted_forced_by_bottom)
 		var/mob/living/carbon/human/top = L.sexcon.knotted_owner
 		if(istype(top) && top.sexcon)
-			var/do_forceful_removal = L.cmode || L.sexcon.arousal > MAX_AROUSAL / 4 || L.sexcon.manual_arousal > SEX_MANUAL_AROUSAL_PARTIAL // bottom forced the knot, so bottom can wrench free
+			var/do_forceful_removal = L.sexcon.wants_forceful_unknot()
 			top.sexcon.knot_remove(forceful_removal = do_forceful_removal, remover = L)
 	else if(L.sexcon.knotted_status == KNOTTED_AS_BTM && L.sexcon.knot_via_portal)
 		// The bottom can't take the panties off while knotted, so they can always pull free of the portal.
 		var/mob/living/carbon/human/top = L.sexcon.knotted_owner
 		if(istype(top) && top.sexcon)
-			var/do_forceful_removal = L.cmode || L.sexcon.arousal > MAX_AROUSAL / 4 || L.sexcon.manual_arousal > SEX_MANUAL_AROUSAL_PARTIAL
+			var/do_forceful_removal = L.sexcon.wants_forceful_unknot()
 			top.sexcon.knot_remove(forceful_removal = do_forceful_removal, remover = L)
 	else if(L.sexcon.knotted_status == KNOTTED_AS_BTM)
 		to_chat(L, span_warning("I can't pull free!"))
@@ -611,7 +623,7 @@
 	if(!istype(L) || !L.sexcon)
 		return FALSE
 	if(L.sexcon.knotted_status == KNOTTED_AS_TOP)
-		var/do_forceful_removal = L.cmode || L.sexcon.arousal > MAX_AROUSAL / 4 || L.sexcon.manual_arousal > SEX_MANUAL_AROUSAL_PARTIAL // combat mode, or considered still hard, let it rip like a beyblade
+		var/do_forceful_removal = L.sexcon.wants_forceful_unknot()
 		L.sexcon.knot_remove(forceful_removal = do_forceful_removal)
 	return FALSE
 

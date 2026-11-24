@@ -1039,7 +1039,10 @@
 	lip_style = target.lip_style
 	lip_color = target.lip_color
 	age = target.age
-	underwear = target.underwear
+	// Keep our own underwear, moved onto the new chest. Taking target.underwear made two mobs wear one item,
+	// so deleting either left the other holding a deleted item (a hard delete).
+	if(underwear?.undies_feature)
+		get_bodypart(BODY_ZONE_CHEST)?.add_bodypart_feature(underwear.undies_feature)
 	shavelevel = target.shavelevel
 	socks = target.socks
 	has_stubble = target.has_stubble

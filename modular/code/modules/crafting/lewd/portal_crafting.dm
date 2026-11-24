@@ -5,7 +5,7 @@
 	name = "Portal Light (+1 Amythortz, +1 Glass)"
 	required_item = /obj/item/ingot/bronze
 	additional_items = list(/obj/item/roguegem/amethyst, /obj/item/natural/glass)
-	created_item = /obj/item/portallight
+	created_item = /obj/item/portal_light
 	skill_level = 3
 
 /datum/artificer_recipe/contraptions/portal_panties
