@@ -955,6 +955,7 @@
 	arousal = clamp(amount, 0, MAX_AROUSAL)
 	update_pink_screen()
 	update_erect_state()
+	portal_arousal_changed()
 
 /datum/sex_controller/proc/try_apply_false_sensation()
 	if(!user.has_flaw(/datum/charflaw/addiction/lovefiend) && !user.has_flaw(/datum/charflaw/addiction/baothamarked))

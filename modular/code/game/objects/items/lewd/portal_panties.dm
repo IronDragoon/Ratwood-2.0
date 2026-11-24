@@ -135,18 +135,37 @@
 	else
 		REMOVE_TRAIT(src, TRAIT_NODROP, PORTAL_KNOT_TRAIT)
 
+/obj/item/portallight
+	/// Which portal_glow_[n] colour the light shows, from the wearer's arousal. 0 while unlinked.
+	var/glow_step = 0
+
+/// Arousal to glow colour: green, lime, yellow, orange, then red from the climax threshold.
+/proc/portal_glow_step(arousal)
+	return clamp(round(arousal / 25) + 1, 1, 5)
+
+/// The wearer's groin colour, resolved the way their body's genitals resolve it: skin tone, fur or scale colour, or chest colour.
+/proc/portal_flesh_color(mob/living/carbon/human/wearer)
+	var/list/sources = color_key_source_list_from_carbon(wearer)
+	var/flesh = "[sources[KEY_CHEST_COLOR]]"
+	if(!length(flesh))
+		return "#ffffff"
+	if(copytext(flesh, 1, 2) != "#")
+		flesh = "#[flesh]"
+	return flesh
+
 /obj/item/portallight/proc/update_portal_icon()
 	cut_overlays()
 	icon_state = "unpaired"
+	glow_step = 0
 	var/mob/living/carbon/human/wearer = get_wearer()
 	if(!wearer)
 		return
-	icon_state = "paired"
+	icon_state = "paired_body"
+	glow_step = portal_glow_step(wearer.sexcon?.arousal)
+	add_overlay(mutable_appearance(icon, "portal_glow_[glow_step]"))
+	var/flesh = portal_flesh_color(wearer)
 	var/mutable_appearance/sleeve = mutable_appearance(icon, "portal_sleeve_normal")
-	var/skin = "[wearer.skin_tone]"
-	if(length(skin) && copytext(skin, 1, 2) != "#")
-		skin = "#[skin]"
-	sleeve.color = skin
+	sleeve.color = flesh
 	add_overlay(sleeve)
 	if(linked_underwear.focus == SEX_PART_COCK)
 		var/mutable_appearance/cock = portal_cock_overlay(wearer)
@@ -161,8 +180,20 @@
 			organ_state = "portal_anus"
 	if(organ_state)
 		var/mutable_appearance/organ = mutable_appearance(icon, organ_state)
-		organ.color = "#f37272"
+		organ.color = gradient("#f37272", flesh, 0.35) // pink, warmed toward their own flesh
 		add_overlay(organ)
+
+/// The wearer's arousal changed; their light redraws only when that crosses into another glow colour.
+/datum/sex_controller/proc/portal_arousal_changed()
+	var/mob/living/carbon/human/wearer = user
+	if(!istype(wearer))
+		return
+	var/obj/item/undies/portal/portal_undies = wearer.underwear
+	if(!istype(portal_undies) || !portal_undies.linked_light)
+		return
+	var/obj/item/portallight/light = portal_undies.linked_light
+	if(light.glow_step != portal_glow_step(arousal))
+		light.update_portal_icon()
 
 /// Side-on portal cocks, built once per look: "[accessory type]-[icon state]-[colours]" = icon.
 GLOBAL_LIST_EMPTY(portal_cock_icons)
