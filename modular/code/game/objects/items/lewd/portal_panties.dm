@@ -1,6 +1,6 @@
 // Portal panties and the portal light: a linked pair for ERP at any distance.
 // Ported from Rivermist Hollow (sheetofseaweed/Rivermist-Hollow-Vanderlin).
-// Art (portal.dmi, portal_panties.dmi) by Rivermist Hollow, CC-BY-SA 3.0.
+// Art (portal.dmi, portal_panties.dmi) by Rivermist Hollow, CC-BY-SA 3.0, except the portal_penis state, made for Ratwood.
 
 #define PORTAL_KNOT_TRAIT "portal_knot"
 
@@ -152,9 +152,11 @@
 	switch(linked_underwear.focus)
 		if(SEX_PART_CUNT)
 			organ_state = "portal_vag"
+		if(SEX_PART_COCK)
+			organ_state = "portal_penis"
 		if(SEX_PART_ANUS)
 			organ_state = "portal_anus"
-	if(organ_state) // no penis sprite yet, the sleeve alone shows for that focus
+	if(organ_state)
 		var/mutable_appearance/organ = mutable_appearance(icon, organ_state)
 		organ.color = "#f37272"
 		add_overlay(organ)
