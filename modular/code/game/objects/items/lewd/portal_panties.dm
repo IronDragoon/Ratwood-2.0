@@ -67,8 +67,9 @@
 /obj/item/portallight/Destroy()
 	if(knot_locked && knot_sexcon)
 		var/datum/sex_controller/knotted = knot_sexcon
-		knot_sexcon = null
-		knotted.knot_remove(forceful_removal = TRUE)
+		set_knot_lock(FALSE) // now, while the link still reaches the panties; the async release finishes after Destroy
+		// Async: the yank runs emotes and sleeps, which Destroy must not.
+		INVOKE_ASYNC(knotted, TYPE_PROC_REF(/datum/sex_controller, knot_remove), TRUE)
 	if(linked_underwear?.linked_light == src)
 		linked_underwear.linked_light = null
 	linked_underwear = null
@@ -356,8 +357,9 @@ GLOBAL_DATUM(portal_cock_root_shade, /icon)
 /obj/item/undies/portal/Destroy()
 	if(knot_locked && linked_light?.knot_sexcon)
 		var/datum/sex_controller/knotted = linked_light.knot_sexcon
-		linked_light.knot_sexcon = null
-		knotted.knot_remove(forceful_removal = TRUE)
+		linked_light.set_knot_lock(FALSE) // now, while the link still reaches the light; the async release finishes after Destroy
+		// Async: the yank runs emotes and sleeps, which Destroy must not.
+		INVOKE_ASYNC(knotted, TYPE_PROC_REF(/datum/sex_controller, knot_remove), TRUE)
 	var/obj/item/portallight/old_light = linked_light
 	if(old_light?.linked_underwear == src)
 		old_light.linked_underwear = null
