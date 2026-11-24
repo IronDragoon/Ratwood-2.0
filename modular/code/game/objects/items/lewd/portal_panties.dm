@@ -1,6 +1,6 @@
 // Portal panties and the portal light: a linked pair for ERP at any distance.
 // Ported from Rivermist Hollow (sheetofseaweed/Rivermist-Hollow-Vanderlin).
-// Art (portal.dmi, portal_panties.dmi) by Rivermist Hollow, CC-BY-SA 3.0, except the portal_penis state, made for Ratwood.
+// Art (portal.dmi, portal_panties.dmi) by Rivermist Hollow, CC-BY-SA 3.0. The cock focus reuses the wearer's own body sprite.
 
 #define PORTAL_KNOT_TRAIT "portal_knot"
 
@@ -148,18 +148,77 @@
 		skin = "#[skin]"
 	sleeve.color = skin
 	add_overlay(sleeve)
+	if(linked_underwear.focus == SEX_PART_COCK)
+		var/mutable_appearance/cock = portal_cock_overlay(wearer)
+		if(cock) // no usable sprite leaves the sleeve bare
+			add_overlay(cock)
+		return
 	var/organ_state
 	switch(linked_underwear.focus)
 		if(SEX_PART_CUNT)
 			organ_state = "portal_vag"
-		if(SEX_PART_COCK)
-			organ_state = "portal_penis"
 		if(SEX_PART_ANUS)
 			organ_state = "portal_anus"
 	if(organ_state)
 		var/mutable_appearance/organ = mutable_appearance(icon, organ_state)
 		organ.color = "#f37272"
 		add_overlay(organ)
+
+/// Side-on portal cocks, built once per look: "[accessory type]-[icon state]-[colours]" = icon.
+GLOBAL_LIST_EMPTY(portal_cock_icons)
+
+/// Multiplied over the cock so its root darkens into the portal. Columns 13-15 hold the root in every side-on frame.
+GLOBAL_DATUM(portal_cock_root_shade, /icon)
+
+/proc/portal_get_root_shade()
+	if(!GLOB.portal_cock_root_shade)
+		var/icon/shade = icon('icons/blanks/32x32.dmi', "nothing")
+		shade.DrawBox("#ffffff", 1, 1, 32, 32)
+		shade.DrawBox("#e8e2ec", 13, 1, 13, 32)
+		shade.DrawBox("#c3b6cd", 14, 1, 14, 32)
+		shade.DrawBox("#9687aa", 15, 1, 15, 32)
+		GLOB.portal_cock_root_shade = shade
+	return GLOB.portal_cock_root_shade
+
+/**
+ * The wearer's own cock, drawn side-on poking out of the portal: their shape, size, colours and current
+ * soft or hard state, from the same cached sprites as their body. Null if there's nothing to draw.
+ */
+/obj/item/portallight/proc/portal_cock_overlay(mob/living/carbon/human/wearer)
+	var/obj/item/organ/penis/cock = wearer.getorganslot(ORGAN_SLOT_PENIS)
+	if(!cock?.accessory_type)
+		return null
+	var/datum/sprite_accessory/penis/accessory = SPRITE_ACCESSORY(cock.accessory_type)
+	if(!accessory)
+		return null
+	// Skips get_appearance(), which hides the cock whenever underwear is worn.
+	var/state = accessory.get_icon_state(cock, null, wearer)
+	if(!state)
+		return null
+	var/key = "[accessory.type]-[state]-[cock.accessory_colors]"
+	var/icon/side_on = GLOB.portal_cock_icons[key]
+	if(!side_on)
+		for(var/mutable_appearance/layer as anything in accessory.get_overlay(state, cock.accessory_colors))
+			if(!findtext(layer.icon_state, "_FRONT"))
+				continue
+			side_on = icon(layer.icon, layer.icon_state, WEST)
+			side_on.Blend(portal_get_root_shade(), ICON_MULTIPLY)
+			break
+		if(!side_on)
+			return null
+		GLOB.portal_cock_icons[key] = side_on
+	var/mutable_appearance/overlay = mutable_appearance(side_on)
+	// Moves the groin of the body-scale frame (15, 9) onto the portal opening (12, 14), in BYOND pixel coordinates.
+	overlay.pixel_x = -3
+	overlay.pixel_y = 5
+	return overlay
+
+/// The wearer's cock changed state; a light focused on it redraws to match.
+/mob/living/carbon/human/proc/refresh_portal_cock()
+	var/obj/item/undies/portal/portal_undies = underwear
+	if(!istype(portal_undies) || portal_undies.focus != SEX_PART_COCK)
+		return
+	portal_undies.linked_light?.update_portal_icon()
 
 /obj/item/portallight/attack_self(mob/user)
 	. = ..()

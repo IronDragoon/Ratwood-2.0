@@ -67,6 +67,9 @@
 	erect_state = new_state
 	if(oldstate != erect_state && owner)
 		owner.update_body_parts(TRUE)
+		if(ishuman(owner))
+			var/mob/living/carbon/human/human_owner = owner
+			human_owner.refresh_portal_cock()
 
 /obj/item/organ/penis/knotted
 	name = "knotted penis"
