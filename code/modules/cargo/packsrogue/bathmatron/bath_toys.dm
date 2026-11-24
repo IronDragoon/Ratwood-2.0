@@ -141,3 +141,8 @@
 	name = "Chastity device (cursed)"
 	cost = PRICE_CHASTITY_CAGE
 	contains = list(/obj/item/chastity/cursed)
+
+/datum/supply_pack/rogue/bath_toys/portal_pair
+	name = "Portal Pair (Boxed)"
+	cost = 200
+	contains = list(/obj/item/portal_pair_case)

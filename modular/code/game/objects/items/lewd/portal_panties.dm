@@ -219,6 +219,30 @@
 		return
 
 /**
+ * PORTAL PAIR CASE
+ * A one-use case holding a light and panties that are already linked. Sold by the brassface and taken from loadout.
+ */
+/obj/item/portal_pair_case
+	name = "portal pair case"
+	desc = "A small gilded case holding a portal light and a pair of portal panties, already bound to one another."
+	icon = 'modular/icons/obj/lewd/portal.dmi'
+	icon_state = "box"
+	w_class = WEIGHT_CLASS_SMALL
+	grid_width = 32
+	grid_height = 32
+
+/obj/item/portal_pair_case/attack_self(mob/user)
+	. = ..()
+	var/obj/item/portallight/light = new(get_turf(user))
+	var/obj/item/undies/portal/panties = new(get_turf(user))
+	light.set_linked_underwear(panties)
+	playsound(user, 'sound/foley/latch.ogg', 50, TRUE, -2)
+	to_chat(user, span_notice("I open [src]; a portal light and a pair of portal panties, already linked."))
+	qdel(src)
+	user.put_in_hands(light)
+	user.put_in_hands(panties)
+
+/**
  * PORTAL PANTIES
  */
 /obj/item/undies/portal
