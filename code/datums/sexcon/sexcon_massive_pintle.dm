@@ -89,7 +89,15 @@ GLOBAL_LIST_INIT(massive_pintle_mouth_panic_lines, list(
 	var/orifice = sex_part_orifice_name(get_receiver_part(action, receiver))
 	var/cock_word = action.uses_both_cocks ? "cocks" : "cock"
 	var/vision = do_subtle_action ? 1 : DEFAULT_MESSAGE_RANGE
-	if(receiver == target)
+	if(istype(action, /datum/sex_action/portal))
+		// Through a portal only the holder sees the act; bystanders get the vague line and the wearer is never named.
+		var/datum/sex_action/portal/portal_act = action
+		if(receiver == target)
+			to_chat(user, span_warning("I try to force my massive [cock_word] through the portal into their [orifice], but it's simply too big!"))
+		else
+			to_chat(user, span_warning("I try to take their massive [cock_word] into my [orifice] through the portal, but it's simply too big!"))
+		portal_act.portal_holder_vague(user, target)
+	else if(receiver == target)
 		user.visible_message(span_warning("[user] tries to force [user.p_their()] massive [cock_word] into [target]'s [orifice], but it's simply too big!"), vision_distance = vision)
 	else
 		user.visible_message(span_warning("[user] tries to take [target]'s massive [cock_word] into [user.p_their()] [orifice], but it's simply too big!"), vision_distance = vision)
