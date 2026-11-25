@@ -18,13 +18,16 @@
 	var/overlay_state
 	/// What the wearer feels when the panties go on.
 	var/worn_line
+	/// The examine descriptor the light's view line borrows, so it reads and colours like the wearer's own examine.
+	var/descriptor_type
 
-/datum/portal_focus/New(part, name, organ_slot, overlay_state, worn_line)
+/datum/portal_focus/New(part, name, organ_slot, overlay_state, worn_line, descriptor_type)
 	src.part = part
 	src.name = name
 	src.organ_slot = organ_slot
 	src.overlay_state = overlay_state
 	src.worn_line = worn_line
+	src.descriptor_type = descriptor_type
 
 /// Whether this person has the part behind this focus.
 /datum/portal_focus/proc/available_on(mob/living/carbon/human/wearer)
@@ -33,10 +36,34 @@
 	return organ_slot ? !!wearer.getorganslot(organ_slot) : !!wearer.get_bodypart(BODY_ZONE_CHEST)
 
 GLOBAL_LIST_INIT(portal_foci, list(
-	new /datum/portal_focus(SEX_PART_CUNT, "cunt", ORGAN_SLOT_VAGINA, "portal_vag", "I feel magical energies focus around my loins."),
-	new /datum/portal_focus(SEX_PART_COCK, "cock", ORGAN_SLOT_PENIS, null, "I feel magical energies focus around my cock."),
-	new /datum/portal_focus(SEX_PART_ANUS, "ass", null, "portal_anus", "I feel magical energies focus around my backside."),
+	new /datum/portal_focus(SEX_PART_CUNT, "cunt", ORGAN_SLOT_VAGINA, "portal_vag", "I feel magical energies focus around my loins.", /datum/mob_descriptor/vagina),
+	new /datum/portal_focus(SEX_PART_COCK, "cock", ORGAN_SLOT_PENIS, null, "I feel magical energies focus around my cock.", /datum/mob_descriptor/penis),
+	new /datum/portal_focus(SEX_PART_ANUS, "ass", null, "portal_anus", "I feel magical energies focus around my backside.", /datum/mob_descriptor/portal_anus),
 ))
+
+/**
+ * The portal's view of an ass, worded and coloured like the genital descriptors. Bodies have no anus
+ * descriptor, so this one exists only for the light: it never describes a mob on its own.
+ */
+/datum/mob_descriptor/portal_anus
+	name = "ass"
+	descriptor_color = "#ff66cc"
+	aroused_descriptor_color = "#ff5555"
+
+/datum/mob_descriptor/portal_anus/can_describe(mob/living/described)
+	return FALSE
+
+/datum/mob_descriptor/portal_anus/get_description_for_watcher(mob/living/described, mob/watcher)
+	var/mob/living/carbon/human/H = described
+	var/arousal_modifier = ""
+	switch(H.sexcon?.arousal)
+		if(80 to INFINITY)
+			arousal_modifier = ", clenching and twitching eagerly"
+		if(50 to 80)
+			arousal_modifier = ", flushed and twitching"
+		if(20 to 50)
+			arousal_modifier = ", flushed"
+	return "a tight, puckered hole[arousal_modifier]"
 
 /proc/get_portal_focus(part)
 	for(var/datum/portal_focus/focus as anything in GLOB.portal_foci)
@@ -110,6 +137,14 @@ GLOBAL_LIST_INIT(portal_foci, list(
 
 /obj/item/portal_light/examine(mob/user)
 	. = ..()
+	var/view_line = portal_view_line(user)
+	if(view_line)
+		var/list/lines = .
+		var/desc_index = desc ? lines.Find(span_info("[desc]")) : 0 // /atom/examine adds desc wrapped like this
+		if(desc_index)
+			lines.Insert(desc_index + 1, view_line) // right under the description
+		else
+			lines += view_line
 	if(!linked_underwear)
 		. += span_info("It isn't linked to anything. Touch it to a pair of portal panties to link them.")
 		return
@@ -118,6 +153,26 @@ GLOBAL_LIST_INIT(portal_foci, list(
 		return
 	var/datum/portal_focus/focus = get_portal_focus(linked_underwear.focus)
 	. += span_info("It is focused on their [focus?.name]. Middle-click to refocus.")
+
+/**
+ * What you see through the portal: the focused part, worded and coloured exactly like the wearer's own examine
+ * descriptor (size, shape, arousal, brands), so the colours follow the viewer's descriptor colour toggle.
+ */
+/obj/item/portal_light/proc/portal_view_line(mob/user)
+	var/mob/living/carbon/human/wearer = get_wearer()
+	if(!wearer)
+		return null
+	var/datum/portal_focus/focus = get_portal_focus(linked_underwear.focus)
+	if(!focus?.descriptor_type || !focus.available_on(wearer))
+		return null
+	if(focus.organ_slot && (focus.organ_slot in wearer.sexcon?.hidden_genitals)) // their choice to keep it undescribed
+		return span_info("Through it, you glimpse their [focus.name].")
+	var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(focus.descriptor_type)
+	var/view = descriptor.get_description_for_watcher(wearer, user)
+	var/color = descriptor.get_descriptor_color(wearer, user)
+	if(color)
+		view = "<span style='color:[color]'>[view]</span>"
+	return span_info("Through it, you see [view].")
 
 /obj/item/portal_light/on_blocked_unequip(mob/user)
 	if(!knot_locked || world.time < next_knot_lock_notice)
